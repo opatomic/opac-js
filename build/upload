@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+VERSION=`cat version.txt`
+
+cd ..
+# upload version
+git push origin master
+git tag -a "v$VERSION"
+git push origin "v$VERSION"
+
+cd build
+# TODO: npm publish
+npm publish "node"
+
+

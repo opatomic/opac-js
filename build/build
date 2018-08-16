@@ -1,0 +1,111 @@
+#!/bin/bash
+
+# to generate docs, must have node and jsdoc installed
+#  sudo npm install -g jsdoc
+
+# to minimize browser build, must have java 8+ installed, download 
+# closure compiler, and set $CCJAR to the jar file's path.
+#  https://github.com/google/closure-compiler
+
+# TODO: support running closure compiler from within node?
+
+
+CCJAR=~/Downloads/closure.compiler/closure-compiler-v20180204.jar
+OPACJSDIR=../src
+LIBDIR=../lib
+TMPDIR=tmp
+
+
+function deldir {
+	if [ -d "$1" ]; then
+		rm -r "$1"
+	fi
+}
+
+function writeVersion {
+	printf "const VERSION = \"" >> "$1"
+	cat version.txt >> "$1"
+	printf "\";\n\n" >> "$1"
+}
+
+function catHead {
+	printf "// #### Contents of " >> "$2"
+	basename "$1" | tr "\n" " " >> "$2"
+	printf "####\n\n" >> "$2"
+	cat "$1" >> "$2"
+}
+
+
+deldir $TMPDIR
+mkdir $TMPDIR
+
+
+# increment the version build number; awk must write to temp file
+awk -F '.' '{printf("%d.%d.%d",$1,$2,$3+1)}' version.txt > newver.txt
+mv newver.txt version.txt
+VERSION=`cat version.txt`
+
+
+catHead "$OPACJSDIR/BigDec.js" "$TMPDIR/bundle.js"
+catHead "$OPACJSDIR/OpaDef.js" "$TMPDIR/bundle.js"
+catHead "$OPACJSDIR/PartialParser.js" "$TMPDIR/bundle.js"
+catHead "$OPACJSDIR/Serializer.js" "$TMPDIR/bundle.js"
+catHead "$OPACJSDIR/OpaUtils.js" "$TMPDIR/bundle.js"
+catHead "$OPACJSDIR/StreamClient.js" "$TMPDIR/bundle.js"
+
+
+if [ -f $CCJAR ]; then
+	java -jar "$CCJAR" --js "$LIBDIR/deque/deque.js" --js_output_file "$TMPDIR/deque.min.js"
+	java -jar "$CCJAR" --js "$LIBDIR/jsbn/jsbn.js" --js "$LIBDIR/jsbn/jsbn2.js" --js_output_file "$TMPDIR/jsbn.min.js"
+	#java -jar "$CCJAR" --js "$TMPDIR/bundle.js" --js_output_file "$TMPDIR/bundle.min.js" -O WHITESPACE_ONLY
+	java -jar "$CCJAR" --js "$TMPDIR/bundle.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false
+
+
+	cat "browser.head.js" > "browser/opac.browser.min.js"
+	writeVersion "browser/opac.browser.min.js"
+	printf "/* Deque (https://github.com/petkaantonov/deque) LICENSE file:\n" >> "browser/opac.browser.min.js"
+	cat "$LIBDIR/deque/LICENSE" >> "browser/opac.browser.min.js"
+	printf "\n*/\n" >> "browser/opac.browser.min.js"
+	cat "$TMPDIR/deque.min.js" >> "browser/opac.browser.min.js"
+	printf "\n\n/* BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/) LICENSE file: */\n" >> "browser/opac.browser.min.js"
+	cat "$LIBDIR/jsbn/LICENSE" >> "browser/opac.browser.min.js"
+	cat "$TMPDIR/jsbn.min.js" >> "browser/opac.browser.min.js"
+	printf "\n\n" >> "browser/opac.browser.min.js"
+	cat "$TMPDIR/bundle.min.js" >> "browser/opac.browser.min.js"
+	cat "browser.foot.js" >> "browser/opac.browser.min.js"
+	
+	#cp "browser/opac.browser.min.js" "$SRCDIR/admin-browser/src/opac.browser.min.js"
+else
+	echo "CCJAR not found. browser build will not minimize"
+	rm "browser/opac.browser.min.js"
+fi
+
+
+cat "browser.head.js" > "browser/opac.browser.js"
+writeVersion "browser/opac.browser.js"
+printf "// Deque (https://github.com/petkaantonov/deque):\n" >> "browser/opac.browser.js"
+cat "$LIBDIR/deque/deque.js" >> "browser/opac.browser.js"
+printf "\n\n// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):\n" >> "browser/opac.browser.js"
+cat "$LIBDIR/jsbn/LICENSE" >> "browser/opac.browser.js"
+cat "$LIBDIR/jsbn/jsbn.js" >> "browser/opac.browser.js"
+cat "$LIBDIR/jsbn/jsbn2.js" >> "browser/opac.browser.js"
+printf "\n\n" >> "browser/opac.browser.js"
+cat "$TMPDIR/bundle.js" >> "browser/opac.browser.js"
+cat "browser.foot.js" >> "browser/opac.browser.js"
+
+
+#TODO: node: readme.md?
+cat "node.head.js" > "node/opac.node.js"
+writeVersion "node/opac.node.js"
+cat "$TMPDIR/bundle.js" "node.foot.js" >> "node/opac.node.js"
+sed -e "s/\\\$VERSION/$VERSION/" "package.json" > "node/package.json"
+
+
+deldir $TMPDIR
+
+
+# TODO: run some tests!!!
+
+# TODO: generate docs?
+
+
