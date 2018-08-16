@@ -20,7 +20,7 @@ const BTOA = G.btoa;
 
 var P;
 
-const VERSION = "0.1.2";
+const VERSION = "0.1.3";
 
 // Deque (https://github.com/petkaantonov/deque):
 /**
@@ -2691,7 +2691,7 @@ function callNoResponse(c, cmd, args) {
 	// if no callback is specified then send null as async id indicating server must not send response
 	c.s.write1(OpaDef.ARRAYSTART);
 	writeCommand(c, cmd);
-	c.s.writeObject(args);
+	c.s.writeObject(args ? args : null);
 	c.s.write1(OpaDef.NULL);
 	c.s.write1(OpaDef.ARRAYEND);
 }
@@ -2728,10 +2728,6 @@ P.call = function(cmd, args, cb) {
 }
 
 function callId(c, cmd, args, cb, isP) {
-	//if (!cb) {
-	//	return callNoResponse(c, cmd, args);
-	//}
-	
 	++c.id;
 	var id = isP ? 0 - c.id : c.id;
 	
