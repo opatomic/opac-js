@@ -47,9 +47,9 @@ sock.connect(4567, "localhost", function() {
 	
 	var chid = c.callPersistent("SUBSCRIBE", ["channelName"], echoResult);
 	c.call("PUBLISH", ["channelName", "chan message"]);
-	c.call("UNSUBSCRIBE", ["channelName"], function(result, err) {
+	c.callAsync("UNSUBSCRIBE", ["channelName"], function(result, err) {
 		if (err) {
-			console.log("Error: could not unsubscribe");
+			console.log("Error: could not unsubscribe; " + err);
 		} else {
 			console.log("Unsubscribed");
 			c.unregister(chid);
