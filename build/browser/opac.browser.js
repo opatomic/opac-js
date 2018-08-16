@@ -20,7 +20,7 @@ const BTOA = G.btoa;
 
 var P;
 
-const VERSION = "0.1.3";
+const VERSION = "0.1.4";
 
 // Deque (https://github.com/petkaantonov/deque):
 /**
@@ -1812,24 +1812,24 @@ var OpaDef = {
 	NULL         : CC("N"),
 	FALSE        : CC("F"),
 	TRUE         : CC("T"),
-	ZERO         : CC("!"),
-	EMPTYBIN     : CC("b"),
-	EMPTYSTR     : CC("s"),
-	EMPTYLIST    : CC("_"),
+	ZERO         : CC("O"),
+	EMPTYBIN     : CC("A"),
+	EMPTYSTR     : CC("R"),
+	EMPTYLIST    : CC("M"),
 	SORTMAX      : CC("Z"),
 
-	POSVARINT    : CC("$"),
-	NEGVARINT    : CC("%"),
-	POSPOSVARDEC : CC("P"),
-	POSNEGVARDEC : CC("Q"),
-	NEGPOSVARDEC : CC("R"),
-	NEGNEGVARDEC : CC("V"),
-	POSBIGINT    : CC("G"),
-	NEGBIGINT    : CC("H"),
-	POSPOSBIGDEC : CC("I"),
-	POSNEGBIGDEC : CC("J"),
-	NEGPOSBIGDEC : CC("K"),
-	NEGNEGBIGDEC : CC("M"),
+	POSVARINT    : CC("D"),
+	NEGVARINT    : CC("E"),
+	POSPOSVARDEC : CC("G"),
+	POSNEGVARDEC : CC("H"),
+	NEGPOSVARDEC : CC("I"),
+	NEGNEGVARDEC : CC("J"),
+	POSBIGINT    : CC("K"),
+	NEGBIGINT    : CC("L"),
+	POSPOSBIGDEC : CC("V"),
+	POSNEGBIGDEC : CC("W"),
+	NEGPOSBIGDEC : CC("X"),
+	NEGNEGBIGDEC : CC("Y"),
 
 	BINLPVI      : CC("B"),
 	STRLPVI      : CC("S"),
@@ -1842,7 +1842,7 @@ var OpaDef = {
 	FalseObj      : false,
 	TrueObj       : true,
 	ZeroIntObj    : 0,
-	EmptyBinObj   : new Uint8Array(0),
+	EmptyBinObj   : NEWBUF(0),
 	EmptyStrObj   : "",
 	EmptyArrayObj : [],
 };
