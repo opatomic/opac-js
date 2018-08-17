@@ -2,6 +2,7 @@
   "name": "opatomic-client",
   "version": "$VERSION",
   "description": "Opatomic client",
+  "keywords": ["opatomic", "client"],
   "homepage": "https://github.com/opatomic/opac-js",
   "main": "opac.node.js",
   "scripts": {
