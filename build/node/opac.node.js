@@ -19,7 +19,7 @@ const BTOA = function(v) {
 
 var P;
 
-const VERSION = "0.1.8";
+const VERSION = "0.1.17";
 
 // #### Contents of BigDec.js ####
 
@@ -1001,7 +1001,7 @@ P.writeObject = function(v) {
 	}
 }
 
-Serializer.prototype.STR2BUF = new Map();
+P.STR2BUF = new Map();
 
 // #### Contents of OpaUtils.js ####
 

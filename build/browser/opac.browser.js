@@ -20,7 +20,7 @@ const BTOA = G.btoa;
 
 var P;
 
-const VERSION = "0.1.8";
+const VERSION = "0.1.17";
 
 // Deque (https://github.com/petkaantonov/deque):
 /**
@@ -2541,7 +2541,7 @@ P.writeObject = function(v) {
 	}
 }
 
-Serializer.prototype.STR2BUF = new Map();
+P.STR2BUF = new Map();
 
 // #### Contents of OpaUtils.js ####
 
