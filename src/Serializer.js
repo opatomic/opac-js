@@ -354,5 +354,5 @@ P.writeObject = function(v) {
 	}
 }
 
-Serializer.prototype.STR2BUF = new Map();
+P.STR2BUF = new Map();
 
