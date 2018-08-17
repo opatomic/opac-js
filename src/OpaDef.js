@@ -31,15 +31,6 @@ var OpaDef = {
 	STRLPVI      : CC("S"),
 
 	ARRAYSTART   : CC("["),
-	ARRAYEND     : CC("]"),
-
-	UndefinedObj  : undefined,
-	NullObj       : null,
-	FalseObj      : false,
-	TrueObj       : true,
-	ZeroIntObj    : 0,
-	EmptyBinObj   : NEWBUF(0),
-	EmptyStrObj   : "",
-	EmptyArrayObj : [],
+	ARRAYEND     : CC("]")
 };
 
