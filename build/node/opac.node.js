@@ -19,7 +19,7 @@ const BTOA = function(v) {
 
 var P;
 
-const VERSION = "0.1.4";
+const VERSION = "0.1.7";
 
 // #### Contents of BigDec.js ####
 
@@ -295,16 +295,7 @@ var OpaDef = {
 	STRLPVI      : CC("S"),
 
 	ARRAYSTART   : CC("["),
-	ARRAYEND     : CC("]"),
-
-	UndefinedObj  : undefined,
-	NullObj       : null,
-	FalseObj      : false,
-	TrueObj       : true,
-	ZeroIntObj    : 0,
-	EmptyBinObj   : NEWBUF(0),
-	EmptyStrObj   : "",
-	EmptyArrayObj : [],
+	ARRAYEND     : CC("]")
 };
 
 // #### Contents of PartialParser.js ####
@@ -505,14 +496,14 @@ P.parseNext = function(b) {
 					return null;
 				}
 				switch (buff[idx++]) {
-					case OpaDef.UNDEFINED: hitNext(p, OpaDef.UndefinedObj);  continue;
-					case OpaDef.NULL:      hitNext(p, OpaDef.NullObj);       continue;
-					case OpaDef.FALSE:     hitNext(p, OpaDef.FalseObj);      continue;
-					case OpaDef.TRUE:      hitNext(p, OpaDef.TrueObj);       continue;
-					case OpaDef.ZERO:      hitNext(p, OpaDef.ZeroIntObj);    continue;
-					case OpaDef.EMPTYBIN:  hitNext(p, OpaDef.EmptyBinObj);   continue;
-					case OpaDef.EMPTYSTR:  hitNext(p, OpaDef.EmptyStrObj);   continue;
-					case OpaDef.EMPTYLIST: hitNext(p, OpaDef.EmptyArrayObj); continue;
+					case OpaDef.UNDEFINED: hitNext(p, p.UndefinedObj);  continue;
+					case OpaDef.NULL:      hitNext(p, p.NullObj);       continue;
+					case OpaDef.FALSE:     hitNext(p, p.FalseObj);      continue;
+					case OpaDef.TRUE:      hitNext(p, p.TrueObj);       continue;
+					case OpaDef.ZERO:      hitNext(p, p.ZeroIntObj);    continue;
+					case OpaDef.EMPTYBIN:  hitNext(p, p.EmptyBinObj);   continue;
+					case OpaDef.EMPTYSTR:  hitNext(p, p.EmptyStrObj);   continue;
+					case OpaDef.EMPTYLIST: hitNext(p, p.EmptyArrayObj); continue;
 
 					case OpaDef.NEGVARINT: initVarint(p, OpaDef.NEGVARINT, S_VARINT2); continue;
 					case OpaDef.POSVARINT: initVarint(p, OpaDef.POSVARINT, S_VARINT2); continue;
@@ -648,7 +639,19 @@ P.parseNext = function(b) {
 	}
 }
 
-PartialParser.prototype.BUF2STR = new Map();
+// the following are the objects returned when the specified tag is parsed
+P.UndefinedObj  = undefined;
+P.NullObj       = null;
+P.FalseObj      = false;
+P.TrueObj       = true;
+P.ZeroIntObj    = 0;
+P.EmptyBinObj   = NEWBUF(0);
+P.EmptyStrObj   = "";
+P.EmptyArrayObj = [];
+
+// BUF2STR maps {utf-8 bytes -> strings} to avoid conversion (speed up) and improve
+// memory usage (prevent duplicate copies of same string)
+P.BUF2STR = new Map();
 
 // #### Contents of Serializer.js ####
 
