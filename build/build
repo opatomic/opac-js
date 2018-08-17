@@ -108,6 +108,7 @@ cat "node.head.js" > "node/opac.node.js"
 writeVersion "node/opac.node.js"
 cat "$TMPDIR/bundle.js" "node.foot.js" >> "node/opac.node.js"
 sed -e "s/\\\$VERSION/$VERSION/" "package.json" > "node/package.json"
+cp "../README.md" "node/README.md"
 
 
 deldir $TMPDIR
