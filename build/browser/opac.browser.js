@@ -20,7 +20,7 @@ const BTOA = G.btoa;
 
 var P;
 
-const VERSION = "0.1.17";
+const VERSION = "0.1.20";
 
 // Deque (https://github.com/petkaantonov/deque):
 /**
