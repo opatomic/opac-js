@@ -1,11 +1,12 @@
 Opatomic client for javascript
 
-This project contains source code for the node.js opatomic-client package.
+This project contains source code for the node.js 
+[opatomic-client](https://www.npmjs.com/package/opatomic-client) package.
 The code can also be built to run in a browser. Running in the browser is 
 undocumented for now (to see source for a working example check out the 
 admin panel).
 
-# Node.js module
+# Node.js package
 
 Install with:
 
@@ -85,5 +86,6 @@ sock.connect(4567, "localhost", function() {
  - numbers (integers and floats)
  - strings
  - arrays
+ - binary buffer (Buffer for node; Uint8Array for browser)
  - BigInteger (node "jsbn" package)
 
