@@ -48,6 +48,7 @@ ensureDir "node"
 deldir $TMPDIR
 mkdir $TMPDIR
 
+VERSION=`cat version.txt`
 
 
 catHead "$OPACJSDIR/BigDec.js" "$TMPDIR/bundle.js"
