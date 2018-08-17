@@ -20,7 +20,7 @@ const BTOA = G.btoa;
 
 var P;
 
-const VERSION = "0.1.7";
+const VERSION = "0.1.8";
 
 // Deque (https://github.com/petkaantonov/deque):
 /**
@@ -2036,14 +2036,14 @@ P.parseNext = function(b) {
 					return null;
 				}
 				switch (buff[idx++]) {
-					case OpaDef.UNDEFINED: hitNext(p, p.UndefinedObj);  continue;
-					case OpaDef.NULL:      hitNext(p, p.NullObj);       continue;
-					case OpaDef.FALSE:     hitNext(p, p.FalseObj);      continue;
-					case OpaDef.TRUE:      hitNext(p, p.TrueObj);       continue;
-					case OpaDef.ZERO:      hitNext(p, p.ZeroIntObj);    continue;
-					case OpaDef.EMPTYBIN:  hitNext(p, p.EmptyBinObj);   continue;
-					case OpaDef.EMPTYSTR:  hitNext(p, p.EmptyStrObj);   continue;
-					case OpaDef.EMPTYLIST: hitNext(p, p.EmptyArrayObj); continue;
+					case OpaDef.UNDEFINED: hitNext(p, undefined); continue;
+					case OpaDef.NULL:      hitNext(p, null);      continue;
+					case OpaDef.FALSE:     hitNext(p, false);     continue;
+					case OpaDef.TRUE:      hitNext(p, true);      continue;
+					case OpaDef.ZERO:      hitNext(p, 0);         continue;
+					case OpaDef.EMPTYBIN:  hitNext(p, NEWBUF(0)); continue;
+					case OpaDef.EMPTYSTR:  hitNext(p, "");        continue;
+					case OpaDef.EMPTYLIST: hitNext(p, []);        continue;
 
 					case OpaDef.NEGVARINT: initVarint(p, OpaDef.NEGVARINT, S_VARINT2); continue;
 					case OpaDef.POSVARINT: initVarint(p, OpaDef.POSVARINT, S_VARINT2); continue;
@@ -2178,16 +2178,6 @@ P.parseNext = function(b) {
 		}
 	}
 }
-
-// the following are the objects returned when the specified tag is parsed
-P.UndefinedObj  = undefined;
-P.NullObj       = null;
-P.FalseObj      = false;
-P.TrueObj       = true;
-P.ZeroIntObj    = 0;
-P.EmptyBinObj   = NEWBUF(0);
-P.EmptyStrObj   = "";
-P.EmptyArrayObj = [];
 
 // BUF2STR maps {utf-8 bytes -> strings} to avoid conversion (speed up) and improve
 // memory usage (prevent duplicate copies of same string)
