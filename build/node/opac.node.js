@@ -19,7 +19,7 @@ const BTOA = function(v) {
 
 var P;
 
-const VERSION = "0.1.20";
+const VERSION = "0.1.22";
 
 // #### Contents of BigDec.js ####
 
