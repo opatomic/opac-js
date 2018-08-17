@@ -49,11 +49,6 @@ deldir $TMPDIR
 mkdir $TMPDIR
 
 
-# increment the version build number; awk must write to temp file
-awk -F '.' '{printf("%d.%d.%d",$1,$2,$3+1)}' version.txt > newver.txt
-mv newver.txt version.txt
-VERSION=`cat version.txt`
-
 
 catHead "$OPACJSDIR/BigDec.js" "$TMPDIR/bundle.js"
 catHead "$OPACJSDIR/OpaDef.js" "$TMPDIR/bundle.js"

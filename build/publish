@@ -1,0 +1,17 @@
+#!/bin/bash
+
+
+
+# increment the version build number; awk must write to temp file
+awk -F '.' '{printf("%d.%d.%d",$1,$2,$3+1)}' version.txt > newver.txt
+mv newver.txt version.txt
+VERSION=`cat version.txt`
+
+
+./build
+
+git commit -m "build v$VERSION" version.txt browser/* node/*
+npm publish node
+
+echo published v$VERSION
+
