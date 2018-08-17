@@ -36,6 +36,8 @@ sock.connect(4567, "localhost", function() {
 	c.call("PING");
 	c.call("PING", null, echoResult);
 	c.call("ECHO", ["Hello"], echoResult);
+	c.call("ECHO", [[undefined, null, false, true, -1, 0, 1, "string", []]], echoResult);
+	
 	c.call("INCR", ["TESTkey", -4], echoResult);
 	c.call("INCR", ["TESTkey", new BigInteger("12345678901234567890")], echoResult);
 	
@@ -58,6 +60,7 @@ sock.connect(4567, "localhost", function() {
 	});
 	
 	// TODO: add example with bigdec
+	
 	c.call("QUIT");
 });
 
@@ -65,18 +68,12 @@ sock.connect(4567, "localhost", function() {
 
 
 ## API
-
-### newClient(socket)
-
-### client.call(opname[, args[, callback]])
-
-### client.callAsync(opname[, args[, callback]])
-
-### client.callPersistent(opname[, args[, callback]])
-
-### client.unregister(id)
-
-### client.cacheString(str)
+ - newClient(socket)
+ - client.call(opname[, args[, callback]])
+ - client.callAsync(opname[, args[, callback]])
+ - client.callPersistent(opname[, args[, callback]])
+ - client.unregister(id)
+ - client.cacheString(str)
 
 
 ## Serializer supported types
