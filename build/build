@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# to generate docs, must have node and jsdoc installed
-#  sudo npm install -g jsdoc
-
 # to minimize browser build, must have java 8+ installed, download 
 # closure compiler, and set $CCJAR to the jar file's path.
 #  https://github.com/google/closure-compiler
@@ -99,7 +96,6 @@ cat "$TMPDIR/bundle.js" >> "browser/opac.browser.js"
 cat "browser.foot.js" >> "browser/opac.browser.js"
 
 
-#TODO: node: readme.md?
 cat "node.head.js" > "node/opac.node.js"
 writeVersion "node/opac.node.js"
 cat "$TMPDIR/bundle.js" "node.foot.js" >> "node/opac.node.js"
