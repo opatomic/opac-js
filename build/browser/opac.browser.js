@@ -20,7 +20,7 @@ const BTOA = G.btoa;
 
 var P;
 
-const VERSION = "0.1.22";
+const VERSION = "0.1.23";
 
 // Deque (https://github.com/petkaantonov/deque):
 /**
@@ -2742,24 +2742,24 @@ function callId(c, cmd, args, cb, isP) {
  * @param {array} args - The parameters for the command
  * @param {responseCallback} cb - A callback function to invoke when the response is received
  */
-P.callAsync = function(cmd, args, cb) {
+P.callA = function(cmd, args, cb) {
 	callId(this, cmd, args, cb, 0);
 }
 
 /**
- * Same as callAsync() except that the callback can be invoked multiple times. Use this for subscriptions.
+ * Same as callA() except that the callback can be invoked multiple times. Use this for subscriptions.
  * @param {string} cmd - The command to run
  * @param {array} args - The parameters for the command
  * @param {responseCallback} cb - A callback function to invoke when the responses are received
  * @return {*} - The value that is used when calling unregister()
  */
-P.callPersistent = function(cmd, args, cb) {
+P.callAP = function(cmd, args, cb) {
 	return callId(this, cmd, args, cb, 1);
 }
 
 /**
  * Removes the specified async callback from the client. Use this when unsubscribing from a channel.
- * @param {*} id - The value that was returned from callPersistent()
+ * @param {*} id - The value that was returned from callAP()
  */
 P.unregister = function(id) {
 	return this.mAsyncCallbacks.delete(id);
