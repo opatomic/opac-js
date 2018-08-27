@@ -28,11 +28,11 @@ function runTest2(c) {
 	c.call("PING");
 	c.call("PING");
 	c.call("ECHO", [0], echoResult);
-	var sub1 = c.callPersistent("SUBSCRIBE", ["ch1"], echoResult);
+	var sub1 = c.callAP("SUBSCRIBE", ["ch1"], echoResult);
 	c.call("PUBLISH", ["ch1","msg1"], echoResult);
 	c.call("PUBLISH", ["ch1","msg2"], echoResult);
 	c.call("PUBLISH", ["ch2","msg3"], echoResult);
-	var sub2 = c.callPersistent("SUBSCRIBE", ["ch2"], echoResult);
+	var sub2 = c.callAP("SUBSCRIBE", ["ch2"], echoResult);
 	c.call("PUBLISH", ["ch2","msg4"], echoResult);
 	//c.call("QUIT");
 }

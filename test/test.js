@@ -23,7 +23,7 @@ function echoResult(result, err) {
 function bench(c, its, cmd, args) {
 	var t = new Date().getTime();
 	for (var i = 0; i < its - 1; ++i) {
-		c.callAsync(cmd, args, null);
+		c.callA(cmd, args, null);
 	}
 	c.call(cmd, args, function(result, err) {
 		if (err) {
@@ -164,7 +164,7 @@ function runTest(s) {
 	//c.call("ECHO", [Big("1.23e-3")], echoResult);
 	c.call("ECHO", [[undefined,null,false,true,-1,0,87687,new BigDec("-1.234e-450"),1.23,"str",[],[8762487264], binobj]], echoResult);
 	c.call("ECHO", [[new BigDec("123e456"),new BigDec("123e-456"),new BigDec("-123e456"),new BigDec("-123e-456")]], echoResult);
-	c.callAsync("ECHO", ["testing async callback id"], echoResult);
+	c.callA("ECHO", ["testing async callback id"], echoResult);
 	c.call("ECHO", [-1.23], echoResult);
 	c.flush();
 	

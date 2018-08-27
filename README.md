@@ -41,16 +41,16 @@ sock.connect(4567, "localhost", function() {
 	c.call("INCR", ["TESTkey", -4], echoResult);
 	c.call("INCR", ["TESTkey", new BigInteger("12345678901234567890")], echoResult);
 	
-	// callAsync() can be used for long running ops so they don't block responses
+	// callA() can be used for long running ops so they don't block responses
 	// note: op may still block other responses (depends on server implementation)
-	c.callAsync("SINTERSTORE", ["destkey", "set1", "set2"], echoResult);
+	c.callA("SINTERSTORE", ["destkey", "set1", "set2"], echoResult);
 	
 	c.call("ECHO", ["Hello", "ExtraArg!"], echoResult);
 	c.call("BADCMD", ["Hello"], echoResult);
 	
-	var chid = c.callPersistent("SUBSCRIBE", ["channelName"], echoResult);
+	var chid = c.callAP("SUBSCRIBE", ["channelName"], echoResult);
 	c.call("PUBLISH", ["channelName", "chan message"]);
-	c.callAsync("UNSUBSCRIBE", ["channelName"], function(result, err) {
+	c.callA("UNSUBSCRIBE", ["channelName"], function(result, err) {
 		if (err) {
 			console.log("Error: could not unsubscribe; " + err);
 		} else {
@@ -70,8 +70,8 @@ sock.connect(4567, "localhost", function() {
 ## API
  - newClient(socket)
  - client.call(opname[, args[, callback]])
- - client.callAsync(opname[, args[, callback]])
- - client.callPersistent(opname[, args[, callback]])
+ - client.callA(opname[, args[, callback]])
+ - client.callAP(opname[, args[, callback]])
  - client.unregister(id)
  - client.cacheString(str)
 
