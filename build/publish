@@ -8,7 +8,7 @@ mv newver.txt version.txt
 VERSION=`cat version.txt`
 
 
-./build
+./build --publish
 
 git commit -m "build v$VERSION" version.txt browser/* node/*
 npm publish node

@@ -6,6 +6,11 @@
 
 # TODO: support running closure compiler from within node?
 
+if [[ $# -eq 1 && $1 = "--publish" ]]; then
+	VERSUFF=
+else
+	VERSUFF=-dev
+fi
 
 CCJAR=~/Downloads/closure.compiler/closure-compiler-v20180204.jar
 OPACJSDIR=../src
@@ -26,9 +31,7 @@ function ensureDir {
 }
 
 function writeVersion {
-	printf "const VERSION = \"" >> "$1"
-	cat version.txt >> "$1"
-	printf "\";\n\n" >> "$1"
+	printf "const VERSION = \"$VERSION\";\n\n" >> "$1"
 }
 
 function catHead {
@@ -46,6 +49,7 @@ deldir $TMPDIR
 mkdir $TMPDIR
 
 VERSION=`cat version.txt`
+VERSION=$VERSION$VERSUFF
 
 
 catHead "$OPACJSDIR/BigDec.js" "$TMPDIR/bundle.js"
