@@ -56,27 +56,30 @@ catHead "$OPACJSDIR/OpaUtils.js" "$TMPDIR/bundle.js"
 catHead "$OPACJSDIR/StreamClient.js" "$TMPDIR/bundle.js"
 
 
-if [ -f $CCJAR ]; then
-	java -jar "$CCJAR" --js "$LIBDIR/deque/deque.js" --js_output_file "$TMPDIR/deque.min.js"
-	java -jar "$CCJAR" --js "$LIBDIR/jsbn/jsbn.js" --js "$LIBDIR/jsbn/jsbn2.js" --js_output_file "$TMPDIR/jsbn.min.js"
-	#java -jar "$CCJAR" --js "$TMPDIR/bundle.js" --js_output_file "$TMPDIR/bundle.min.js" -O WHITESPACE_ONLY
-	java -jar "$CCJAR" --js "$TMPDIR/bundle.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false
+printf "module = {exports:{}};\n(function(module){\n" > "$TMPDIR/deque.js"
+cat "$LIBDIR/deque/deque.js" >> "$TMPDIR/deque.js"
+printf "\n}(module));\nvar Deque = module.exports;\n" >> "$TMPDIR/deque.js"
 
+printf "var BigInteger = (function(){\n" > "$TMPDIR/jsbn.js"
+cat "$LIBDIR/jsbn/jsbn.js" "$LIBDIR/jsbn/jsbn2.js" >> "$TMPDIR/jsbn.js"
+printf "\nreturn BigInteger;\n}());\n" >> "$TMPDIR/jsbn.js"
+
+
+if [ -f $CCJAR ]; then
+	java -jar "$CCJAR" --js "$TMPDIR/deque.js" --js_output_file "$TMPDIR/deque.min.js"
+	java -jar "$CCJAR" --js "$TMPDIR/jsbn.js" --js_output_file "$TMPDIR/jsbn.min.js"
+	java -jar "$CCJAR" --js "$TMPDIR/bundle.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false
 
 	cat "browser.head.js" > "browser/opac.browser.min.js"
 	writeVersion "browser/opac.browser.min.js"
 	printf "/* Deque (https://github.com/petkaantonov/deque) LICENSE file:\n" >> "browser/opac.browser.min.js"
 	cat "$LIBDIR/deque/LICENSE" >> "browser/opac.browser.min.js"
-	printf "\n*/\n" >> "browser/opac.browser.min.js"
+	printf "*/\n" >> "browser/opac.browser.min.js"
 	cat "$TMPDIR/deque.min.js" >> "browser/opac.browser.min.js"
 	printf "\n\n/* BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/) LICENSE file: */\n" >> "browser/opac.browser.min.js"
-	cat "$LIBDIR/jsbn/LICENSE" >> "browser/opac.browser.min.js"
-	cat "$TMPDIR/jsbn.min.js" >> "browser/opac.browser.min.js"
+	cat "$LIBDIR/jsbn/LICENSE" "$TMPDIR/jsbn.min.js" >> "browser/opac.browser.min.js"
 	printf "\n\n" >> "browser/opac.browser.min.js"
-	cat "$TMPDIR/bundle.min.js" >> "browser/opac.browser.min.js"
-	cat "browser.foot.js" >> "browser/opac.browser.min.js"
-	
-	#cp "browser/opac.browser.min.js" "$SRCDIR/admin-browser/src/opac.browser.min.js"
+	cat "$TMPDIR/bundle.min.js" "browser.foot.js" >> "browser/opac.browser.min.js"
 else
 	echo "CCJAR not found. browser build will not minimize"
 	rm "browser/opac.browser.min.js"
@@ -86,14 +89,11 @@ fi
 cat "browser.head.js" > "browser/opac.browser.js"
 writeVersion "browser/opac.browser.js"
 printf "// Deque (https://github.com/petkaantonov/deque):\n" >> "browser/opac.browser.js"
-cat "$LIBDIR/deque/deque.js" >> "browser/opac.browser.js"
+cat "$TMPDIR/deque.js" >> "browser/opac.browser.js"
 printf "\n\n// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):\n" >> "browser/opac.browser.js"
-cat "$LIBDIR/jsbn/LICENSE" >> "browser/opac.browser.js"
-cat "$LIBDIR/jsbn/jsbn.js" >> "browser/opac.browser.js"
-cat "$LIBDIR/jsbn/jsbn2.js" >> "browser/opac.browser.js"
+cat "$LIBDIR/jsbn/LICENSE" "$TMPDIR/jsbn.js" >> "browser/opac.browser.js"
 printf "\n\n" >> "browser/opac.browser.js"
-cat "$TMPDIR/bundle.js" >> "browser/opac.browser.js"
-cat "browser.foot.js" >> "browser/opac.browser.js"
+cat "$TMPDIR/bundle.js" "browser.foot.js" >> "browser/opac.browser.js"
 
 
 cat "node.head.js" > "node/opac.node.js"
