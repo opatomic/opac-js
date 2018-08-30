@@ -5,23 +5,23 @@ function opaType(o) {
 	if (t == "object") {
 		if (o === null) {
 			return "null";
+		} else if (Array.isArray(o)) {
+			return "Array";
 		} else if (o === OpaDef.SORTMAX_OBJ) {
 			return "SORTMAX";
-		} else if (o.constructor.name == "BigInteger") {
+		} else if (o instanceof BigInteger) {
 			return "BigInteger";
-		} else if (o.constructor.name == "BigDec") {
+		} else if (o instanceof BigDec) {
 			return "BigDec";
 		} else if (o.constructor.name == "Uint8Array") {
 			return "Uint8Array";
 		} else if (o.constructor.name == "Buffer") {
 			return "Buffer";
-		} else if (Array.isArray(o)) {
-			return "Array";
 		} else {
 			return "object";
 		}
 		//throw "unknown object " + o.constructor.name + " " + o.toString();
-	} else if (t == "string" || t == "number" || t == "boolean" || t == "undefined") {
+	} else if (t == "string" || t == "number" || t == "boolean" || t == "undefined" || t == "bigint") {
 		return t;
 	}
 	throw "unknown object " + o.toString();

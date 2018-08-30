@@ -330,13 +330,15 @@ P.writeObject = function(v) {
 		case "object":
 			if (v === null) {
 				this.write1(OpaDef.NULL);
-			} else if (v === OpaDef.SORTMAX_OBJ) {
-				this.write1(OpaDef.SORTMAX);
+			} else if (v.toOpaSO && (typeof v.toOpaSO) == "function") {
+				v.toOpaSO(this);
 			} else if (Array.isArray(v)) {
 				this.writeArray(v);
-			} else if (v.constructor.name == "BigInteger") {
+			} else if (v === OpaDef.SORTMAX_OBJ) {
+				this.write1(OpaDef.SORTMAX);
+			} else if (v instanceof BigInteger) {
 				writeBigInt(this, v);
-			} else if (v.constructor.name == "BigDec") {
+			} else if (v instanceof BigDec) {
 				writeBigDec(this, v);
 			} else if (v.constructor.name == "Uint8Array" || v.constructor.name == "Buffer") {
 				if (v.length == 0) {
@@ -345,8 +347,6 @@ P.writeObject = function(v) {
 					writeTypeAndVarint(this, OpaDef.BINLPVI, v.length);
 					this.write(v);
 				}
-			} else if (typeof v.toOpaSO === "function") {
-				v.toOpaSO(this);
 			} else {
 				throw "unsupported object type " + v.constructor.name;
 			}
