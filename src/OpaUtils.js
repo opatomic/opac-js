@@ -5,6 +5,8 @@ function opaType(o) {
 	if (t == "object") {
 		if (o === null) {
 			return "null";
+		} else if (o === OpaDef.SORTMAX_OBJ) {
+			return "SORTMAX";
 		} else if (o.constructor.name == "BigInteger") {
 			return "BigInteger";
 		} else if (o.constructor.name == "BigDec") {
@@ -45,6 +47,8 @@ function opaStringify(obj, space, depth) {
 			return "undefined";
 		case "null":
 			return "null";
+		case "SORTMAX":
+			return "SORTMAX";
 		case "boolean":
 		case "number":
 		//case "BigInteger":

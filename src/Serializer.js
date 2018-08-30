@@ -330,6 +330,8 @@ P.writeObject = function(v) {
 		case "object":
 			if (v === null) {
 				this.write1(OpaDef.NULL);
+			} else if (v === OpaDef.SORTMAX_OBJ) {
+				this.write1(OpaDef.SORTMAX);
 			} else if (Array.isArray(v)) {
 				this.writeArray(v);
 			} else if (v.constructor.name == "BigInteger") {

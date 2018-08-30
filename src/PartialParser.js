@@ -202,6 +202,7 @@ P.parseNext = function(b) {
 					case OpaDef.EMPTYBIN:  hitNext(p, NEWBUF(0)); continue;
 					case OpaDef.EMPTYSTR:  hitNext(p, "");        continue;
 					case OpaDef.EMPTYLIST: hitNext(p, []);        continue;
+					case OpaDef.SORTMAX:   hitNext(p, OpaDef.SORTMAX_OBJ); continue;
 
 					case OpaDef.NEGVARINT: initVarint(p, OpaDef.NEGVARINT, S_VARINT2); continue;
 					case OpaDef.POSVARINT: initVarint(p, OpaDef.POSVARINT, S_VARINT2); continue;

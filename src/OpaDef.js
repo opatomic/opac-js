@@ -31,6 +31,10 @@ var OpaDef = {
 	STRLPVI      : CC("S"),
 
 	ARRAYSTART   : CC("["),
-	ARRAYEND     : CC("]")
+	ARRAYEND     : CC("]"),
+	
+	SORTMAX_OBJ  : {
+		toString: function(){return "SORTMAX";}
+	}
 };
 
