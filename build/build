@@ -6,12 +6,6 @@
 
 # TODO: support running closure compiler from within node?
 
-if [[ $# -eq 1 && $1 = "--publish" ]]; then
-	VERSUFF=
-else
-	VERSUFF=-dev
-fi
-
 CCJAR=~/Downloads/closure.compiler/closure-compiler-v20180204.jar
 OPACJSDIR=../src
 LIBDIR=../lib
@@ -47,6 +41,13 @@ ensureDir "node"
 
 deldir $TMPDIR
 mkdir $TMPDIR
+
+
+if [[ $# -eq 1 && $1 = "--publish" ]]; then
+	VERSUFF=
+else
+	VERSUFF=-dev
+fi
 
 VERSION=`cat version.txt`
 VERSION=$VERSION$VERSUFF
