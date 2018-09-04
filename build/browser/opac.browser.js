@@ -19,10 +19,13 @@ const STRDEC = function(b) {
 const BTOA = G.btoa;
 
 var P;
+var module;
 
-const VERSION = "0.1.23";
+const VERSION = "0.1.24";
 
 // Deque (https://github.com/petkaantonov/deque):
+module = {exports:{}};
+(function(module){
 /**
  * Copyright (c) 2013 Petka Antonov
  * 
@@ -44,7 +47,7 @@ const VERSION = "0.1.23";
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-//"use strict";
+"use strict";
 function Deque(capacity) {
     this._capacity = getCapacity(capacity);
     this._length = 0;
@@ -297,7 +300,11 @@ function getCapacity(capacity) {
     );
 }
 
-//module.exports = Deque;
+module.exports = Deque;
+
+
+}(module));
+var Deque = module.exports;
 
 
 // BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):
@@ -306,8 +313,7 @@ Licensing
 ---------
 
 This software is covered under the following copyright:
-*/
-/*
+
  * Copyright (c) 2003-2005  Tom Wu
  * All Rights Reserved.
  *
@@ -336,14 +342,14 @@ This software is covered under the following copyright:
  *
  * All redistributions must retain an intact copy of this copyright notice
  * and disclaimer.
- */
-/*
+
 Address all questions regarding this license to:
 
   Tom Wu
   tjw@cs.Stanford.EDU
 */
 
+var BigInteger = (function(){
 // Copyright (c) 2005  Tom Wu
 // All Rights Reserved.
 // See "LICENSE" for details.
@@ -1560,6 +1566,9 @@ BigInteger.prototype.square = bnSquare;
 // long longValue()
 // static BigInteger valueOf(long val)
 
+return BigInteger;
+}());
+
 
 // #### Contents of BigDec.js ####
 
@@ -1835,7 +1844,11 @@ var OpaDef = {
 	STRLPVI      : CC("S"),
 
 	ARRAYSTART   : CC("["),
-	ARRAYEND     : CC("]")
+	ARRAYEND     : CC("]"),
+	
+	SORTMAX_OBJ  : {
+		toString: function(){return "SORTMAX";}
+	}
 };
 
 // #### Contents of PartialParser.js ####
@@ -2044,6 +2057,7 @@ P.parseNext = function(b) {
 					case OpaDef.EMPTYBIN:  hitNext(p, NEWBUF(0)); continue;
 					case OpaDef.EMPTYSTR:  hitNext(p, "");        continue;
 					case OpaDef.EMPTYLIST: hitNext(p, []);        continue;
+					case OpaDef.SORTMAX:   hitNext(p, OpaDef.SORTMAX_OBJ); continue;
 
 					case OpaDef.NEGVARINT: initVarint(p, OpaDef.NEGVARINT, S_VARINT2); continue;
 					case OpaDef.POSVARINT: initVarint(p, OpaDef.POSVARINT, S_VARINT2); continue;
@@ -2517,11 +2531,15 @@ P.writeObject = function(v) {
 		case "object":
 			if (v === null) {
 				this.write1(OpaDef.NULL);
+			} else if (v.toOpaSO && (typeof v.toOpaSO) == "function") {
+				v.toOpaSO(this);
 			} else if (Array.isArray(v)) {
 				this.writeArray(v);
-			} else if (v.constructor.name == "BigInteger") {
+			} else if (v === OpaDef.SORTMAX_OBJ) {
+				this.write1(OpaDef.SORTMAX);
+			} else if (v instanceof BigInteger) {
 				writeBigInt(this, v);
-			} else if (v.constructor.name == "BigDec") {
+			} else if (v instanceof BigDec) {
 				writeBigDec(this, v);
 			} else if (v.constructor.name == "Uint8Array" || v.constructor.name == "Buffer") {
 				if (v.length == 0) {
@@ -2530,8 +2548,6 @@ P.writeObject = function(v) {
 					writeTypeAndVarint(this, OpaDef.BINLPVI, v.length);
 					this.write(v);
 				}
-			} else if (typeof v.toOpaSO === "function") {
-				v.toOpaSO(this);
 			} else {
 				throw "unsupported object type " + v.constructor.name;
 			}
@@ -2552,21 +2568,23 @@ function opaType(o) {
 	if (t == "object") {
 		if (o === null) {
 			return "null";
-		} else if (o.constructor.name == "BigInteger") {
+		} else if (Array.isArray(o)) {
+			return "Array";
+		} else if (o === OpaDef.SORTMAX_OBJ) {
+			return "SORTMAX";
+		} else if (o instanceof BigInteger) {
 			return "BigInteger";
-		} else if (o.constructor.name == "BigDec") {
+		} else if (o instanceof BigDec) {
 			return "BigDec";
 		} else if (o.constructor.name == "Uint8Array") {
 			return "Uint8Array";
 		} else if (o.constructor.name == "Buffer") {
 			return "Buffer";
-		} else if (Array.isArray(o)) {
-			return "Array";
 		} else {
 			return "object";
 		}
 		//throw "unknown object " + o.constructor.name + " " + o.toString();
-	} else if (t == "string" || t == "number" || t == "boolean" || t == "undefined") {
+	} else if (t == "string" || t == "number" || t == "boolean" || t == "undefined" || t == "bigint") {
 		return t;
 	}
 	throw "unknown object " + o.toString();
@@ -2592,6 +2610,8 @@ function opaStringify(obj, space, depth) {
 			return "undefined";
 		case "null":
 			return "null";
+		case "SORTMAX":
+			return "SORTMAX";
 		case "boolean":
 		case "number":
 		//case "BigInteger":
