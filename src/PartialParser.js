@@ -194,15 +194,15 @@ P.parseNext = function(b) {
 					return null;
 				}
 				switch (buff[idx++]) {
-					case OpaDef.UNDEFINED: hitNext(p, undefined); continue;
-					case OpaDef.NULL:      hitNext(p, null);      continue;
-					case OpaDef.FALSE:     hitNext(p, false);     continue;
-					case OpaDef.TRUE:      hitNext(p, true);      continue;
-					case OpaDef.ZERO:      hitNext(p, 0);         continue;
-					case OpaDef.EMPTYBIN:  hitNext(p, NEWBUF(0)); continue;
-					case OpaDef.EMPTYSTR:  hitNext(p, "");        continue;
-					case OpaDef.EMPTYLIST: hitNext(p, []);        continue;
-					case OpaDef.SORTMAX:   hitNext(p, OpaDef.SORTMAX_OBJ); continue;
+					case OpaDef.UNDEFINED:  hitNext(p, undefined); continue;
+					case OpaDef.NULL:       hitNext(p, null);      continue;
+					case OpaDef.FALSE:      hitNext(p, false);     continue;
+					case OpaDef.TRUE:       hitNext(p, true);      continue;
+					case OpaDef.ZERO:       hitNext(p, 0);         continue;
+					case OpaDef.EMPTYBIN:   hitNext(p, NEWBUF(0)); continue;
+					case OpaDef.EMPTYSTR:   hitNext(p, "");        continue;
+					case OpaDef.EMPTYARRAY: hitNext(p, []);        continue;
+					case OpaDef.SORTMAX:    hitNext(p, OpaDef.SORTMAX_OBJ); continue;
 
 					case OpaDef.NEGVARINT: initVarint(p, OpaDef.NEGVARINT, S_VARINT2); continue;
 					case OpaDef.POSVARINT: initVarint(p, OpaDef.POSVARINT, S_VARINT2); continue;

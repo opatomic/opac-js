@@ -11,7 +11,7 @@ var OpaDef = {
 	ZERO         : CC("O"),
 	EMPTYBIN     : CC("A"),
 	EMPTYSTR     : CC("R"),
-	EMPTYLIST    : CC("M"),
+	EMPTYARRAY   : CC("M"),
 	SORTMAX      : CC("Z"),
 
 	POSVARINT    : CC("D"),

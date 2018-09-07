@@ -295,7 +295,7 @@ P.writeString = function(v) {
 
 P.writeArray = function(v) {
 	if (v.length == 0) {
-		this.write1(OpaDef.EMPTYLIST);
+		this.write1(OpaDef.EMPTYARRAY);
 	} else {
 		this.write1(OpaDef.ARRAYSTART);
 		for (var i = 0; i < v.length; ++i) {
