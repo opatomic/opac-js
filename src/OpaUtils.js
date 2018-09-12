@@ -1,6 +1,5 @@
 
 function opaType(o) {
-	// TODO: handle sortmin, sortmax
 	var t = typeof o;
 	if (t == "object") {
 		if (o === null) {
