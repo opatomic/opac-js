@@ -172,6 +172,28 @@ P.onRecv = function(b) {
 }
 
 /**
+ * Call this method when connection is closed. All request callbacks that have not received a response
+ * will be notified of failure. Every persistent async callback will also be notified of failure.
+ */
+P.onClose = function() {
+	var tmp = this.mMainCallbacks;
+	while (tmp.length > 0) {
+		var cb = tmp.shift();
+		if (cb) {
+			cb(null, OpaDef.ERR_CLOSED);
+		}
+	}
+	
+	tmp = this.mAsyncCallbacks;
+	tmp.forEach(function(val, key, map) {
+		if (val) {
+			val(null, OpaDef.ERR_CLOSED);
+		}
+	});
+	tmp.clear();
+}
+
+/**
  * Cache the utf-8 bytes for a string in memory. Improves performance slightly by
  * avoiding an allocation + conversion every time the string is serialized or parsed.
  * Use for strings that are repeated often.

@@ -16,7 +16,11 @@ function newClient(s) {
 	s.on("data", function(b) {
 		c.onRecv(b);
 	});
-	
+
+	s.on("close", function(hadError) {
+		c.onClose();
+	});
+
 	return c;
 }
 

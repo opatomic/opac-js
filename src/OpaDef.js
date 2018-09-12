@@ -35,6 +35,8 @@ var OpaDef = {
 	
 	SORTMAX_OBJ  : {
 		toString: function(){return "SORTMAX";}
-	}
+	},
+
+	ERR_CLOSED : -16394
 };
 
