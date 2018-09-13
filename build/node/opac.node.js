@@ -19,7 +19,7 @@ const BTOA = function(v) {
 
 var P;
 
-const VERSION = "0.1.24";
+const VERSION = "0.1.25";
 
 // #### Contents of BigDec.js ####
 
@@ -275,7 +275,7 @@ var OpaDef = {
 	ZERO         : CC("O"),
 	EMPTYBIN     : CC("A"),
 	EMPTYSTR     : CC("R"),
-	EMPTYLIST    : CC("M"),
+	EMPTYARRAY   : CC("M"),
 	SORTMAX      : CC("Z"),
 
 	POSVARINT    : CC("D"),
@@ -299,7 +299,9 @@ var OpaDef = {
 	
 	SORTMAX_OBJ  : {
 		toString: function(){return "SORTMAX";}
-	}
+	},
+
+	ERR_CLOSED : -16394
 };
 
 // #### Contents of PartialParser.js ####
@@ -500,15 +502,15 @@ P.parseNext = function(b) {
 					return null;
 				}
 				switch (buff[idx++]) {
-					case OpaDef.UNDEFINED: hitNext(p, undefined); continue;
-					case OpaDef.NULL:      hitNext(p, null);      continue;
-					case OpaDef.FALSE:     hitNext(p, false);     continue;
-					case OpaDef.TRUE:      hitNext(p, true);      continue;
-					case OpaDef.ZERO:      hitNext(p, 0);         continue;
-					case OpaDef.EMPTYBIN:  hitNext(p, NEWBUF(0)); continue;
-					case OpaDef.EMPTYSTR:  hitNext(p, "");        continue;
-					case OpaDef.EMPTYLIST: hitNext(p, []);        continue;
-					case OpaDef.SORTMAX:   hitNext(p, OpaDef.SORTMAX_OBJ); continue;
+					case OpaDef.UNDEFINED:  hitNext(p, undefined); continue;
+					case OpaDef.NULL:       hitNext(p, null);      continue;
+					case OpaDef.FALSE:      hitNext(p, false);     continue;
+					case OpaDef.TRUE:       hitNext(p, true);      continue;
+					case OpaDef.ZERO:       hitNext(p, 0);         continue;
+					case OpaDef.EMPTYBIN:   hitNext(p, NEWBUF(0)); continue;
+					case OpaDef.EMPTYSTR:   hitNext(p, "");        continue;
+					case OpaDef.EMPTYARRAY: hitNext(p, []);        continue;
+					case OpaDef.SORTMAX:    hitNext(p, OpaDef.SORTMAX_OBJ); continue;
 
 					case OpaDef.NEGVARINT: initVarint(p, OpaDef.NEGVARINT, S_VARINT2); continue;
 					case OpaDef.POSVARINT: initVarint(p, OpaDef.POSVARINT, S_VARINT2); continue;
@@ -947,7 +949,7 @@ P.writeString = function(v) {
 
 P.writeArray = function(v) {
 	if (v.length == 0) {
-		this.write1(OpaDef.EMPTYLIST);
+		this.write1(OpaDef.EMPTYARRAY);
 	} else {
 		this.write1(OpaDef.ARRAYSTART);
 		for (var i = 0; i < v.length; ++i) {
@@ -1014,7 +1016,6 @@ P.STR2BUF = new Map();
 
 
 function opaType(o) {
-	// TODO: handle sortmin, sortmax
 	var t = typeof o;
 	if (t == "object") {
 		if (o === null) {
@@ -1279,6 +1280,28 @@ P.onRecv = function(b) {
 }
 
 /**
+ * Call this method when connection is closed. All request callbacks that have not received a response
+ * will be notified of failure. Every persistent async callback will also be notified of failure.
+ */
+P.onClose = function() {
+	var tmp = this.mMainCallbacks;
+	while (tmp.length > 0) {
+		var cb = tmp.shift();
+		if (cb) {
+			cb(null, OpaDef.ERR_CLOSED);
+		}
+	}
+	
+	tmp = this.mAsyncCallbacks;
+	tmp.forEach(function(val, key, map) {
+		if (val) {
+			val(null, OpaDef.ERR_CLOSED);
+		}
+	});
+	tmp.clear();
+}
+
+/**
  * Cache the utf-8 bytes for a string in memory. Improves performance slightly by
  * avoiding an allocation + conversion every time the string is serialized or parsed.
  * Use for strings that are repeated often.
@@ -1312,7 +1335,11 @@ function newClient(s) {
 	s.on("data", function(b) {
 		c.onRecv(b);
 	});
-	
+
+	s.on("close", function(hadError) {
+		c.onClose();
+	});
+
 	return c;
 }
 
