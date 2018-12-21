@@ -220,7 +220,7 @@ function writeBigDec(s, v) {
 	}
 }
 
-P = Serializer.prototype;
+var P = Serializer.prototype;
 
 P.write1 = function(v) {
 	if (this.i >= this.b.length) {

@@ -19,10 +19,9 @@ function StreamClient(o) {
 	this.mParser = new PartialParser();
 	this.mBuff = this.mParser.newBuff();
 	this.mTimeout = null;
-	this.mCmdCache = new Map();
 }
 
-P = StreamClient.prototype;
+var P = StreamClient.prototype;
 
 function schedTimeout(c) {
 	if (c.mTimeout === null) {
@@ -35,13 +34,8 @@ function schedTimeout(c) {
 }
 
 function writeCommand(c, cmd) {
-	var b = c.mCmdCache != null ? c.mCmdCache.get(cmd) : STRENC(cmd);
-	if (!b) {
-		b = STRENC(cmd);
-		c.mCmdCache.set(cmd, b);
-	}
-	writeTypeAndVarint(c.s, OpaDef.STRLPVI, b.length);
-	c.s.write(b);
+	// note: command cache was removed. STR2BUF (in Serializer) can be used instead
+	c.s.writeString(cmd);
 }
 
 function callNoResponse(c, cmd, args) {

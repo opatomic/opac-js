@@ -147,7 +147,7 @@ function div(a, b, q, r) {
 	}
 }
 
-P = BigDec.prototype;
+var P = BigDec.prototype;
 
 P.abs = function() {
 	return this.m.signum() < 0 ? new BigDec(this.m.abs(), this.e) : this;

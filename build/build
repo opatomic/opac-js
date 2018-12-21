@@ -35,6 +35,12 @@ function catHead {
 	cat "$1" >> "$2"
 }
 
+function catObjClosure {
+	printf "var $1 = (function(){\n" >> $3
+	catHead $2 $3
+	printf "return $1;\n}());\n\n" >> $3
+}
+
 
 ensureDir "browser"
 ensureDir "node"
@@ -53,12 +59,12 @@ VERSION=`cat version.txt`
 VERSION=$VERSION$VERSUFF
 
 
-catHead "$OPACJSDIR/BigDec.js" "$TMPDIR/bundle.js"
-catHead "$OPACJSDIR/OpaDef.js" "$TMPDIR/bundle.js"
-catHead "$OPACJSDIR/PartialParser.js" "$TMPDIR/bundle.js"
-catHead "$OPACJSDIR/Serializer.js" "$TMPDIR/bundle.js"
+catObjClosure "BigDec" "$OPACJSDIR/BigDec.js" "$TMPDIR/bundle.js"
+catObjClosure "OpaDef" "$OPACJSDIR/OpaDef.js" "$TMPDIR/bundle.js"
+catObjClosure "PartialParser" "$OPACJSDIR/PartialParser.js" "$TMPDIR/bundle.js"
+catObjClosure "Serializer" "$OPACJSDIR/Serializer.js" "$TMPDIR/bundle.js"
 catHead "$OPACJSDIR/OpaUtils.js" "$TMPDIR/bundle.js"
-catHead "$OPACJSDIR/StreamClient.js" "$TMPDIR/bundle.js"
+catObjClosure "StreamClient" "$OPACJSDIR/StreamClient.js" "$TMPDIR/bundle.js"
 
 
 printf "module = {exports:{}};\n(function(module){\n" > "$TMPDIR/deque.js"

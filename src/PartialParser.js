@@ -173,7 +173,7 @@ function clearBytes(p) {
 	}
 }
 
-P = PartialParser.prototype;
+var P = PartialParser.prototype;
 
 P.newBuff = function() {
 	return {data: null, idx: 0, len: 0};

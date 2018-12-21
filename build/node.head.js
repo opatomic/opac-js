@@ -17,5 +17,3 @@ const BTOA = function(v) {
 	return Buffer.from(v).toString("base64");
 }
 
-var P;
-
