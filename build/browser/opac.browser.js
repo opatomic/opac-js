@@ -18,10 +18,9 @@ const STRDEC = function(b) {
 }
 const BTOA = G.btoa;
 
-var P;
 var module;
 
-const VERSION = "0.1.25";
+const VERSION = "0.1.26";
 
 // Deque (https://github.com/petkaantonov/deque):
 module = {exports:{}};
@@ -1570,6 +1569,7 @@ return BigInteger;
 }());
 
 
+var BigDec = (function(){
 // #### Contents of BigDec.js ####
 
 // dependencies: BigInteger
@@ -1721,7 +1721,7 @@ function div(a, b, q, r) {
 	}
 }
 
-P = BigDec.prototype;
+var P = BigDec.prototype;
 
 P.abs = function() {
 	return this.m.signum() < 0 ? new BigDec(this.m.abs(), this.e) : this;
@@ -1809,6 +1809,10 @@ P.toString = function() {
 	return s;
 }
 
+return BigDec;
+}());
+
+var OpaDef = (function(){
 // #### Contents of OpaDef.js ####
 
 
@@ -1853,6 +1857,10 @@ var OpaDef = {
 	ERR_CLOSED : -16394
 };
 
+return OpaDef;
+}());
+
+var PartialParser = (function(){
 // #### Contents of PartialParser.js ####
 
 // Dependencies: BigInteger, BigDec, OpaDef, NEWBUF, STRDEC
@@ -2030,7 +2038,7 @@ function clearBytes(p) {
 	}
 }
 
-P = PartialParser.prototype;
+var P = PartialParser.prototype;
 
 P.newBuff = function() {
 	return {data: null, idx: 0, len: 0};
@@ -2199,6 +2207,10 @@ P.parseNext = function(b) {
 // memory usage (prevent duplicate copies of same string)
 P.BUF2STR = new Map();
 
+return PartialParser;
+}());
+
+var Serializer = (function(){
 // #### Contents of Serializer.js ####
 
 // Dependencies: BigInteger, BigDec, OpaDef, NEWBUF, STRENC
@@ -2423,7 +2435,7 @@ function writeBigDec(s, v) {
 	}
 }
 
-P = Serializer.prototype;
+var P = Serializer.prototype;
 
 P.write1 = function(v) {
 	if (this.i >= this.b.length) {
@@ -2561,6 +2573,9 @@ P.writeObject = function(v) {
 
 P.STR2BUF = new Map();
 
+return Serializer;
+}());
+
 // #### Contents of OpaUtils.js ####
 
 
@@ -2653,6 +2668,7 @@ function opaStringify(obj, space, depth) {
 	throw "unhandled case in switch";
 }
 
+var StreamClient = (function(){
 // #### Contents of StreamClient.js ####
 
 // dependencies: STRENC PartialParser Serializer Deque Map
@@ -2676,10 +2692,9 @@ function StreamClient(o) {
 	this.mParser = new PartialParser();
 	this.mBuff = this.mParser.newBuff();
 	this.mTimeout = null;
-	this.mCmdCache = new Map();
 }
 
-P = StreamClient.prototype;
+var P = StreamClient.prototype;
 
 function schedTimeout(c) {
 	if (c.mTimeout === null) {
@@ -2692,13 +2707,8 @@ function schedTimeout(c) {
 }
 
 function writeCommand(c, cmd) {
-	var b = c.mCmdCache != null ? c.mCmdCache.get(cmd) : STRENC(cmd);
-	if (!b) {
-		b = STRENC(cmd);
-		c.mCmdCache.set(cmd, b);
-	}
-	writeTypeAndVarint(c.s, OpaDef.STRLPVI, b.length);
-	c.s.write(b);
+	// note: command cache was removed. STR2BUF (in Serializer) can be used instead
+	c.s.writeString(cmd);
 }
 
 function callNoResponse(c, cmd, args) {
@@ -2865,6 +2875,9 @@ P.cacheString = function(s) {
 		this.s.STR2BUF.set(s, b);
 	}
 }
+
+return StreamClient;
+}());
 
 
 var E = G.Opatomic = {};
