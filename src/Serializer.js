@@ -356,5 +356,5 @@ P.writeObject = function(v) {
 	}
 }
 
-P.STR2BUF = new Map();
+P.STR2BUF = (typeof Map == "undefined") ? null : new Map();
 

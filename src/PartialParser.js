@@ -340,5 +340,5 @@ P.parseNext = function(b) {
 
 // BUF2STR maps {utf-8 bytes -> strings} to avoid conversion (speed up) and improve
 // memory usage (prevent duplicate copies of same string)
-P.BUF2STR = new Map();
+P.BUF2STR = (typeof Map == "undefined") ? null : new Map();
 
