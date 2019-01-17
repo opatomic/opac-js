@@ -150,12 +150,12 @@ function writeBIAsVI(s, t, v) {
 		writeBIAsVI(s, t, TMPBI2);
 		return;
 	}
-	
+
 	ensureSpace(s, 10);
 	if (t != 0) {
 		s.b[s.i++] = t;
 	}
-	
+
 	if (v.compareTo(BIGINT31) > 0) {
 		if (v != TMPBI2) {
 			v.copyTo(TMPBI2);
@@ -166,7 +166,7 @@ function writeBIAsVI(s, t, v) {
 			v.rShiftTo(7, v);
 		}
 	}
-	
+
 	v = v.intValue();
 	while (v > 0x7F) {
 		s.b[s.i++] = 0x80 | (v & 0xFF);
@@ -248,7 +248,7 @@ P.flush = function() {
 	}
 }
 
-P.writeNumber = function(v) {	
+P.writeNumber = function(v) {
 	if (Number.isSafeInteger(v)) {
 		if (v > 0) {
 			writeTypeAndVarint(this, OpaDef.POSVARINT, v);

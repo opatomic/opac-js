@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# to minimize browser build, must have java 8+ installed, download 
+# to minimize browser build, must have java 8+ installed, download
 # closure compiler, and set $CCJAR to the jar file's path.
 #  https://github.com/google/closure-compiler
 

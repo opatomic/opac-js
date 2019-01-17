@@ -108,7 +108,7 @@ function mul3(a, b, r) {
 		} else if (a.e < b.e) {
 			b = extend(b, b.e - a.e);
 		}
-		
+
 		a.m.multiplyTo(b.m, r.m);
 		r.e = r.m.signum() == 0 ? 0 : a.e + b.e;
 	}
@@ -139,7 +139,7 @@ function div(a, b, q, r) {
 		} else if (a.e < b.e) {
 			b = extend(b, b.e - a.e);
 		}
-		
+
 		// TODO: is this correct?
 		a.m.divRemTo(b.m, q.m, r.m);
 		q.e = 0;
@@ -171,9 +171,9 @@ P.compareTo = function(b) {
 	} else if (b.m.s < 0) {
 		return 1;
 	}
-	
-	// TODO: if exp's are not equal, can estimate comparison based on number of bits 
-	//  each power of ten is worth which could prevent having to multiply and extend 
+
+	// TODO: if exp's are not equal, can estimate comparison based on number of bits
+	//  each power of ten is worth which could prevent having to multiply and extend
 	//  a value until exponents are equal
 	if (this.e == b.e) {
 		return this.m.compareTo(b.m);

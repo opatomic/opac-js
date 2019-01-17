@@ -32,7 +32,7 @@ var OpaDef = {
 
 	ARRAYSTART   : CC("["),
 	ARRAYEND     : CC("]"),
-	
+
 	SORTMAX_OBJ  : {
 		toString: function(){return "SORTMAX";}
 	},

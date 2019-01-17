@@ -122,9 +122,9 @@ function bigIntFromNumber(n) {
 	if (!Number.isSafeInteger(n)) {
 		throw "arg is not safe integer";
 	}
-	
+
 	//return new BigInteger(n.toString(16), 16);
-	
+
 	var val = new BigInteger(null);
 	val.s = 0;
 	val.t = 1;
@@ -219,10 +219,10 @@ P.parseNext = function(b) {
 					case OpaDef.POSNEGBIGDEC: initVarint(p, OpaDef.POSNEGBIGDEC, S_BIGDEC1); continue;
 					case OpaDef.NEGPOSBIGDEC: initVarint(p, OpaDef.NEGPOSBIGDEC, S_BIGDEC1); continue;
 					case OpaDef.NEGNEGBIGDEC: initVarint(p, OpaDef.NEGNEGBIGDEC, S_BIGDEC1); continue;
-					
+
 					case OpaDef.BINLPVI: initBytes(p, OpaDef.BINLPVI, S_BLOB); continue;
 					case OpaDef.STRLPVI: initBytes(p, OpaDef.STRLPVI, S_STR ); continue;
-					
+
 					case OpaDef.ARRAYSTART:
 						if (p.mCurrCont != null) {
 							p.mContainers.push(p.mCurrCont);
@@ -247,7 +247,7 @@ P.parseNext = function(b) {
 					default:
 						throwErr(p, "unknown char");
 				}
-				
+
 			case S_VARINT1:
 				while (true) {
 					if (idx >= stop) {
@@ -292,7 +292,7 @@ P.parseNext = function(b) {
 				clearBytes(p);
 				p.mState = S_NEXTOBJ;
 				continue;
-				
+
 			case S_VARDEC1:
 				p.mDecExp = getVarint32(p, p.mObjType == OpaDef.NEGPOSVARDEC || p.mObjType == OpaDef.NEGNEGVARDEC);
 				initVarint(p, p.mObjType, S_VARDEC2);
@@ -303,7 +303,7 @@ P.parseNext = function(b) {
 				hitNext(p, new BigDec(m, p.mDecExp));
 				p.mState = S_NEXTOBJ;
 				continue;
-				
+
 			case S_BIGDEC1:
 				p.mDecExp = getVarint32(p, p.mObjType == OpaDef.NEGPOSBIGDEC || p.mObjType == OpaDef.NEGNEGBIGDEC);
 				initBytes(p, p.mObjType, S_BIGDEC2);
@@ -315,7 +315,7 @@ P.parseNext = function(b) {
 				clearBytes(p);
 				p.mState = S_NEXTOBJ;
 				continue;
-				
+
 			case S_BLOB:
 				// TODO: if p.mBytes.length is large then the subarray will be larger than needed
 				//   create smaller array and copy data to smaller array??
@@ -331,7 +331,7 @@ P.parseNext = function(b) {
 				clearBytes(p);
 				p.mState = S_NEXTOBJ;
 				continue;
-				
+
 			default:
 				throwErr(p, "unknown state");
 		}

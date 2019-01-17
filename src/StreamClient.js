@@ -9,7 +9,7 @@
 
 /**
  * Create new StreamClient.
- * @param o - Object that has a write() and flush() method. 
+ * @param o - Object that has a write() and flush() method.
  */
 function StreamClient(o) {
 	this.s = new Serializer(o);
@@ -81,7 +81,7 @@ P.call = function(cmd, args, cb) {
 function callId(c, cmd, args, cb, isP) {
 	++c.id;
 	var id = isP ? 0 - c.id : c.id;
-	
+
 	c.s.write1(OpaDef.ARRAYSTART);
 	writeCommand(c, cmd);
 	c.s.writeObject(args);
@@ -93,8 +93,8 @@ function callId(c, cmd, args, cb, isP) {
 }
 
 /**
- * Sends the specified command and args to the server with an async id. Using an async id indicates to the 
- * server that the operation response can be sent out of order. Invokes the specified callback when a 
+ * Sends the specified command and args to the server with an async id. Using an async id indicates to the
+ * server that the operation response can be sent out of order. Invokes the specified callback when a
  * response is received.
  * @param {string} cmd - The command to run
  * @param {array} args - The parameters for the command
@@ -177,7 +177,7 @@ P.onClose = function() {
 			cb(null, OpaDef.ERR_CLOSED);
 		}
 	}
-	
+
 	tmp = this.mAsyncCallbacks;
 	tmp.forEach(function(val, key, map) {
 		if (val) {
