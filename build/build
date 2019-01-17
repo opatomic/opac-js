@@ -59,6 +59,7 @@ VERSION=`cat version.txt`
 VERSION=$VERSION$VERSUFF
 
 
+writeVersion "$TMPDIR/bundle.js"
 catObjClosure "BigDec" "$OPACJSDIR/BigDec.js" "$TMPDIR/bundle.js"
 catObjClosure "OpaDef" "$OPACJSDIR/OpaDef.js" "$TMPDIR/bundle.js"
 catObjClosure "PartialParser" "$OPACJSDIR/PartialParser.js" "$TMPDIR/bundle.js"
@@ -76,13 +77,13 @@ cat "$LIBDIR/jsbn/jsbn.js" "$LIBDIR/jsbn/jsbn2.js" >> "$TMPDIR/jsbn.js"
 printf "\nreturn BigInteger;\n}());\n" >> "$TMPDIR/jsbn.js"
 
 
+rm "browser/opac.browser.min.js"
 if [ -f $CCJAR ]; then
 	java -jar "$CCJAR" --js "$TMPDIR/deque.js" --js_output_file "$TMPDIR/deque.min.js"
 	java -jar "$CCJAR" --js "$TMPDIR/jsbn.js" --js_output_file "$TMPDIR/jsbn.min.js"
 	java -jar "$CCJAR" --js "$TMPDIR/bundle.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false
 
 	cat "browser.head.js" > "browser/opac.browser.min.js"
-	writeVersion "browser/opac.browser.min.js"
 	printf "/* Deque (https://github.com/petkaantonov/deque) LICENSE file:\n" >> "browser/opac.browser.min.js"
 	cat "$LIBDIR/deque/LICENSE" >> "browser/opac.browser.min.js"
 	printf "*/\n" >> "browser/opac.browser.min.js"
@@ -93,12 +94,10 @@ if [ -f $CCJAR ]; then
 	cat "$TMPDIR/bundle.min.js" "browser.foot.js" >> "browser/opac.browser.min.js"
 else
 	echo "CCJAR not found. browser build will not minimize"
-	rm "browser/opac.browser.min.js"
 fi
 
 
 cat "browser.head.js" > "browser/opac.browser.js"
-writeVersion "browser/opac.browser.js"
 printf "// Deque (https://github.com/petkaantonov/deque):\n" >> "browser/opac.browser.js"
 cat "$TMPDIR/deque.js" >> "browser/opac.browser.js"
 printf "\n\n// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):\n" >> "browser/opac.browser.js"
@@ -108,7 +107,6 @@ cat "$TMPDIR/bundle.js" "browser.foot.js" >> "browser/opac.browser.js"
 
 
 cat "node.head.js" > "node/opac.node.js"
-writeVersion "node/opac.node.js"
 cat "$TMPDIR/bundle.js" "node.foot.js" >> "node/opac.node.js"
 sed -e "s/\\\$VERSION/$VERSION/" "package.json" > "node/package.json"
 cp "../README.md" "node/README.md"
