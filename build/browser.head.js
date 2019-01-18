@@ -18,5 +18,3 @@ const STRDEC = function(b) {
 }
 const BTOA = G.btoa;
 
-var module;
-

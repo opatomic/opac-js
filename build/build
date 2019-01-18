@@ -68,9 +68,9 @@ catHead "$OPACJSDIR/OpaUtils.js" "$TMPDIR/bundle.js"
 catObjClosure "StreamClient" "$OPACJSDIR/StreamClient.js" "$TMPDIR/bundle.js"
 
 
-printf "module = {exports:{}};\n(function(module){\n" > "$TMPDIR/deque.js"
+printf "var Deque = (function(){var module = {}; (function(){\n" > "$TMPDIR/deque.js"
 cat "$LIBDIR/deque/deque.js" >> "$TMPDIR/deque.js"
-printf "\n}(module));\nvar Deque = module.exports;\n" >> "$TMPDIR/deque.js"
+printf "\n}());return module.exports;}());" >> "$TMPDIR/deque.js"
 
 printf "var BigInteger = (function(){\n" > "$TMPDIR/jsbn.js"
 cat "$LIBDIR/jsbn/jsbn.js" "$LIBDIR/jsbn/jsbn2.js" >> "$TMPDIR/jsbn.js"
