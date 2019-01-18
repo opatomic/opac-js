@@ -79,31 +79,31 @@ printf "\nreturn BigInteger;\n}());\n" >> "$TMPDIR/jsbn.js"
 
 rm "browser/opac.browser.min.js"
 if [ -f $CCJAR ]; then
-	java -jar "$CCJAR" --js "$TMPDIR/deque.js" --js_output_file "$TMPDIR/deque.min.js"
-	java -jar "$CCJAR" --js "$TMPDIR/jsbn.js" --js_output_file "$TMPDIR/jsbn.min.js"
-	java -jar "$CCJAR" --js "$TMPDIR/bundle.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false
+	java -jar "$CCJAR" --js "browser.head.js" "$TMPDIR/deque.js" "$TMPDIR/jsbn.js" "$TMPDIR/bundle.js" "browser.foot.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false --isolation_mode IIFE
 
-	cat "browser.head.js" > "browser/opac.browser.min.js"
+	printf "// Minimized and bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n\n" >> "browser/opac.browser.min.js"
 	printf "/* Deque (https://github.com/petkaantonov/deque) LICENSE file:\n" >> "browser/opac.browser.min.js"
 	cat "$LIBDIR/deque/LICENSE" >> "browser/opac.browser.min.js"
 	printf "*/\n" >> "browser/opac.browser.min.js"
-	cat "$TMPDIR/deque.min.js" >> "browser/opac.browser.min.js"
 	printf "\n\n/* BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/) LICENSE file: */\n" >> "browser/opac.browser.min.js"
-	cat "$LIBDIR/jsbn/LICENSE" "$TMPDIR/jsbn.min.js" >> "browser/opac.browser.min.js"
+	cat "$LIBDIR/jsbn/LICENSE" >> "browser/opac.browser.min.js"
 	printf "\n\n" >> "browser/opac.browser.min.js"
-	cat "$TMPDIR/bundle.min.js" "browser.foot.js" >> "browser/opac.browser.min.js"
+	cat "$TMPDIR/bundle.min.js" >> "browser/opac.browser.min.js"
 else
 	echo "CCJAR not found. browser build will not minimize"
 fi
 
 
-cat "browser.head.js" > "browser/opac.browser.js"
+printf "// Bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n" > "browser/opac.browser.js"
+printf "(function(){\n" >> "browser/opac.browser.js"
+cat "browser.head.js" >> "browser/opac.browser.js"
 printf "// Deque (https://github.com/petkaantonov/deque):\n" >> "browser/opac.browser.js"
 cat "$TMPDIR/deque.js" >> "browser/opac.browser.js"
 printf "\n\n// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):\n" >> "browser/opac.browser.js"
 cat "$LIBDIR/jsbn/LICENSE" "$TMPDIR/jsbn.js" >> "browser/opac.browser.js"
 printf "\n\n" >> "browser/opac.browser.js"
 cat "$TMPDIR/bundle.js" "browser.foot.js" >> "browser/opac.browser.js"
+printf "})();\n" >> "browser/opac.browser.js"
 
 
 cat "node.head.js" > "node/opac.node.js"

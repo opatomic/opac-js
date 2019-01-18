@@ -1,10 +1,4 @@
-;(function(G){
-
 "use strict";
-
-// Source code for opatomic client
-// see https://github.com/opatomic/opac-js for more info
-
 const NEWBUF = function(l) {
 	return new Uint8Array(l);
 }
@@ -16,5 +10,5 @@ const DECODER = new TextDecoder("utf-8");
 const STRDEC = function(b) {
 	return DECODER.decode(b);
 }
-const BTOA = G.btoa;
+const BTOA = window.btoa;
 
