@@ -12,6 +12,11 @@ LIBDIR=../lib
 TMPDIR=tmp
 
 
+if [ ! -f $CCJAR ]; then
+	# if $CCJAR file does not exist, search current directory for CC
+	CCJAR=`find *closure*compiler*.jar | tail -1`
+fi
+
 function deldir {
 	if [ -d "$1" ]; then
 		rm -r "$1"
