@@ -1,7 +1,7 @@
 // dependencies: STRENC PartialParser Serializer Deque Map
 
 /**
- * @callback responseCallback
+ * @callback ResponseCallback
  * @param {Object} result - The result of the operation. Can be null.
  * @param {Object} error  - If response is an error then result is null and error is non-null
  */
@@ -61,8 +61,8 @@ P.flush = function() {
 /**
  * Sends the specified command and args to the server. Invokes the specified callback when a response is received.
  * @param {string} cmd - The command to run
- * @param {array} args - The parameters for the command
- * @param {responseCallback} cb - A callback function to invoke when the response is received
+ * @param {Array=} args - The parameters for the command
+ * @param {ResponseCallback=} cb - A callback function to invoke when the response is received
  */
 P.call = function(cmd, args, cb) {
 	if (!cb) {
@@ -97,8 +97,8 @@ function callId(c, cmd, args, cb, isP) {
  * server that the operation response can be sent out of order. Invokes the specified callback when a
  * response is received.
  * @param {string} cmd - The command to run
- * @param {array} args - The parameters for the command
- * @param {responseCallback} cb - A callback function to invoke when the response is received
+ * @param {!Array} args - The parameters for the command
+ * @param {!ResponseCallback} cb - A callback function to invoke when the response is received
  */
 P.callA = function(cmd, args, cb) {
 	callId(this, cmd, args, cb, 0);
@@ -107,8 +107,8 @@ P.callA = function(cmd, args, cb) {
 /**
  * Same as callA() except that the callback can be invoked multiple times. Use this for subscriptions.
  * @param {string} cmd - The command to run
- * @param {array} args - The parameters for the command
- * @param {responseCallback} cb - A callback function to invoke when the responses are received
+ * @param {!Array} args - The parameters for the command
+ * @param {!ResponseCallback} cb - A callback function to invoke when the responses are received
  * @return {*} - The value that is used when calling unregister()
  */
 P.callAP = function(cmd, args, cb) {
