@@ -73,7 +73,7 @@ sock.connect(4567, "localhost", function() {
  - client.callA(opname[, args[, callback]])
  - client.callAP(opname[, args[, callback]])
  - client.unregister(id)
- - client.cacheString(str)
+ - cacheString(str)
 
 
 ## Serializer supported types

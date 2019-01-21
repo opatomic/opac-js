@@ -187,19 +187,3 @@ P.onClose = function() {
 	tmp.clear();
 }
 
-/**
- * Cache the utf-8 bytes for a string in memory. Improves performance slightly by
- * avoiding an allocation + conversion every time the string is serialized or parsed.
- * Use for strings that are repeated often.
- * @param {string} s - The string to cache
- */
-P.cacheString = function(s) {
-	var b = STRENC(s);
-	if (this.mParser.BUF2STR) {
-		this.mParser.BUF2STR.set(b, s);
-	}
-	if (this.s.STR2BUF) {
-		this.s.STR2BUF.set(s, b);
-	}
-}
-
