@@ -57,7 +57,7 @@ function benchParser(obj, its) {
 	c.flush();
 	console.log("buff len: " + buffLen);
 	console.log(buff.subarray(0, buffLen));
-	
+
 	var pp = new PartialParser();
 	var pb = new PartialParser.Buff();
 	pb.data = buff;
@@ -82,11 +82,11 @@ function benchEnc() {
 	writer.on = function() {
 	}
 	var c = libopac.newClient(writer);
-	
+
 	var its = 1000000;
-	
+
 	libopac.cacheString("hello");
-	
+
 	//bench(c, its, "ECHO", [new BigDec("2147483647")]);
 	//bench(c, its, "ECHO", [new BigDec("0")]);
 	//bench(c, its, "ECHO", [new BigDec("12345")]);
@@ -100,7 +100,7 @@ function benchEnc() {
 	//bench(c, 100000, "ECHO", [new BigDec("-89237487234723984789237489237849723984728347982378947")]);
 	//bench(c, 100000, "ECHO", [new BigInteger("89237487234723984789237489237849723984728347982378947")]);
 	//bench(c, 100000, "ECHO", [new BigInteger("-89237487234723984789237489237849723984728347982378947")]);
-	
+
 	//bench(c, its, "ECHO", [undefined]);
 	//bench(c, its, "ECHO", [null]);
 	//bench(c, its, "ECHO", [false]);
@@ -121,22 +121,22 @@ function benchEnc() {
 	//bench(c, its, "ECHO", [new BigDec("9223372036854775807")]);
 	//bench(c, its, "ECHO", [new BigInteger("922337203685477580700")]);
 	//bench(c, its, "ECHO", [new BigDec("89237487234723984789237489237849723984728347982378947.1")]);
-	
+
 	//bench(c, its, "ECHO", [new BigInteger((Number.MIN_SAFE_INTEGER).toString())]);
 	//bench(c, its, "ECHO", [new BigInteger((Number.MAX_SAFE_INTEGER).toString())]);
 	//bench(c, its, "ECHO", [new BigDec((Number.MIN_SAFE_INTEGER).toString())]);
 	//bench(c, its, "ECHO", [new BigDec((Number.MAX_SAFE_INTEGER).toString())]);
 	//bench(c, its, "ECHO", [new BigInteger("-922337203685477580700904823049832")]);
 	//bench(c, its, "ECHO", [new BigDec("-922337203685477580700904823049832.1")]);
-	
+
 	//bench(c, its, "ECHO", [new BigInteger("-9223372036854775807")]);
 	//bench(c, its, "ECHO", [Math.pow(2,30)]);
 	bench(c, its, "ECHO", [new BigInteger(Math.pow(2,30).toString())]);
-	
+
 	c.flush();
-	
+
 	//benchEncStr("PING", 100000, writer);
-	
+
 	console.log("enc time: " + ((new Date().getTime()) - t));
 	console.log(c.id);
 }
@@ -144,10 +144,10 @@ function benchEnc() {
 function runTest(s) {
 	var c = libopac.newClient(s);
 	var binobj = Buffer.from("hello", "utf-8");
-	
+
 	console.log("s.writableHighWaterMark: " + s.writableHighWaterMark);
 	console.log("s.writableLength: " + s.writableLength);
-	
+
 	c.call("PING", null, echoResult);
 	c.call("ECHO", ["hello"], echoResult);
 	c.call("ECHO", [0], echoResult);
@@ -167,17 +167,17 @@ function runTest(s) {
 	c.callA("ECHO", ["testing async callback id"], echoResult);
 	c.call("ECHO", [-1.23], echoResult);
 	c.flush();
-	
+
 	var bda = new BigDec("100e2");
 	var bdb = new BigDec("30");
 	var qr = bdb.divideAndRemainder(bda);
 	console.log(qr[0].toString());
 	console.log(qr[1].toString());
-	
+
 	console.log("TODO: write tests for all object types");
 	console.log("s.writableHighWaterMark: " + s.writableHighWaterMark);
 	console.log("s.writableLength: " + s.writableLength);
-	
+
 	var its = 700000;
 	//bench(c, its, "ECHO", [0]);
 	//bench(c, its, "ECHO", [1234]);
@@ -193,21 +193,21 @@ function runTest(s) {
 	bench(c, its, "ECHO", ["hello"]);
 	//bench(c, its, "ECHO", [binobj]);
 	//bench(c, its, "PING");
-	
+
 	//bench(c, its, "ECHO", [new BigInteger((Number.MIN_SAFE_INTEGER).toString())]);
-	
+
 	c.flush();
-	
+
 	console.log("s.writableHighWaterMark: " + s.writableHighWaterMark);
 	console.log("s.writableLength: " + s.writableLength);
-	
+
 	//setTimeout(function() {
 	//	s.pause();
 	//}, 1);
 	//setTimeout(function() {
 	//	s.resume();
 	//}, 10);
-	
+
 	setTimeout(function() {
 		console.log("s.bufferSize: " + s.bufferSize);
 		console.log("c.s.i: " + c.s.i);
@@ -222,11 +222,11 @@ function runTest(s) {
 			});
 		});
 	}, 6000);
-	
+
 	//c.call("QUIT", null, function(result, err) {
 	//	//s.close();
 	//});
-	
+
 	c.flush();
 }
 

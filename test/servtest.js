@@ -57,7 +57,7 @@ function connect(port, host, onconnect, closetimeout) {
 	var s = new libnet.Socket();
 	s.setNoDelay(true);
 	s.connect(port, host, onconnect);
-	
+
 	if (closetimeout) {
 		var timer = setTimeout(function() {
 			console.log("force closing socket after " + closetimeout + " ms");
@@ -67,7 +67,7 @@ function connect(port, host, onconnect, closetimeout) {
 			clearTimeout(timer);
 		});
 	}
-	
+
 	return s;
 }
 
@@ -130,7 +130,7 @@ function testBigExp(v) {
 	var s = connect(4567, "localhost", function() {
 		var c = libopac.newClient(s);
 		c.call("ECHO", [v], expectErr);
-		
+
 		c.call("QUIT");
 		c.flush();
 	}, 1000);

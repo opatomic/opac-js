@@ -12,7 +12,7 @@ function newClient(s) {
 		s.write(b);
 		c.s.b = NEWBUF(c.s.b.length);
 	};
-	
+
 	s.on("data", function(b) {
 		c.onRecv(b);
 	});
