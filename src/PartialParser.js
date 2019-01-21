@@ -175,10 +175,6 @@ function clearBytes(p) {
 
 var P = PartialParser.prototype;
 
-P.newBuff = function() {
-	return {data: null, idx: 0, len: 0};
-}
-
 P.parseNext = function(b) {
 	var p = this;
 	var buff = b.data;
@@ -341,4 +337,10 @@ P.parseNext = function(b) {
 // BUF2STR maps {utf-8 bytes -> strings} to avoid conversion (speed up) and improve
 // memory usage (prevent duplicate copies of same string)
 P.BUF2STR = (typeof Map == "undefined") ? null : new Map();
+
+PartialParser.Buff = function() {
+	this.data = null;
+	this.idx = 0;
+	this.len = 0;
+};
 

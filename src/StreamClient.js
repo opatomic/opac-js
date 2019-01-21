@@ -17,7 +17,7 @@ function StreamClient(o) {
 	this.mMainCallbacks = new Deque();
 	this.mAsyncCallbacks = new Map();
 	this.mParser = new PartialParser();
-	this.mBuff = this.mParser.newBuff();
+	this.mBuff = new PartialParser.Buff();
 	this.mTimeout = null;
 }
 

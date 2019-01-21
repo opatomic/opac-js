@@ -59,7 +59,7 @@ function benchParser(obj, its) {
 	console.log(buff.subarray(0, buffLen));
 	
 	var pp = new PartialParser();
-	var pb = pp.newBuff();
+	var pb = new PartialParser.Buff();
 	pb.data = buff;
 	var t = new Date().getTime();
 	for (var i = 0; i < its; ++i) {
