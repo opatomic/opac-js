@@ -1,6 +1,5 @@
 "use strict";
 
-const Deque = require("double-ended-queue");
 const BigInteger = require("jsbn").BigInteger;
 
 const NEWBUF = function(l) {

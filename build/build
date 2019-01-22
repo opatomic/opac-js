@@ -37,7 +37,7 @@ function catHead {
 }
 
 function catAllSrc {
-	cat "$TMPDIR/version.js" "$OPACJSDIR/BigDec.js" "$OPACJSDIR/OpaDef.js" "$OPACJSDIR/PartialParser.js" "$OPACJSDIR/Serializer.js" "$OPACJSDIR/OpaUtils.js" "$OPACJSDIR/StreamClient.js" >> $1
+	cat "$TMPDIR/version.js" "$OPACJSDIR/Queue.js" "$OPACJSDIR/BigDec.js" "$OPACJSDIR/OpaDef.js" "$OPACJSDIR/PartialParser.js" "$OPACJSDIR/Serializer.js" "$OPACJSDIR/OpaUtils.js" "$OPACJSDIR/StreamClient.js" >> $1
 }
 
 
@@ -61,10 +61,6 @@ VERSION=$VERSION$VERSUFF
 printf "const VERSION = \"$VERSION\";\n\n" >> "$TMPDIR/version.js"
 
 
-printf "var Deque = (function(){var module = {}; (function(){\n" > "$TMPDIR/deque.js"
-cat "$LIBDIR/deque/deque.js" >> "$TMPDIR/deque.js"
-printf "\n}());return module.exports;}());" >> "$TMPDIR/deque.js"
-
 printf "var BigInteger = (function(){\n" > "$TMPDIR/jsbn.js"
 cat "$LIBDIR/jsbn/jsbn.js" "$LIBDIR/jsbn/jsbn2.js" >> "$TMPDIR/jsbn.js"
 printf "\nreturn BigInteger;\n}());\n" >> "$TMPDIR/jsbn.js"
@@ -72,13 +68,10 @@ printf "\nreturn BigInteger;\n}());\n" >> "$TMPDIR/jsbn.js"
 
 rm "browser/opac.browser.min.js"
 if [ -f $CCJAR ]; then
-	java -jar "$CCJAR" --js "browser.head.js" "$TMPDIR/version.js" "$TMPDIR/deque.js" "$TMPDIR/jsbn.js" "$OPACJSDIR/*.js" "browser.foot.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false --isolation_mode IIFE
+	java -jar "$CCJAR" --js "browser.head.js" "$TMPDIR/version.js" "$TMPDIR/jsbn.js" "$OPACJSDIR/*.js" "browser.foot.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false --isolation_mode IIFE
 
 	printf "// Minimized and bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n\n" >> "browser/opac.browser.min.js"
-	printf "/* Deque (https://github.com/petkaantonov/deque) LICENSE file:\n" >> "browser/opac.browser.min.js"
-	cat "$LIBDIR/deque/LICENSE" >> "browser/opac.browser.min.js"
-	printf "*/\n" >> "browser/opac.browser.min.js"
-	printf "\n\n/* BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/) LICENSE file: */\n" >> "browser/opac.browser.min.js"
+	printf "/* BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/) LICENSE file: */\n" >> "browser/opac.browser.min.js"
 	cat "$LIBDIR/jsbn/LICENSE" >> "browser/opac.browser.min.js"
 	printf "\n\n" >> "browser/opac.browser.min.js"
 	cat "$TMPDIR/bundle.min.js" >> "browser/opac.browser.min.js"
@@ -90,9 +83,7 @@ fi
 printf "// Bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n" > "browser/opac.browser.js"
 printf "(function(){\n" >> "browser/opac.browser.js"
 cat "browser.head.js" >> "browser/opac.browser.js"
-printf "// Deque (https://github.com/petkaantonov/deque):\n" >> "browser/opac.browser.js"
-cat "$TMPDIR/deque.js" >> "browser/opac.browser.js"
-printf "\n\n// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):\n" >> "browser/opac.browser.js"
+printf "// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):\n" >> "browser/opac.browser.js"
 cat "$LIBDIR/jsbn/LICENSE" "$TMPDIR/jsbn.js" >> "browser/opac.browser.js"
 printf "\n\n" >> "browser/opac.browser.js"
 catAllSrc "browser/opac.browser.js"

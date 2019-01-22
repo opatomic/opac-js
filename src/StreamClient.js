@@ -1,4 +1,4 @@
-// dependencies: STRENC PartialParser Serializer Deque Map
+// dependencies: STRENC PartialParser Serializer Queue Map
 
 /**
  * @callback ResponseCallback
@@ -16,7 +16,7 @@ var StreamClient = (function(){
 function StreamClient(o) {
 	this.s = new Serializer(o);
 	this.id = 0;
-	this.mMainCallbacks = new Deque();
+	this.mMainCallbacks = new Queue();
 	this.mAsyncCallbacks = new Map();
 	this.mParser = new PartialParser();
 	this.mBuff = new PartialParser.Buff();
@@ -173,7 +173,7 @@ P.onRecv = function(b) {
  */
 P.onClose = function() {
 	var tmp = this.mMainCallbacks;
-	while (tmp.length > 0) {
+	while (tmp.size() > 0) {
 		var cb = tmp.shift();
 		if (cb) {
 			cb(null, OpaDef.ERR_CLOSED);
