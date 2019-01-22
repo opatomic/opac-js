@@ -29,10 +29,6 @@ function ensureDir {
 	fi
 }
 
-function writeVersion {
-	printf "const VERSION = \"$VERSION\";\n\n" >> "$1"
-}
-
 function catHead {
 	printf "// #### Contents of " >> "$2"
 	basename "$1" | tr "\n" " " >> "$2"
@@ -40,10 +36,8 @@ function catHead {
 	cat "$1" >> "$2"
 }
 
-function catObjClosure {
-	printf "var $1 = (function(){\n" >> $3
-	catHead $2 $3
-	printf "return $1;\n}());\n\n" >> $3
+function catAllSrc {
+	cat "$TMPDIR/version.js" "$OPACJSDIR/BigDec.js" "$OPACJSDIR/OpaDef.js" "$OPACJSDIR/PartialParser.js" "$OPACJSDIR/Serializer.js" "$OPACJSDIR/OpaUtils.js" "$OPACJSDIR/StreamClient.js" >> $1
 }
 
 
@@ -64,13 +58,7 @@ VERSION=`cat version.txt`
 VERSION=$VERSION$VERSUFF
 
 
-writeVersion "$TMPDIR/bundle.js"
-catObjClosure "BigDec" "$OPACJSDIR/BigDec.js" "$TMPDIR/bundle.js"
-catObjClosure "OpaDef" "$OPACJSDIR/OpaDef.js" "$TMPDIR/bundle.js"
-catObjClosure "PartialParser" "$OPACJSDIR/PartialParser.js" "$TMPDIR/bundle.js"
-catObjClosure "Serializer" "$OPACJSDIR/Serializer.js" "$TMPDIR/bundle.js"
-catHead "$OPACJSDIR/OpaUtils.js" "$TMPDIR/bundle.js"
-catObjClosure "StreamClient" "$OPACJSDIR/StreamClient.js" "$TMPDIR/bundle.js"
+printf "const VERSION = \"$VERSION\";\n\n" >> "$TMPDIR/version.js"
 
 
 printf "var Deque = (function(){var module = {}; (function(){\n" > "$TMPDIR/deque.js"
@@ -84,7 +72,7 @@ printf "\nreturn BigInteger;\n}());\n" >> "$TMPDIR/jsbn.js"
 
 rm "browser/opac.browser.min.js"
 if [ -f $CCJAR ]; then
-	java -jar "$CCJAR" --js "browser.head.js" "$TMPDIR/deque.js" "$TMPDIR/jsbn.js" "$TMPDIR/bundle.js" "browser.foot.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false --isolation_mode IIFE
+	java -jar "$CCJAR" --js "browser.head.js" "$TMPDIR/version.js" "$TMPDIR/deque.js" "$TMPDIR/jsbn.js" "$OPACJSDIR/*.js" "browser.foot.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false --isolation_mode IIFE
 
 	printf "// Minimized and bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n\n" >> "browser/opac.browser.min.js"
 	printf "/* Deque (https://github.com/petkaantonov/deque) LICENSE file:\n" >> "browser/opac.browser.min.js"
@@ -107,12 +95,14 @@ cat "$TMPDIR/deque.js" >> "browser/opac.browser.js"
 printf "\n\n// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):\n" >> "browser/opac.browser.js"
 cat "$LIBDIR/jsbn/LICENSE" "$TMPDIR/jsbn.js" >> "browser/opac.browser.js"
 printf "\n\n" >> "browser/opac.browser.js"
-cat "$TMPDIR/bundle.js" "browser.foot.js" >> "browser/opac.browser.js"
+catAllSrc "browser/opac.browser.js"
+cat "browser.foot.js" >> "browser/opac.browser.js"
 printf "})();\n" >> "browser/opac.browser.js"
 
 
 cat "node.head.js" > "node/opac.node.js"
-cat "$TMPDIR/bundle.js" "node.foot.js" >> "node/opac.node.js"
+catAllSrc "node/opac.node.js"
+cat "node.foot.js" >> "node/opac.node.js"
 sed -e "s/\\\$VERSION/$VERSION/" "package.json" > "node/package.json"
 cp "../README.md" "node/README.md"
 

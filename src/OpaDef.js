@@ -1,4 +1,6 @@
 
+var OpaDef = (function(){
+
 function CC(s) {
 	return s.charCodeAt(0);
 }
@@ -39,4 +41,7 @@ var OpaDef = {
 
 	ERR_CLOSED : -16394
 };
+
+return OpaDef;
+}());
 

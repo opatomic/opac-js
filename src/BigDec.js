@@ -1,5 +1,7 @@
 // dependencies: BigInteger
 
+var BigDec = (function(){
+
 /*
 TODO:
  add mathcontext to each op to handle rounding
@@ -234,4 +236,7 @@ P.toString = function() {
 	}
 	return s;
 }
+
+return BigDec;
+}());
 

@@ -7,6 +7,8 @@
  */
 
 
+var StreamClient = (function(){
+
 /**
  * Create new StreamClient.
  * @param o - Object that has a write() and flush() method.
@@ -186,4 +188,7 @@ P.onClose = function() {
 	});
 	tmp.clear();
 }
+
+return StreamClient;
+}());
 

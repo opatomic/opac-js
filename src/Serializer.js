@@ -1,5 +1,7 @@
 // Dependencies: BigInteger, BigDec, OpaDef, NEWBUF, STRENC
 
+var Serializer = (function(){
+
 const SURROGATE_OFFSET = 0x010000 - (0xD800 << 10) - 0xDC00;
 const BIMAXVARINT = new BigInteger("9223372036854775807");
 const BIMINVARINT = BIMAXVARINT.negate();
@@ -357,4 +359,7 @@ P.writeObject = function(v) {
 }
 
 P.STR2BUF = (typeof Map == "undefined") ? null : new Map();
+
+return Serializer;
+}());
 

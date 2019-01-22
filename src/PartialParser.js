@@ -1,5 +1,7 @@
 // Dependencies: BigInteger, BigDec, OpaDef, NEWBUF, STRDEC
 
+var PartialParser = (function(){
+
 const S_NEXTOBJ = 1;
 const S_VARINT1 = 2;
 const S_VARINT2 = 3;
@@ -343,4 +345,7 @@ PartialParser.Buff = function() {
 	this.idx = 0;
 	this.len = 0;
 };
+
+return PartialParser;
+}());
 
