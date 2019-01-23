@@ -358,7 +358,7 @@ P.writeObject = function(v) {
 	}
 }
 
-P.STR2BUF = (typeof Map == "undefined") ? null : new Map();
+Serializer.STR2BUF = (typeof Map == "undefined") ? null : new Map();
 
 return Serializer;
 }());
