@@ -1,28 +1,43 @@
 // dependencies: STRENC PartialParser Serializer Queue Map
 
 /**
+ * @ignore
+ * @typedef {function(*, *):undefined}
+ */
+var ResponseCallback;
+
+/**
  * @callback ResponseCallback
- * @param {Object} result - The result of the operation. Can be null.
- * @param {Object} error  - If response is an error then result is null and error is non-null
+ * @param {*} result - The result of the operation. Can be null.
+ * @param {*} error  - If response is an error then result is null and error is non-null
  */
 
-
-var EventClient = (function(){
 
 /**
  * Create new EventClient
+ * @constructor
  * @param o - Object that has a write() and flush() method.
  */
 function EventClient(o) {
+	/** @type {!Serializer} */
 	this.s = new Serializer(o);
+	/** @type {number} */
 	this.id = 0;
+	/** @type {Queue<ResponseCallback>} */
 	this.mMainCallbacks = new Queue();
+	/** @type {!Map<*,ResponseCallback>} */
 	this.mAsyncCallbacks = new Map();
+	/** @type {!PartialParser} */
 	this.mParser = new PartialParser();
+	/** @type {PartialParser.Buff} */
 	this.mBuff = new PartialParser.Buff();
+	/** @type {number|null} */
 	this.mTimeout = null;
 }
 
+(function(){
+
+/** @alias EventClient.prototype */
 var P = EventClient.prototype;
 
 function schedTimeout(c) {
@@ -189,6 +204,5 @@ P.onClose = function() {
 	tmp.clear();
 }
 
-return EventClient;
 }());
 

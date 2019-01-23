@@ -1,6 +1,36 @@
 // Dependencies: BigInteger, BigDec, OpaDef, NEWBUF, STRENC
 
-var Serializer = (function(){
+/**
+ * @interface
+ */
+var IWriter = function() {};
+
+/**
+ * @param {!Uint8Array} buff
+ */
+IWriter.prototype.write = function(buff) {};
+
+IWriter.prototype.flush = function() {};
+
+
+/**
+ * @constructor
+ * @param {!IWriter} out - Where to write values
+ * @param {number=} sz - Length of internal buffer
+ */
+function Serializer(out, sz) {
+	if (sz && sz <= 10) {
+		throw "buffer len is too small";
+	}
+	/** @type {!IWriter} */
+	this.o = out;
+	/** @type {!Uint8Array} */
+	this.b = NEWBUF(sz ? sz : 4096);
+	/** @type {number} */
+	this.i = 0;
+}
+
+(function(){
 
 const SURROGATE_OFFSET = 0x010000 - (0xD800 << 10) - 0xDC00;
 const BIMAXVARINT = new BigInteger("9223372036854775807");
@@ -11,6 +41,12 @@ const BIGINT31 = new BigInteger("7FFFFFFF", 16);
 //  it does not get cleared after use. assume memory usage will not be very large for 1 value
 const TMPBI2 = new BigInteger(null);
 
+/**
+ * @param {!string} s
+ * @param {number} offset
+ * @param {number} len
+ * @return {number}
+ */
 function getUtf8Len(s, offset, len) {
 	var end = offset + len;
 	var numBytes = len;
@@ -40,6 +76,10 @@ function getUtf8Len(s, offset, len) {
 	return numBytes;
 }
 
+/**
+ * @param {!Serializer} ser
+ * @param {!string} str
+ */
 function writeUtf8(ser, str) {
 	var end = str.length;
 	//var blen = buff.length;
@@ -87,16 +127,9 @@ function writeUtf8(ser, str) {
 	ser.i = bpos;
 }
 
-
-function Serializer(out, sz) {
-	if (sz && sz <= 10) {
-		throw "buffer len is too small";
-	}
-	this.o = out;
-	this.b = NEWBUF(sz ? sz : 4096);
-	this.i = 0;
-}
-
+/**
+ * @param {!Serializer} s
+ */
 function flushBuff(s) {
 	if (s.i > 0) {
 		s.o.write(s.i == s.b.length ? s.b : s.b.subarray(0, s.i));
@@ -104,12 +137,21 @@ function flushBuff(s) {
 	}
 }
 
+/**
+ * @param {!Serializer} s
+ * @param {number} l
+ */
 function ensureSpace(s, l) {
 	if (s.i + l > s.b.length) {
 		flushBuff(s);
 	}
 }
 
+/**
+ * @param {!Serializer} s
+ * @param {number} t
+ * @param {number} v
+ */
 function writeTypeAndVarint(s, t, v) {
 	ensureSpace(s, 10);
 	if (t != 0) {
@@ -127,6 +169,11 @@ function writeTypeAndVarint(s, t, v) {
 	s.b[s.i++] = v;
 }
 
+/**
+ * @param {!Serializer} s
+ * @param {number} t
+ * @param {!BigInteger} v
+ */
 function writeTypeAndBigBytes(s, t, v) {
 	if (v.signum() < 0) {
 		BigInteger.ZERO.subTo(v, TMPBI2);
@@ -146,6 +193,11 @@ function writeTypeAndBigBytes(s, t, v) {
 	}
 }
 
+/**
+ * @param {!Serializer} s
+ * @param {number} t
+ * @param {!BigInteger} v
+ */
 function writeBIAsVI(s, t, v) {
 	if (v.signum() < 0) {
 		BigInteger.ZERO.subTo(v, TMPBI2);
@@ -177,6 +229,10 @@ function writeBIAsVI(s, t, v) {
 	s.b[s.i++] = v;
 }
 
+/**
+ * @param {!Serializer} s
+ * @param {!BigInteger} v
+ */
 function writeBigInt(s, v) {
 	var sn = v.signum();
 	if (sn == 0) {
@@ -196,6 +252,10 @@ function writeBigInt(s, v) {
 	}
 }
 
+/**
+ * @param {!Serializer} s
+ * @param {!BigDec} v
+ */
 function writeBigDec(s, v) {
 	if (v.e == 0) {
 		writeBigInt(s, v.m);
@@ -222,8 +282,13 @@ function writeBigDec(s, v) {
 	}
 }
 
+/** @alias Serializer.prototype */
 var P = Serializer.prototype;
 
+/**
+ * Write a single byte
+ * @param {!number} v
+ */
 P.write1 = function(v) {
 	if (this.i >= this.b.length) {
 		flushBuff(this);
@@ -231,6 +296,10 @@ P.write1 = function(v) {
 	this.b[this.i++] = v;
 }
 
+/**
+ * Write a raw byte array
+ * @param {!Uint8Array} b
+ */
 P.write = function(b) {
 	if (b.length > this.b.length - this.i) {
 		flushBuff(this);
@@ -243,6 +312,9 @@ P.write = function(b) {
 	this.i += b.length;
 }
 
+/**
+ * Force any buffered bytes to be written
+ */
 P.flush = function() {
 	flushBuff(this);
 	if (typeof this.o.flush === "function") {
@@ -250,6 +322,10 @@ P.flush = function() {
 	}
 }
 
+/**
+ * Serialize a number
+ * @param {!number} v
+ */
 P.writeNumber = function(v) {
 	if (Number.isSafeInteger(v)) {
 		if (v > 0) {
@@ -270,6 +346,10 @@ P.writeNumber = function(v) {
 	}
 }
 
+/**
+ * Serialize a string
+ * @param {!string} v
+ */
 P.writeString = function(v) {
 	if (v.length == 0) {
 		this.write1(OpaDef.EMPTYSTR);
@@ -295,6 +375,10 @@ P.writeString = function(v) {
 	}
 }
 
+/**
+ * Serialize an Array
+ * @param {!Array} v
+ */
 P.writeArray = function(v) {
 	if (v.length == 0) {
 		this.write1(OpaDef.EMPTYARRAY);
@@ -307,6 +391,11 @@ P.writeArray = function(v) {
 	}
 }
 
+/**
+ * Serialize any supported value (undefined/null/boolean/number/string/Uint8Array/BigInteger/BigDec/OpaDef.SORTMAX_OBJ)
+ * or an Object with toOpaSO() property, or an Array containing any of the previously listed types.
+ * @param {*} v
+ */
 P.writeObject = function(v) {
 	// TODO: handle iterable objects?
 	//  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols
@@ -358,8 +447,13 @@ P.writeObject = function(v) {
 	}
 }
 
+/**
+ * maps {strings -> utf-8 bytes} to avoid conversion (speed up)
+ * @type {Map<!string, !Uint8Array>}
+ * @const
+ * @memberof Serializer
+ */
 Serializer.STR2BUF = (typeof Map == "undefined") ? null : new Map();
 
-return Serializer;
 }());
 

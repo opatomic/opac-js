@@ -3,14 +3,25 @@
  * Copyright (c) 2013 Petka Antonov and licensed under the MIT license
  */
 
-var Queue = (function(){
-
+/**
+ * @constructor
+ * @template T
+ */
 function Queue() {
+	/** @type {number} */
 	this._capacity = 16;
+	/** @type {number} */
 	this._length = 0;
+	/** @type {number} */
 	this._front = 0;
 }
 
+(function(){
+
+/**
+ * Add the specified element to the tail of the queue
+ * @param {T} item
+ */
 Queue.prototype.push = function(item) {
 	var length = this._length;
 	checkCapacity(this, length + 1);
@@ -19,14 +30,18 @@ Queue.prototype.push = function(item) {
 	this._length = length + 1;
 };
 
+/**
+ * Remove an item from the head of the queue
+ * @return {T} The first item in the queue or undefined if queue is empty
+ */
 Queue.prototype.shift = function() {
 	var length = this._length;
 	if (length === 0) {
-		return void 0;
+		return undefined;
 	}
 	var front = this._front;
 	var ret = this[front];
-	this[front] = void 0;
+	this[front] = undefined;
 	this._front = (front + 1) & (this._capacity - 1);
 	this._length = length - 1;
 	return ret;
@@ -56,7 +71,7 @@ function resizeTo(q, capacity) {
 function arrayMove(src, srcIndex, dst, dstIndex, len) {
 	for (var j = 0; j < len; ++j) {
 		dst[j + dstIndex] = src[j + srcIndex];
-		src[j + srcIndex] = void 0;
+		src[j + srcIndex] = undefined;
 	}
 }
 
@@ -77,6 +92,5 @@ function getCapacity(capacity) {
 	);
 }
 
-return Queue;
 }());
 

@@ -1,6 +1,11 @@
 // Dependencies: BigInteger, BigDec, OpaDef, NEWBUF, STRDEC
 
-var PartialParser = (function(){
+/**
+ * @constructor
+ */
+var PartialParser = function(){};
+
+(function(){
 
 const S_NEXTOBJ = 1;
 const S_VARINT1 = 2;
@@ -19,27 +24,51 @@ const S_ERR     = 13;
 // note: this temp variable is only used to read varints so it will never store more than a 64 bit integer (low memory)
 const TMPBI1 = new BigInteger(null);
 
-function PartialParser() {
+/**
+ * @constructor
+ */
+PartialParser = function() {
+	/** @type {!Array<*>} */
 	this.mContainers = [];
+	/** @type {Array} */
 	this.mCurrCont = null;
+	/** @type {number} */
 	this.mState = S_NEXTOBJ;
+	/** @type {number} */
 	this.mNextState = 0;
+	/** @type {number} */
 	this.mNextState2 = 0;
+	/** @type {!BigInteger|number} */
 	this.mVarintVal = 0;
+	/** @type {number} */
 	this.mVarintMul = 0;
+	/** @type {number} */
 	this.mVarintBitshift = 0;
+	/** @type {number} */
 	this.mDecExp = 0;
+	/** @type {number} */
 	this.mObjType = 0;
+	/** @type {number} */
 	this.mBytesIdx = 0;
+	/** @type {number} */
 	this.mBytesLen = 0;
+	/** @type {Uint8Array} */
 	this.mBytes = null;
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {!string} msg
+ */
 function throwErr(p, msg) {
 	p.mState = S_ERR;
 	throw msg;
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {*} o
+ */
 function hitNext(p, o) {
 	if (p.mCurrCont == null) {
 		throwErr(p, "no array container");
@@ -47,6 +76,11 @@ function hitNext(p, o) {
 	p.mCurrCont.push(o);
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {number} objType
+ * @param {number} nextState
+ */
 function initVarint(p, objType, nextState) {
 	p.mState = S_VARINT1;
 	p.mNextState = nextState;
@@ -56,11 +90,21 @@ function initVarint(p, objType, nextState) {
 	p.mVarintBitshift = 0;
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {number} objType
+ * @param {number} nextState
+ */
 function initBytes(p, objType, nextState) {
 	initVarint(p, objType, S_BYTES1);
 	p.mNextState2 = nextState;
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {boolean} neg
+ * @return {number}
+ */
 function getVarint32(p, neg) {
 	if (typeof p.mVarintVal != "number" || p.mVarintVal > 2147483647) {
 		throwErr(p, "varint out of range");
@@ -68,6 +112,11 @@ function getVarint32(p, neg) {
 	return neg ? 0 - p.mVarintVal : p.mVarintVal;
 }
 
+/**
+ * @param {boolean} neg
+ * @param {number|!BigInteger} v
+ * @return {number|!BigInteger}
+ */
 function getNum(neg, v) {
 	if (neg) {
 		if (typeof v == "number") {
@@ -79,10 +128,16 @@ function getNum(neg, v) {
 	return v;
 }
 
-// read a byte array in big-endian format that is always positive (does not have a sign bit)
-// custom function similar to bnpFromString(s,256);
-// see also, java constructor: public BigInteger(int signum, byte[] magnitude)
-//   https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html#BigInteger(int,%20byte[])
+/**
+ * read a byte array in big-endian format that is always positive (does not have a sign bit)
+ * custom function similar to bnpFromString(s,256);
+ * see also, java constructor: public BigInteger(int signum, byte[] magnitude)
+ *   https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html#BigInteger(int,%20byte[])
+ * @param {!Uint8Array} b
+ * @param {number} len
+ * @param {!BigInteger} r
+ * @return {!BigInteger}
+ */
 function bigintFromBytes2(b, len, r) {
 	r.t = 0;
 	r.s = 0;
@@ -107,11 +162,20 @@ function bigintFromBytes2(b, len, r) {
 	return r;
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {boolean} neg
+ * @return {!BigInteger}
+ */
 function bigIntFromBytes(p, neg) {
 	//var b = p.mBytes.subarray(0, p.mBytesLen);
 	return getNum(neg, bigintFromBytes2(p.mBytes, p.mBytesLen, new BigInteger(null)));
 }
 
+/**
+ * @param {number} n
+ * @return {!BigInteger}
+ */
 function bigIntFromNumber(n) {
 	if (n < 0) {
 		var bi = bigIntFromNumber(0 - n);
@@ -140,6 +204,10 @@ function bigIntFromNumber(n) {
 	return val;
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {number} bval
+ */
 function varintNextByte(p, bval) {
 	if (p.mVarintBitshift < 28) {
 		p.mVarintVal |= (bval & 0x7F) << p.mVarintBitshift;
@@ -164,19 +232,32 @@ function varintNextByte(p, bval) {
 	p.mVarintBitshift += 7;
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {!Uint8Array} b
+ * @return {!string}
+ */
 function getstr(p, b) {
 	var str = p.BUF2STR ? p.BUF2STR.get(b) : null;
 	return str ? str : STRDEC(b);
 }
 
+/**
+ * @param {!PartialParser} p
+ */
 function clearBytes(p) {
 	if (p.mBytes.length > 4096) {
 		p.mBytes = null;
 	}
 }
 
+/** @alias PartialParser.prototype */
 var P = PartialParser.prototype;
 
+/**
+ * @param {!PartialParser.Buff} b
+ * @return {*}
+ */
 P.parseNext = function(b) {
 	var p = this;
 	var buff = b.data;
@@ -336,16 +417,24 @@ P.parseNext = function(b) {
 	}
 }
 
-// BUF2STR maps {utf-8 bytes -> strings} to avoid conversion (speed up) and improve
-// memory usage (prevent duplicate copies of same string)
+/**
+ * maps {utf-8 bytes -> strings} to avoid conversion (speed up) and improve
+ * memory usage (prevent duplicate copies of same string)
+ * @type {Map<!Uint8Array, !string>}
+ * @const
+ * @memberof PartialParser
+ */
 PartialParser.BUF2STR = (typeof Map == "undefined") ? null : new Map();
 
+/**
+ * @constructor
+ * @memberof PartialParser
+ */
 PartialParser.Buff = function() {
 	this.data = null;
 	this.idx = 0;
 	this.len = 0;
 };
 
-return PartialParser;
 }());
 

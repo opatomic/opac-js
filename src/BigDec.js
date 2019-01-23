@@ -1,7 +1,5 @@
 // dependencies: BigInteger
 
-var BigDec = (function(){
-
 /*
 TODO:
  add mathcontext to each op to handle rounding
@@ -12,38 +10,60 @@ TODO:
  scale()
 */
 
+/**
+ * @constructor
+ * @param {BigInteger|string} man
+ * @param {number=} exp
+ */
 function BigDec(man, exp) {
-	if (man && typeof man == "string") {
-		bdFromString(this, man);
-	} else {
-		this.m = man;
-		this.e = exp;
-	}
-}
-
-function nbd() { return new BigDec(new BigInteger(null), 0); }
-
-function bdFromString(v, s) {
-	var decPos = s.indexOf(".");
-	var epos = s.indexOf("e");
-	if (epos < 0) {
-		epos = s.indexOf("E");
-	}
-	if (epos < 0) {
-		v.m = new BigInteger(s);
-		v.e = 0;
-	} else {
-		v.m = new BigInteger(s.substring(0, epos));
-		v.e = parseInt(s.substr(epos + 1), 10);
-		if (!Number.isSafeInteger(v.e)) {
-			throw 'number string "' + s + '" cannot be parsed';
+	/**
+	 * @ignore
+	 * @param {!BigDec} v
+	 * @param {!string} s
+	 */
+	function bdFromString(v, s) {
+		var decPos = s.indexOf(".");
+		var epos = s.indexOf("e");
+		if (epos < 0) {
+			epos = s.indexOf("E");
+		}
+		if (epos < 0) {
+			v.m = new BigInteger(s);
+			v.e = 0;
+		} else {
+			v.m = new BigInteger(s.substring(0, epos));
+			v.e = parseInt(s.substr(epos + 1), 10);
+			if (!Number.isSafeInteger(v.e)) {
+				throw 'number string "' + s + '" cannot be parsed';
+			}
+		}
+		if (decPos >= 0) {
+			v.e -= epos < 0 ? s.length - decPos - 1 : epos - decPos - 1;
 		}
 	}
-	if (decPos >= 0) {
-		v.e -= epos < 0 ? s.length - decPos - 1 : epos - decPos - 1;
+
+	if (typeof man == "string") {
+		bdFromString(this, man);
+	} else {
+		/** @type {!BigInteger} */
+		this.m = man ? man : new BigInteger(null);
+		/** @type {number} */
+		this.e = exp ? exp : 0;
 	}
 }
 
+(function(){
+
+/**
+ * @return {!BigDec}
+ */
+function nbd() { return new BigDec(new BigInteger(null), 0); }
+
+/**
+ * @param {!BigDec} a
+ * @param {number} amount
+ * @return {!BigDec}
+ */
 function extend(a, amount) {
 	if (amount < 0) {
 		throw "invalid extension. must be >= 0";
@@ -58,7 +78,12 @@ function extend(a, amount) {
 	return new BigDec(a.m.signum() < 0 ? m.negate() : m, a.e - amount);
 }
 
-// r = a + b
+/**
+ * r = a + b
+ * @param {!BigDec} a
+ * @param {!BigDec} b
+ * @param {!BigDec} r
+ */
 function add3(a, b, r) {
 	if (b.signum() == 0) {
 		a.copyTo(r);
@@ -75,7 +100,12 @@ function add3(a, b, r) {
 	}
 }
 
-// r = a - b
+/**
+ * r = a - b
+ * @param {!BigDec} a
+ * @param {!BigDec} b
+ * @param {!BigDec} r
+ */
 function sub3(a, b, r) {
 	if (b.signum() == 0) {
 		a.copyTo(r);
@@ -93,7 +123,12 @@ function sub3(a, b, r) {
 	}
 }
 
-// r = a * b
+/**
+ * r = a * b
+ * @param {!BigDec} a
+ * @param {!BigDec} b
+ * @param {!BigDec} r
+ */
 function mul3(a, b, r) {
 	if (a == r || b == r) {
 		// multiplyTo() docs say that result cannot be same object as a or b
@@ -116,9 +151,15 @@ function mul3(a, b, r) {
 	}
 }
 
-// q = a / b
-// r = a % b
-// q or r may be null
+/**
+ * q = a / b
+ * r = a % b
+ * q or r may be null
+ * @param {!BigDec} a
+ * @param {!BigDec} b
+ * @param {BigDec} q
+ * @param {BigDec} r
+ */
 function div(a, b, q, r) {
 	if (a == r || b == r) {
 		var tmp = r.clone();
@@ -149,22 +190,37 @@ function div(a, b, q, r) {
 	}
 }
 
+/** @alias BigDec.prototype */
 var P = BigDec.prototype;
 
+/**
+ * @return {!BigDec}
+ */
 P.abs = function() {
 	return this.m.signum() < 0 ? new BigDec(this.m.abs(), this.e) : this;
 }
 
+/**
+ * @param {!BigDec} b
+ * @return {!BigDec}
+ */
 P.add = function(b) {
 	var r = nbd();
 	add3(this, b, r);
 	return r;
 }
 
+/**
+ * @return {!BigDec}
+ */
 P.clone = function() {
 	return new BigDec(this.m.clone(), this.e);
 }
 
+/**
+ * @param {!BigDec} b
+ * @return {number}
+ */
 P.compareTo = function(b) {
 	if (this.m.s < 0) {
 		if (b.m.s >= 0) {
@@ -186,6 +242,9 @@ P.compareTo = function(b) {
 	}
 }
 
+/**
+ * @param {!BigDec} r
+ */
 P.copyTo = function(r) {
 	this.m.copyTo(r.m);
 	r.e = this.e;
@@ -212,24 +271,39 @@ P.min = function(b) {
 }
 */
 
+/**
+ * @param {!BigDec} b
+ * @return {!BigDec}
+ */
 P.multiply = function(b) {
 	var r = nbd();
 	mul3(this, b, r);
 	return r;
 }
 
+/**
+ * Returns -1 if this value is negative, 1 if positive, else 0 (if this is equal to zero).
+ * @return {number}
+ */
 P.signum = function() {
 	return this.m.signum();
 }
 
+/**
+ * @param {!BigDec} b
+ * @return {!BigDec}
+ */
 P.subtract = function(b) {
 	var r = nbd();
 	sub3(this, b, r);
 	return r;
 }
 
-// TODO: return same string that java returns
+/**
+ * @return {!string}
+ */
 P.toString = function() {
+	// TODO: return same string that java returns
 	var s = this.m.toString();
 	if (this.e != 0) {
 		s += "e" + this.e.toString();
@@ -237,6 +311,5 @@ P.toString = function() {
 	return s;
 }
 
-return BigDec;
 }());
 
