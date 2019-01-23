@@ -8,6 +8,6 @@ E['OpaDef'] = OpaDef;
 E['stringify'] = opaStringify;
 E['opaType'] = opaType;
 E['Serializer'] = Serializer;
-E['StreamClient'] = StreamClient;
+E['EventClient'] = EventClient;
 E['PartialParser'] = PartialParser;
 

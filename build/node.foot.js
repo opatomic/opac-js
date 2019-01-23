@@ -1,7 +1,7 @@
 
 function newClient(s) {
 	var wrapper = {};
-	var c = new StreamClient(wrapper);
+	var c = new EventClient(wrapper);
 
 	wrapper.write = function(b) {
 		// the node socket docs state that the return value from write() should indicate whether the buffer

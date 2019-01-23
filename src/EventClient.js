@@ -7,13 +7,13 @@
  */
 
 
-var StreamClient = (function(){
+var EventClient = (function(){
 
 /**
- * Create new StreamClient.
+ * Create new EventClient
  * @param o - Object that has a write() and flush() method.
  */
-function StreamClient(o) {
+function EventClient(o) {
 	this.s = new Serializer(o);
 	this.id = 0;
 	this.mMainCallbacks = new Queue();
@@ -23,7 +23,7 @@ function StreamClient(o) {
 	this.mTimeout = null;
 }
 
-var P = StreamClient.prototype;
+var P = EventClient.prototype;
 
 function schedTimeout(c) {
 	if (c.mTimeout === null) {
@@ -189,6 +189,6 @@ P.onClose = function() {
 	tmp.clear();
 }
 
-return StreamClient;
+return EventClient;
 }());
 
