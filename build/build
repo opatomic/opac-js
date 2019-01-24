@@ -4,6 +4,9 @@
 # closure compiler, and set $CCJAR to the jar file's path.
 #  https://github.com/google/closure-compiler
 
+# to generate docs, must have jsdoc installed. install for node using the following command
+#  npm install -g jsdoc
+
 # TODO: support running closure compiler from within node?
 
 CCJAR=~/Downloads/closure.compiler/closure-compiler-v20180204.jar
@@ -61,13 +64,15 @@ printf "\nreturn BigInteger;\n}());\n" >> "$TMPDIR/jsbn.js"
 
 rm "browser/opac.browser.min.js"
 if [ -f $CCJAR ]; then
-	java -jar "$CCJAR" --js "browser.head.js" "$TMPDIR/version.js" "$TMPDIR/jsbn.js" "$OPACJSDIR/*.js" "browser.foot.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false --isolation_mode IIFE
+	java -jar "$CCJAR" --js "$TMPDIR/jsbn.js" --js_output_file "$TMPDIR/jsbn.min.js"
+	java -jar "$CCJAR" --js "browser.head.js" "$TMPDIR/version.js" "$OPACJSDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper --extra_annotation_name callback
 
 	printf "// Minimized and bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n\n" >> "browser/opac.browser.min.js"
 	printf "/* BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/) LICENSE file: */\n" >> "browser/opac.browser.min.js"
 	cat "$LIBDIR/jsbn/LICENSE" >> "browser/opac.browser.min.js"
-	printf "\n\n" >> "browser/opac.browser.min.js"
-	cat "$TMPDIR/bundle.min.js" >> "browser/opac.browser.min.js"
+	printf "\n\n(function(){" >> "browser/opac.browser.min.js"
+	cat "$TMPDIR/jsbn.min.js" "$TMPDIR/bundle.min.js" >> "browser/opac.browser.min.js"
+	printf "}());\n" >> "browser/opac.browser.min.js"
 else
 	echo "CCJAR not found. browser build will not minimize"
 fi
@@ -96,6 +101,8 @@ deldir $TMPDIR
 
 # TODO: run some tests!!!
 
-# TODO: generate docs?
+deldir "docs"
+jsdoc "$OPACJSDIR/" -d "docs/" -c "jsdoc.conf.json"
+deldir "docs/fonts"
 
 
