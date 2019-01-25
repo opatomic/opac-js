@@ -181,7 +181,7 @@ function getBI(neg, v) {
  */
 function bigIntFromBytes(p, neg) {
 	//var b = p.mBytes.subarray(0, p.mBytesLen);
-	return getBI(neg, bigintFromBytes2(p.mBytes, p.mBytesLen, new BigInteger(null)));
+	return getBI(neg, bigintFromBytes2(/** @type {!Uint8Array} */ (p.mBytes), p.mBytesLen, new BigInteger(null)));
 }
 
 /**
