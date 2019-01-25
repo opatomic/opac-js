@@ -1,33 +1,65 @@
-/*
- * The Queue class is extracted and modified from https://github.com/petkaantonov/deque which is 
- * Copyright (c) 2013 Petka Antonov and licensed under the MIT license
- */
 
 /**
+ * @classdesc This class is not actually created. It is here to help with type checking.
+ * @constructor
+ * @extends Array
+ * @hideconstructor
+ */
+function QChunk() {}
+/** @type {QChunk} */
+QChunk.prototype.next;
+/** @type {number} */
+QChunk.prototype.head;
+/** @type {number} */
+QChunk.prototype.used;
+
+/**
+ * Queue that allocates arrays in small chunks as needed. Chunks are stored as linked list.
+ * This design is efficient because it does not require growing arrays and copying data when
+ * capacity is exceeded. Also, large contiguous chunks of memory are not required.
+ * If only 1 chunk is needed, then it is utilized as a circular array to avoid constantly
+ * reallocating a new chunk.
  * @constructor
  * @template T
  */
 function Queue() {
 	/** @type {number} */
-	this._capacity = 16;
-	/** @type {number} */
-	this._length = 0;
-	/** @type {number} */
-	this._front = 0;
+	this.totlen = 0;
+	/** @type {!QChunk} */
+	this.head = newChunk(this.newChunkSize, null);
+	/** @type {!QChunk} */
+	this.tail = this.head;
 }
 
-(function(){
+/**
+ * @param {number} size - size of chunk's array
+ * @param {QChunk} prev - link to previous chunk
+ * @return {!QChunk}
+ */
+function newChunk(size, prev) {
+	var c = /** @type {!QChunk} */ (new Array(size));
+	c.next = null;
+	c.head = 0;
+	c.used = 0;
+	if (prev) {
+		prev.next = c;
+	}
+	return c;
+}
 
 /**
  * Add the specified element to the tail of the queue
  * @param {T} item
+ * @return {number} new length after adding item
  */
 Queue.prototype.push = function(item) {
-	var length = this._length;
-	checkCapacity(this, length + 1);
-	var i = (this._front + length) & (this._capacity - 1);
-	this[i] = item;
-	this._length = length + 1;
+	var chunk = this.tail;
+	if (chunk.used + 1 >= chunk.length) {
+		this.tail = chunk = newChunk(this.newChunkSize, chunk);
+	}
+	chunk[(chunk.head + chunk.used) & (chunk.length - 1)] = item;
+	chunk.used++;
+	return ++this.totlen;
 };
 
 /**
@@ -35,62 +67,33 @@ Queue.prototype.push = function(item) {
  * @return {T} The first item in the queue or undefined if queue is empty
  */
 Queue.prototype.shift = function() {
-	var length = this._length;
-	if (length === 0) {
+	var chunk = this.head;
+	if (chunk.used == 0) {
 		return undefined;
 	}
-	var front = this._front;
-	var ret = this[front];
-	this[front] = undefined;
-	this._front = (front + 1) & (this._capacity - 1);
-	this._length = length - 1;
-	return ret;
+	var idx = chunk.head;
+	var item = chunk[idx];
+	chunk[idx] = undefined;
+	chunk.used--;
+	if (chunk.used == 0 && chunk.next) {
+		this.head = chunk.next;
+	} else {
+		chunk.head = (idx + 1) & (chunk.length - 1);
+	}
+	this.totlen--;
+	return item;
 };
 
+/**
+ * @return {number}
+ */
 Queue.prototype.size = function() {
-	return this._length;
+	return this.totlen;
 };
 
-function checkCapacity(q, size) {
-	if (q._capacity < size) {
-		resizeTo(q, getCapacity((q._capacity + (q._capacity >> 1)) + 16));
-	}
-}
-
-function resizeTo(q, capacity) {
-	var oldCapacity = q._capacity;
-	q._capacity = capacity;
-	var front = q._front;
-	var length = q._length;
-	if (front + length > oldCapacity) {
-		var moveItemsCount = (front + length) & (oldCapacity - 1);
-		arrayMove(q, 0, q, oldCapacity, moveItemsCount);
-	}
-}
-
-function arrayMove(src, srcIndex, dst, dstIndex, len) {
-	for (var j = 0; j < len; ++j) {
-		dst[j + dstIndex] = src[j + srcIndex];
-		src[j + srcIndex] = undefined;
-	}
-}
-
-function pow2AtLeast(n) {
-	n = n >>> 0;
-	n = n - 1;
-	n = n | (n >> 1);
-	n = n | (n >> 2);
-	n = n | (n >> 4);
-	n = n | (n >> 8);
-	n = n | (n >> 16);
-	return n + 1;
-}
-
-function getCapacity(capacity) {
-	return pow2AtLeast(
-		Math.min(Math.max(16, capacity), 1073741824)
-	);
-}
-
-}());
+/**
+ * size of each new array chunk. must be greater than 0 and a power of 2!
+ * @type {number}
+ */
+Queue.prototype.newChunkSize = 64;
 
