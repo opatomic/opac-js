@@ -174,8 +174,12 @@ function div(a, b, q, r) {
 		// actually, can probably define x/0 to be 0. see https://www.hillelwayne.com/post/divide-by-zero/
 		throw "cannot divide by 0";
 	} else if (a.signum() == 0) {
-		a.copyTo(q);
-		a.copyTo(r);
+		if (q) {
+			a.copyTo(q);
+		}
+		if (r) {
+			a.copyTo(r);
+		}
 	} else {
 		if (a.e > b.e) {
 			a = extend(a, a.e - b.e);
@@ -184,9 +188,13 @@ function div(a, b, q, r) {
 		}
 
 		// TODO: is this correct?
-		a.m.divRemTo(b.m, q.m, r.m);
-		q.e = 0;
-		r.e = 0;
+		a.m.divRemTo(b.m, q ? q.m : null, r ? r.m : null);
+		if (q) {
+			q.e = 0;
+		}
+		if (r) {
+			r.e = 0;
+		}
 	}
 }
 
