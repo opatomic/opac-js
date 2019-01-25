@@ -190,13 +190,10 @@ function div(a, b, q, r) {
 	}
 }
 
-/** @alias BigDec.prototype */
-var P = BigDec.prototype;
-
 /**
  * @return {!BigDec}
  */
-P.abs = function() {
+BigDec.prototype.abs = function() {
 	return this.m.signum() < 0 ? new BigDec(this.m.abs(), this.e) : this;
 }
 
@@ -204,7 +201,7 @@ P.abs = function() {
  * @param {!BigDec} b
  * @return {!BigDec}
  */
-P.add = function(b) {
+BigDec.prototype.add = function(b) {
 	var r = nbd();
 	add3(this, b, r);
 	return r;
@@ -213,7 +210,7 @@ P.add = function(b) {
 /**
  * @return {!BigDec}
  */
-P.clone = function() {
+BigDec.prototype.clone = function() {
 	return new BigDec(this.m.clone(), this.e);
 }
 
@@ -221,7 +218,7 @@ P.clone = function() {
  * @param {!BigDec} b
  * @return {number}
  */
-P.compareTo = function(b) {
+BigDec.prototype.compareTo = function(b) {
 	if (this.m.s < 0) {
 		if (b.m.s >= 0) {
 			return -1;
@@ -245,28 +242,28 @@ P.compareTo = function(b) {
 /**
  * @param {!BigDec} r
  */
-P.copyTo = function(r) {
+BigDec.prototype.copyTo = function(r) {
 	this.m.copyTo(r.m);
 	r.e = this.e;
 }
 
 /*
-P.divideAndRemainder = function(b) {
+BigDec.prototype.divideAndRemainder = function(b) {
 	var q = nbd();
 	var r = nbd();
 	div(this, b, q, r);
 	return [q, r];
 }
 
-P.equals = function(b) {
+BigDec.prototype.equals = function(b) {
 	return this.compareTo(b) == 0;
 }
 
-P.max = function(b) {
+BigDec.prototype.max = function(b) {
 	return this.compareTo(b) > 0 ? this : b;
 }
 
-P.min = function(b) {
+BigDec.prototype.min = function(b) {
 	return this.compareTo(b) < 0 ? this : b;
 }
 */
@@ -275,7 +272,7 @@ P.min = function(b) {
  * @param {!BigDec} b
  * @return {!BigDec}
  */
-P.multiply = function(b) {
+BigDec.prototype.multiply = function(b) {
 	var r = nbd();
 	mul3(this, b, r);
 	return r;
@@ -285,7 +282,7 @@ P.multiply = function(b) {
  * Returns -1 if this value is negative, 1 if positive, else 0 (if this is equal to zero).
  * @return {number}
  */
-P.signum = function() {
+BigDec.prototype.signum = function() {
 	return this.m.signum();
 }
 
@@ -293,7 +290,7 @@ P.signum = function() {
  * @param {!BigDec} b
  * @return {!BigDec}
  */
-P.subtract = function(b) {
+BigDec.prototype.subtract = function(b) {
 	var r = nbd();
 	sub3(this, b, r);
 	return r;
@@ -302,7 +299,7 @@ P.subtract = function(b) {
 /**
  * @return {!string}
  */
-P.toString = function() {
+BigDec.prototype.toString = function() {
 	// TODO: return same string that java returns
 	var s = this.m.toString();
 	if (this.e != 0) {

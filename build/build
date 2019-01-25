@@ -65,7 +65,7 @@ printf "\nreturn BigInteger;\n}());\n" >> "$TMPDIR/jsbn.js"
 rm "browser/opac.browser.min.js"
 if [ -f $CCJAR ]; then
 	java -jar "$CCJAR" --js "$TMPDIR/jsbn.js" --js_output_file "$TMPDIR/jsbn.min.js"
-	java -jar "$CCJAR" --js "browser.head.js" "$TMPDIR/version.js" "$OPACJSDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper --extra_annotation_name callback
+	java -jar "$CCJAR" --js "browser.head.js" "$TMPDIR/version.js" "$OPACJSDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper --extra_annotation_name callback --extra_annotation_name hideconstructor
 
 	printf "// Minimized and bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n\n" >> "browser/opac.browser.min.js"
 	printf "/* BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/) LICENSE file: */\n" >> "browser/opac.browser.min.js"

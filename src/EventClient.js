@@ -2,21 +2,21 @@
 
 /**
  * @ignore
- * @typedef {function(*, *):undefined}
+ * @typedef {function(*, *=):undefined}
  */
 var ResponseCallback;
 
 /**
  * @callback ResponseCallback
  * @param {*} result - The result of the operation. Can be null.
- * @param {*} error  - If response is an error then result is null and error is non-null
+ * @param {*=} error - If response is an error then result is null and error is non-null
  */
 
 
 /**
  * Create new EventClient
  * @constructor
- * @param o - Object that has a write() and flush() method.
+ * @param {!IWriter} o - Object that has a write() and flush() method.
  */
 function EventClient(o) {
 	/** @type {!Serializer} */
@@ -25,7 +25,7 @@ function EventClient(o) {
 	this.id = 0;
 	/** @type {Queue<ResponseCallback>} */
 	this.mMainCallbacks = new Queue();
-	/** @type {!Map<*,ResponseCallback>} */
+	/** @type {!Map<*,!ResponseCallback>} */
 	this.mAsyncCallbacks = new Map();
 	/** @type {!PartialParser} */
 	this.mParser = new PartialParser();
@@ -37,9 +37,9 @@ function EventClient(o) {
 
 (function(){
 
-/** @alias EventClient.prototype */
-var P = EventClient.prototype;
-
+/**
+ * @param {EventClient} c
+ */
 function schedTimeout(c) {
 	if (c.mTimeout === null) {
 		// TODO: use process.nextTick() in node?
@@ -50,11 +50,20 @@ function schedTimeout(c) {
 	}
 }
 
+/**
+ * @param {EventClient} c
+ * @param {string} cmd
+ */
 function writeCommand(c, cmd) {
 	// note: command cache was removed. STR2BUF (in Serializer) can be used instead
 	c.s.writeString(cmd);
 }
 
+/**
+ * @param {EventClient} c
+ * @param {string} cmd
+ * @param {Array=} args
+ */
 function callNoResponse(c, cmd, args) {
 	// if no callback is specified then send null as async id indicating server must not send response
 	c.s.write1(OpaDef.ARRAYSTART);
@@ -67,7 +76,7 @@ function callNoResponse(c, cmd, args) {
 /**
  * Send all buffered requests.
  */
-P.flush = function() {
+EventClient.prototype.flush = function() {
 	if (this.mTimeout != null) {
 		clearTimeout(this.mTimeout);
 		this.mTimeout = null;
@@ -81,7 +90,7 @@ P.flush = function() {
  * @param {Array=} args - The parameters for the command
  * @param {ResponseCallback=} cb - A callback function to invoke when the response is received
  */
-P.call = function(cmd, args, cb) {
+EventClient.prototype.call = function(cmd, args, cb) {
 	if (!cb) {
 		return callNoResponse(this, cmd, args);
 	}
@@ -95,6 +104,14 @@ P.call = function(cmd, args, cb) {
 	this.mMainCallbacks.push(cb);
 }
 
+/**
+ * @param {!EventClient} c
+ * @param {string} cmd
+ * @param {Array} args
+ * @param {!ResponseCallback} cb
+ * @param {number} isP
+ * @return {number}
+ */
 function callId(c, cmd, args, cb, isP) {
 	++c.id;
 	var id = isP ? 0 - c.id : c.id;
@@ -117,7 +134,7 @@ function callId(c, cmd, args, cb, isP) {
  * @param {!Array} args - The parameters for the command
  * @param {!ResponseCallback} cb - A callback function to invoke when the response is received
  */
-P.callA = function(cmd, args, cb) {
+EventClient.prototype.callA = function(cmd, args, cb) {
 	callId(this, cmd, args, cb, 0);
 }
 
@@ -128,7 +145,7 @@ P.callA = function(cmd, args, cb) {
  * @param {!ResponseCallback} cb - A callback function to invoke when the responses are received
  * @return {*} - The value that is used when calling unregister()
  */
-P.callAP = function(cmd, args, cb) {
+EventClient.prototype.callAP = function(cmd, args, cb) {
 	return callId(this, cmd, args, cb, 1);
 }
 
@@ -136,10 +153,14 @@ P.callAP = function(cmd, args, cb) {
  * Removes the specified async callback from the client. Use this when unsubscribing from a channel.
  * @param {*} id - The value that was returned from callAP()
  */
-P.unregister = function(id) {
+EventClient.prototype.unregister = function(id) {
 	return this.mAsyncCallbacks.delete(id);
 }
 
+/**
+ * @param {!EventClient} c
+ * @param {!Array<*>} msg
+ */
 function onResponse(c, msg) {
 	var cb;
 	var id = msg.length >= 3 ? msg[2] : null;
@@ -166,10 +187,9 @@ function onResponse(c, msg) {
 /**
  * Call this method when more data has arrived from server. Buffer will be parsed
  * and callbacks invoked for each complete response received.
- * @param b - Byte buffer containing data to parse. Type is Uint8Array when running in browser.
- *            Type is Buffer when running in node
+ * @param {!Uint8Array} b - Byte buffer containing data to parse
  */
-P.onRecv = function(b) {
+EventClient.prototype.onRecv = function(b) {
 	this.mBuff.data = b;
 	this.mBuff.idx = 0;
 	this.mBuff.len = b.length;
@@ -186,7 +206,7 @@ P.onRecv = function(b) {
  * Call this method when connection is closed. All request callbacks that have not received a response
  * will be notified of failure. Every persistent async callback will also be notified of failure.
  */
-P.onClose = function() {
+EventClient.prototype.onClose = function() {
 	var tmp = this.mMainCallbacks;
 	while (tmp.size() > 0) {
 		var cb = tmp.shift();

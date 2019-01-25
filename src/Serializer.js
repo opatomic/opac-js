@@ -221,12 +221,12 @@ function writeBIAsVI(s, t, v) {
 		}
 	}
 
-	v = v.intValue();
-	while (v > 0x7F) {
-		s.b[s.i++] = 0x80 | (v & 0xFF);
-		v >>>= 7;
+	var intv = v.intValue();
+	while (intv > 0x7F) {
+		s.b[s.i++] = 0x80 | (intv & 0xFF);
+		intv >>>= 7;
 	}
-	s.b[s.i++] = v;
+	s.b[s.i++] = intv;
 }
 
 /**
@@ -282,14 +282,11 @@ function writeBigDec(s, v) {
 	}
 }
 
-/** @alias Serializer.prototype */
-var P = Serializer.prototype;
-
 /**
  * Write a single byte
  * @param {!number} v
  */
-P.write1 = function(v) {
+Serializer.prototype.write1 = function(v) {
 	if (this.i >= this.b.length) {
 		flushBuff(this);
 	}
@@ -300,7 +297,7 @@ P.write1 = function(v) {
  * Write a raw byte array
  * @param {!Uint8Array} b
  */
-P.write = function(b) {
+Serializer.prototype.write = function(b) {
 	if (b.length > this.b.length - this.i) {
 		flushBuff(this);
 		if (b.length >= this.b.length) {
@@ -315,7 +312,7 @@ P.write = function(b) {
 /**
  * Force any buffered bytes to be written
  */
-P.flush = function() {
+Serializer.prototype.flush = function() {
 	flushBuff(this);
 	if (typeof this.o.flush === "function") {
 		this.o.flush();
@@ -326,7 +323,7 @@ P.flush = function() {
  * Serialize a number
  * @param {!number} v
  */
-P.writeNumber = function(v) {
+Serializer.prototype.writeNumber = function(v) {
 	if (Number.isSafeInteger(v)) {
 		if (v > 0) {
 			writeTypeAndVarint(this, OpaDef.POSVARINT, v);
@@ -350,14 +347,14 @@ P.writeNumber = function(v) {
  * Serialize a string
  * @param {!string} v
  */
-P.writeString = function(v) {
+Serializer.prototype.writeString = function(v) {
 	if (v.length == 0) {
 		this.write1(OpaDef.EMPTYSTR);
 		return;
 	}
 	var b;
-	if (this.STR2BUF) {
-		b = this.STR2BUF.get(v);
+	if (Serializer.STR2BUF) {
+		b = Serializer.STR2BUF.get(v);
 		if (b) {
 			writeTypeAndVarint(this, OpaDef.STRLPVI, b.length);
 			this.write(b);
@@ -379,7 +376,7 @@ P.writeString = function(v) {
  * Serialize an Array
  * @param {!Array} v
  */
-P.writeArray = function(v) {
+Serializer.prototype.writeArray = function(v) {
 	if (v.length == 0) {
 		this.write1(OpaDef.EMPTYARRAY);
 	} else {
@@ -396,7 +393,7 @@ P.writeArray = function(v) {
  * or an Object with toOpaSO() property, or an Array containing any of the previously listed types.
  * @param {*} v
  */
-P.writeObject = function(v) {
+Serializer.prototype.writeObject = function(v) {
 	// TODO: handle iterable objects?
 	//  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols
 	switch (typeof v) {
@@ -419,9 +416,10 @@ P.writeObject = function(v) {
 			this.write1(OpaDef.UNDEFINED);
 			break;
 		case "object":
+			v = /** @type {Object} */ (v);
 			if (v === null) {
 				this.write1(OpaDef.NULL);
-			} else if (v.toOpaSO && (typeof v.toOpaSO) == "function") {
+			} else if (v.hasOwnProperty("toOpaSO") && typeof v.toOpaSO == "function") {
 				v.toOpaSO(this);
 			} else if (Array.isArray(v)) {
 				this.writeArray(v);
@@ -432,6 +430,7 @@ P.writeObject = function(v) {
 			} else if (v instanceof BigDec) {
 				writeBigDec(this, v);
 			} else if (v.constructor.name == "Uint8Array" || v.constructor.name == "Buffer") {
+				v = /** @type {!Uint8Array} */ (v);
 				if (v.length == 0) {
 					this.write1(OpaDef.EMPTYBIN);
 				} else {

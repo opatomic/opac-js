@@ -238,7 +238,7 @@ function varintNextByte(p, bval) {
  * @return {!string}
  */
 function getstr(p, b) {
-	var str = p.BUF2STR ? p.BUF2STR.get(b) : null;
+	var str = PartialParser.BUF2STR ? PartialParser.BUF2STR.get(b) : null;
 	return str ? str : STRDEC(b);
 }
 
@@ -251,14 +251,12 @@ function clearBytes(p) {
 	}
 }
 
-/** @alias PartialParser.prototype */
-var P = PartialParser.prototype;
-
 /**
  * @param {!PartialParser.Buff} b
- * @return {*}
+ * @return {Array}
+ * @memberof PartialParser
  */
-P.parseNext = function(b) {
+PartialParser.prototype.parseNext = function(b) {
 	var p = this;
 	var buff = b.data;
 	var idx = b.idx;
@@ -319,7 +317,7 @@ P.parseNext = function(b) {
 							b.len = stop - idx;
 							return tmp;
 						}
-						var parent = p.mContainers.pop();
+						var parent = /** @type {!Array} */ (p.mContainers.pop());
 						parent.push(p.mCurrCont);
 						p.mCurrCont = parent;
 						continue;
@@ -426,15 +424,18 @@ P.parseNext = function(b) {
  */
 PartialParser.BUF2STR = (typeof Map == "undefined") ? null : new Map();
 
+}());
+
 /**
  * @constructor
  * @memberof PartialParser
  */
 PartialParser.Buff = function() {
+	/** @type {Uint8Array} */
 	this.data = null;
+	/** @type {number} */
 	this.idx = 0;
+	/** @type {number} */
 	this.len = 0;
 };
-
-}());
 
