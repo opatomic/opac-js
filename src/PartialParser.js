@@ -165,6 +165,7 @@ function bigintFromBytes2(b, len, r) {
 /**
  * @param {boolean} neg
  * @param {!BigInteger} v
+ * @return {!BigInteger}
  */
 function getBI(neg, v) {
 	if (neg) {
