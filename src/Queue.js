@@ -26,17 +26,18 @@ function Queue() {
 	/** @type {number} */
 	this.totlen = 0;
 	/** @type {!QChunk} */
-	this.head = newChunk(this.newChunkSize, null);
+	this.head = newQChunk(this.newChunkSize, null);
 	/** @type {!QChunk} */
 	this.tail = this.head;
 }
 
 /**
+ * @ignore
  * @param {number} size - size of chunk's array
  * @param {QChunk} prev - link to previous chunk
  * @return {!QChunk}
  */
-function newChunk(size, prev) {
+function newQChunk(size, prev) {
 	var c = /** @type {!QChunk} */ (new Array(size));
 	c.next = null;
 	c.head = 0;
@@ -55,7 +56,7 @@ function newChunk(size, prev) {
 Queue.prototype.push = function(item) {
 	var chunk = this.tail;
 	if (chunk.used + 1 >= chunk.length) {
-		this.tail = chunk = newChunk(this.newChunkSize, chunk);
+		this.tail = chunk = newQChunk(this.newChunkSize, chunk);
 	}
 	chunk[(chunk.head + chunk.used) & (chunk.length - 1)] = item;
 	chunk.used++;
