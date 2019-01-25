@@ -166,7 +166,7 @@ function onResponse(c, msg) {
 	var id = msg.length >= 3 ? msg[2] : null;
 	if (id !== null && id !== undefined) {
 		cb = c.mAsyncCallbacks.get(id);
-		if (id > 0) {
+		if (cb != null && (/** @type {number} */(id) > 0)) {
 			c.mAsyncCallbacks.delete(id);
 		}
 	} else {

@@ -109,7 +109,7 @@ function getVarint32(p, neg) {
 	if (typeof p.mVarintVal != "number" || p.mVarintVal > 2147483647) {
 		throwErr(p, "varint out of range");
 	}
-	return neg ? 0 - p.mVarintVal : p.mVarintVal;
+	return neg ? 0 - /** @type {number} */ (p.mVarintVal) : /** @type {number} */ (p.mVarintVal);
 }
 
 /**
@@ -163,13 +163,24 @@ function bigintFromBytes2(b, len, r) {
 }
 
 /**
+ * @param {boolean} neg
+ * @param {!BigInteger} v
+ */
+function getBI(neg, v) {
+	if (neg) {
+		BigInteger.ZERO.subTo(v, v);
+	}
+	return v;
+}
+
+/**
  * @param {!PartialParser} p
  * @param {boolean} neg
  * @return {!BigInteger}
  */
 function bigIntFromBytes(p, neg) {
 	//var b = p.mBytes.subarray(0, p.mBytesLen);
-	return getNum(neg, bigintFromBytes2(p.mBytes, p.mBytesLen, new BigInteger(null)));
+	return getBI(neg, bigintFromBytes2(p.mBytes, p.mBytesLen, new BigInteger(null)));
 }
 
 /**
@@ -178,9 +189,7 @@ function bigIntFromBytes(p, neg) {
  */
 function bigIntFromNumber(n) {
 	if (n < 0) {
-		var bi = bigIntFromNumber(0 - n);
-		BigInteger.ZERO.subTo(bi, bi);
-		return bi;
+		return getBI(true, bigIntFromNumber(0 - n));
 	}
 	if (n == 0) {
 		return BigInteger.ZERO.clone();
@@ -223,11 +232,11 @@ function varintNextByte(p, bval) {
 	} else {
 		if (p.mVarintBitshift == 49) {
 			// mVarintVal is a number; must convert to a BigInteger
-			p.mVarintVal = bigIntFromNumber(p.mVarintVal);
+			p.mVarintVal = bigIntFromNumber(/** @type {number} */ (p.mVarintVal));
 		}
 		TMPBI1.fromInt(bval & 0x7F);
 		TMPBI1.lShiftTo(p.mVarintBitshift, TMPBI1);
-		p.mVarintVal.addTo(TMPBI1, p.mVarintVal);
+		p.mVarintVal.addTo(TMPBI1, /** @type {!BigInteger} */ (p.mVarintVal));
 	}
 	p.mVarintBitshift += 7;
 }

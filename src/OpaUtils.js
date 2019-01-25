@@ -70,14 +70,13 @@ function opaStringify(obj, space) {
 				return "undefined";
 			case "null":
 				return "null";
-			case "SORTMAX":
-				return "SORTMAX";
-			case "boolean":
-			case "number":
+			//case "SORTMAX":
+			//	return "SORTMAX";
+			//case "boolean":
+			//case "number":
 			//case "BigInteger":
 			//case "BigDec":
-				obj = /** @type {boolean|number} */ (obj);
-				return obj.toString();
+			//	return obj.toString();
 			case "Uint8Array":
 			case "Buffer":
 				//var dv = new DataView(obj.buffer, obj.byteOffset, obj.byteLength);
