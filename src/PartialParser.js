@@ -195,7 +195,7 @@ function bigIntFromNumber(n) {
 	if (n == 0) {
 		return BigInteger.ZERO.clone();
 	}
-	if (!Number.isSafeInteger(n)) {
+	if (!isSafeInteger(n)) {
 		throw "arg is not safe integer";
 	}
 

@@ -33,7 +33,7 @@ function BigDec(man, exp) {
 		} else {
 			v.m = new BigInteger(s.substring(0, epos));
 			v.e = parseInt(s.substr(epos + 1), 10);
-			if (!Number.isSafeInteger(v.e)) {
+			if (!isSafeInteger(v.e)) {
 				throw 'number string "' + s + '" cannot be parsed';
 			}
 		}

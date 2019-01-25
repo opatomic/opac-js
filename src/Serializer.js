@@ -324,7 +324,7 @@ Serializer.prototype.flush = function() {
  * @param {!number} v
  */
 Serializer.prototype.writeNumber = function(v) {
-	if (Number.isSafeInteger(v)) {
+	if (isSafeInteger(v)) {
 		if (v > 0) {
 			writeTypeAndVarint(this, OpaDef.POSVARINT, v);
 		} else if (v == 0) {
