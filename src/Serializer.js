@@ -32,14 +32,14 @@ function Serializer(out, sz) {
 
 (function(){
 
-const SURROGATE_OFFSET = 0x010000 - (0xD800 << 10) - 0xDC00;
-const BIMAXVARINT = new BigInteger("9223372036854775807");
-const BIMINVARINT = BIMAXVARINT.negate();
-const BIGINT31 = new BigInteger("7FFFFFFF", 16);
+var SURROGATE_OFFSET = 0x010000 - (0xD800 << 10) - 0xDC00;
+var BIMAXVARINT = new BigInteger("9223372036854775807");
+var BIMINVARINT = BIMAXVARINT.negate();
+var BIGINT31 = new BigInteger("7FFFFFFF", 16);
 
 // note: potential memory leak here. keeping a temp big int object for serialization, to prevent allocations
 //  it does not get cleared after use. assume memory usage will not be very large for 1 value
-const TMPBI2 = new BigInteger(null);
+var TMPBI2 = new BigInteger(null);
 
 /**
  * @param {!string} s

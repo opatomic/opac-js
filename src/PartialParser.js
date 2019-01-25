@@ -7,22 +7,22 @@ var PartialParser = function(){};
 
 (function(){
 
-const S_NEXTOBJ = 1;
-const S_VARINT1 = 2;
-const S_VARINT2 = 3;
-const S_VARDEC1 = 4;
-const S_VARDEC2 = 5;
-const S_BIGINT  = 6;
-const S_BIGDEC1 = 7;
-const S_BIGDEC2 = 8;
-const S_BYTES1  = 9;
-const S_BYTES2  = 10;
-const S_BLOB    = 11;
-const S_STR     = 12;
-const S_ERR     = 13;
+var S_NEXTOBJ = 1;
+var S_VARINT1 = 2;
+var S_VARINT2 = 3;
+var S_VARDEC1 = 4;
+var S_VARDEC2 = 5;
+var S_BIGINT  = 6;
+var S_BIGDEC1 = 7;
+var S_BIGDEC2 = 8;
+var S_BYTES1  = 9;
+var S_BYTES2  = 10;
+var S_BLOB    = 11;
+var S_STR     = 12;
+var S_ERR     = 13;
 
 // note: this temp variable is only used to read varints so it will never store more than a 64 bit integer (low memory)
-const TMPBI1 = new BigInteger(null);
+var TMPBI1 = new BigInteger(null);
 
 /**
  * @constructor

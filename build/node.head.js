@@ -1,18 +1,18 @@
 "use strict";
 
-const BigInteger = require("jsbn").BigInteger;
+var BigInteger = require("jsbn").BigInteger;
 
-const NEWBUF = function(l) {
+var NEWBUF = function(l) {
 	// TODO: ok to use unsafe here?
 	return Buffer.allocUnsafe(l);
 }
-const STRENC = function(s) {
+var STRENC = function(s) {
 	return Buffer.from(s, "utf-8");
 }
-const STRDEC = function(b) {
+var STRDEC = function(b) {
 	return b.toString("utf-8");
 }
-const BTOA = function(v) {
+var BTOA = function(v) {
 	return Buffer.from(v).toString("base64");
 }
 

@@ -54,7 +54,7 @@ VERSION=`cat version.txt`
 VERSION=$VERSION$VERSUFF
 
 
-printf "const VERSION = \"$VERSION\";\n\n" >> "$TMPDIR/version.js"
+printf "var VERSION = \"$VERSION\";\n\n" >> "$TMPDIR/version.js"
 
 
 printf "var BigInteger = (function(){\n" > "$TMPDIR/jsbn.js"
