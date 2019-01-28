@@ -1,6 +1,6 @@
 {
   "name": "opatomic-client",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "description": "Opatomic client",
   "keywords": ["opatomic", "client"],
   "homepage": "https://github.com/opatomic/opac-js",

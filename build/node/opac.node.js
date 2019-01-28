@@ -16,7 +16,7 @@ var BTOA = function(v) {
 	return Buffer.from(v).toString("base64");
 }
 
-var VERSION = "0.1.29";
+var VERSION = "0.1.30";
 
 
 /**

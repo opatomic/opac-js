@@ -1295,7 +1295,7 @@ return BigInteger;
 }());
 
 
-var VERSION = "0.1.29";
+var VERSION = "0.1.30";
 
 
 /**
