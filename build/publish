@@ -10,7 +10,16 @@ VERSION=`cat version.txt`
 
 ./build --publish
 
-git commit -m "build v$VERSION" version.txt browser/* node/*
+if [ $? -ne 0 ]; then { echo "command failed" ; exit 1; } fi
+
+git add docs/*
+
+if [ $? -ne 0 ]; then { echo "command failed" ; exit 1; } fi
+
+git commit -m "build v$VERSION" version.txt browser/* node/* docs/*
+
+if [ $? -ne 0 ]; then { echo "command failed" ; exit 1; } fi
+
 npm publish node
 
 echo published v$VERSION
