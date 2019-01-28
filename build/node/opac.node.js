@@ -1,26 +1,122 @@
 "use strict";
 
-const Deque = require("double-ended-queue");
-const BigInteger = require("jsbn").BigInteger;
+var BigInteger = require("jsbn").BigInteger;
 
-const NEWBUF = function(l) {
+var NEWBUF = function(l) {
 	// TODO: ok to use unsafe here?
 	return Buffer.allocUnsafe(l);
 }
-const STRENC = function(s) {
+var STRENC = function(s) {
 	return Buffer.from(s, "utf-8");
 }
-const STRDEC = function(b) {
+var STRDEC = function(b) {
 	return b.toString("utf-8");
 }
-const BTOA = function(v) {
+var BTOA = function(v) {
 	return Buffer.from(v).toString("base64");
 }
 
-const VERSION = "0.1.26";
+var VERSION = "0.1.29";
 
-var BigDec = (function(){
-// #### Contents of BigDec.js ####
+
+/**
+ * @classdesc This class is not actually created. It is here to help with type checking.
+ * @constructor
+ * @extends Array
+ * @hideconstructor
+ */
+function QChunk() {}
+/** @type {QChunk} */
+QChunk.prototype.next;
+/** @type {number} */
+QChunk.prototype.head;
+/** @type {number} */
+QChunk.prototype.used;
+
+/**
+ * Queue that allocates arrays in small chunks as needed. Chunks are stored as linked list.
+ * This design is efficient because it does not require growing arrays and copying data when
+ * capacity is exceeded. Also, large contiguous chunks of memory are not required.
+ * If only 1 chunk is needed, then it is utilized as a circular array to avoid constantly
+ * reallocating a new chunk.
+ * @constructor
+ * @template T
+ */
+function Queue() {
+	/** @type {number} */
+	this.totlen = 0;
+	/** @type {!QChunk} */
+	this.head = newQChunk(this.newChunkSize, null);
+	/** @type {!QChunk} */
+	this.tail = this.head;
+}
+
+/**
+ * @ignore
+ * @param {number} size - size of chunk's array
+ * @param {QChunk} prev - link to previous chunk
+ * @return {!QChunk}
+ */
+function newQChunk(size, prev) {
+	var c = /** @type {!QChunk} */ (new Array(size));
+	c.next = null;
+	c.head = 0;
+	c.used = 0;
+	if (prev) {
+		prev.next = c;
+	}
+	return c;
+}
+
+/**
+ * Add the specified element to the tail of the queue
+ * @param {T} item
+ * @return {number} new length after adding item
+ */
+Queue.prototype.push = function(item) {
+	var chunk = this.tail;
+	if (chunk.used + 1 >= chunk.length) {
+		this.tail = chunk = newQChunk(this.newChunkSize, chunk);
+	}
+	chunk[(chunk.head + chunk.used) & (chunk.length - 1)] = item;
+	chunk.used++;
+	return ++this.totlen;
+};
+
+/**
+ * Remove an item from the head of the queue
+ * @return {T} The first item in the queue or undefined if queue is empty
+ */
+Queue.prototype.shift = function() {
+	var chunk = this.head;
+	if (chunk.used == 0) {
+		return undefined;
+	}
+	var idx = chunk.head;
+	var item = chunk[idx];
+	chunk[idx] = undefined;
+	chunk.used--;
+	if (chunk.used == 0 && chunk.next) {
+		this.head = chunk.next;
+	} else {
+		chunk.head = (idx + 1) & (chunk.length - 1);
+	}
+	this.totlen--;
+	return item;
+};
+
+/**
+ * @return {number}
+ */
+Queue.prototype.size = function() {
+	return this.totlen;
+};
+
+/**
+ * size of each new array chunk. must be greater than 0 and a power of 2!
+ * @type {number}
+ */
+Queue.prototype.newChunkSize = 64;
 
 // dependencies: BigInteger
 
@@ -34,38 +130,60 @@ TODO:
  scale()
 */
 
+/**
+ * @constructor
+ * @param {BigInteger|string} man
+ * @param {number=} exp
+ */
 function BigDec(man, exp) {
-	if (man && typeof man == "string") {
-		bdFromString(this, man);
-	} else {
-		this.m = man;
-		this.e = exp;
-	}
-}
-
-function nbd() { return new BigDec(new BigInteger(null), 0); }
-
-function bdFromString(v, s) {
-	var decPos = s.indexOf(".");
-	var epos = s.indexOf("e");
-	if (epos < 0) {
-		epos = s.indexOf("E");
-	}
-	if (epos < 0) {
-		v.m = new BigInteger(s);
-		v.e = 0;
-	} else {
-		v.m = new BigInteger(s.substring(0, epos));
-		v.e = parseInt(s.substr(epos + 1), 10);
-		if (!Number.isSafeInteger(v.e)) {
-			throw 'number string "' + s + '" cannot be parsed';
+	/**
+	 * @ignore
+	 * @param {!BigDec} v
+	 * @param {!string} s
+	 */
+	function bdFromString(v, s) {
+		var decPos = s.indexOf(".");
+		var epos = s.indexOf("e");
+		if (epos < 0) {
+			epos = s.indexOf("E");
+		}
+		if (epos < 0) {
+			v.m = new BigInteger(s);
+			v.e = 0;
+		} else {
+			v.m = new BigInteger(s.substring(0, epos));
+			v.e = parseInt(s.substr(epos + 1), 10);
+			if (!isSafeInteger(v.e)) {
+				throw 'number string "' + s + '" cannot be parsed';
+			}
+		}
+		if (decPos >= 0) {
+			v.e -= epos < 0 ? s.length - decPos - 1 : epos - decPos - 1;
 		}
 	}
-	if (decPos >= 0) {
-		v.e -= epos < 0 ? s.length - decPos - 1 : epos - decPos - 1;
+
+	if (typeof man == "string") {
+		bdFromString(this, man);
+	} else {
+		/** @type {!BigInteger} */
+		this.m = man ? man : new BigInteger(null);
+		/** @type {number} */
+		this.e = exp ? exp : 0;
 	}
 }
 
+(function(){
+
+/**
+ * @return {!BigDec}
+ */
+function nbd() { return new BigDec(new BigInteger(null), 0); }
+
+/**
+ * @param {!BigDec} a
+ * @param {number} amount
+ * @return {!BigDec}
+ */
 function extend(a, amount) {
 	if (amount < 0) {
 		throw "invalid extension. must be >= 0";
@@ -80,7 +198,12 @@ function extend(a, amount) {
 	return new BigDec(a.m.signum() < 0 ? m.negate() : m, a.e - amount);
 }
 
-// r = a + b
+/**
+ * r = a + b
+ * @param {!BigDec} a
+ * @param {!BigDec} b
+ * @param {!BigDec} r
+ */
 function add3(a, b, r) {
 	if (b.signum() == 0) {
 		a.copyTo(r);
@@ -97,7 +220,12 @@ function add3(a, b, r) {
 	}
 }
 
-// r = a - b
+/**
+ * r = a - b
+ * @param {!BigDec} a
+ * @param {!BigDec} b
+ * @param {!BigDec} r
+ */
 function sub3(a, b, r) {
 	if (b.signum() == 0) {
 		a.copyTo(r);
@@ -115,7 +243,12 @@ function sub3(a, b, r) {
 	}
 }
 
-// r = a * b
+/**
+ * r = a * b
+ * @param {!BigDec} a
+ * @param {!BigDec} b
+ * @param {!BigDec} r
+ */
 function mul3(a, b, r) {
 	if (a == r || b == r) {
 		// multiplyTo() docs say that result cannot be same object as a or b
@@ -132,15 +265,21 @@ function mul3(a, b, r) {
 		} else if (a.e < b.e) {
 			b = extend(b, b.e - a.e);
 		}
-		
+
 		a.m.multiplyTo(b.m, r.m);
 		r.e = r.m.signum() == 0 ? 0 : a.e + b.e;
 	}
 }
 
-// q = a / b
-// r = a % b
-// q or r may be null
+/**
+ * q = a / b
+ * r = a % b
+ * q or r may be null
+ * @param {!BigDec} a
+ * @param {!BigDec} b
+ * @param {BigDec} q
+ * @param {BigDec} r
+ */
 function div(a, b, q, r) {
 	if (a == r || b == r) {
 		var tmp = r.clone();
@@ -155,39 +294,59 @@ function div(a, b, q, r) {
 		// actually, can probably define x/0 to be 0. see https://www.hillelwayne.com/post/divide-by-zero/
 		throw "cannot divide by 0";
 	} else if (a.signum() == 0) {
-		a.copyTo(q);
-		a.copyTo(r);
+		if (q) {
+			a.copyTo(q);
+		}
+		if (r) {
+			a.copyTo(r);
+		}
 	} else {
 		if (a.e > b.e) {
 			a = extend(a, a.e - b.e);
 		} else if (a.e < b.e) {
 			b = extend(b, b.e - a.e);
 		}
-		
+
 		// TODO: is this correct?
-		a.m.divRemTo(b.m, q.m, r.m);
-		q.e = 0;
-		r.e = 0;
+		a.m.divRemTo(b.m, q ? q.m : null, r ? r.m : null);
+		if (q) {
+			q.e = 0;
+		}
+		if (r) {
+			r.e = 0;
+		}
 	}
 }
 
-var P = BigDec.prototype;
-
-P.abs = function() {
+/**
+ * @return {!BigDec}
+ */
+BigDec.prototype.abs = function() {
 	return this.m.signum() < 0 ? new BigDec(this.m.abs(), this.e) : this;
 }
 
-P.add = function(b) {
+/**
+ * @param {!BigDec} b
+ * @return {!BigDec}
+ */
+BigDec.prototype.add = function(b) {
 	var r = nbd();
 	add3(this, b, r);
 	return r;
 }
 
-P.clone = function() {
+/**
+ * @return {!BigDec}
+ */
+BigDec.prototype.clone = function() {
 	return new BigDec(this.m.clone(), this.e);
 }
 
-P.compareTo = function(b) {
+/**
+ * @param {!BigDec} b
+ * @return {number}
+ */
+BigDec.prototype.compareTo = function(b) {
 	if (this.m.s < 0) {
 		if (b.m.s >= 0) {
 			return -1;
@@ -195,9 +354,9 @@ P.compareTo = function(b) {
 	} else if (b.m.s < 0) {
 		return 1;
 	}
-	
-	// TODO: if exp's are not equal, can estimate comparison based on number of bits 
-	//  each power of ten is worth which could prevent having to multiply and extend 
+
+	// TODO: if exp's are not equal, can estimate comparison based on number of bits
+	//  each power of ten is worth which could prevent having to multiply and extend
 	//  a value until exponents are equal
 	if (this.e == b.e) {
 		return this.m.compareTo(b.m);
@@ -208,50 +367,68 @@ P.compareTo = function(b) {
 	}
 }
 
-P.copyTo = function(r) {
+/**
+ * @param {!BigDec} r
+ */
+BigDec.prototype.copyTo = function(r) {
 	this.m.copyTo(r.m);
 	r.e = this.e;
 }
 
 /*
-P.divideAndRemainder = function(b) {
+BigDec.prototype.divideAndRemainder = function(b) {
 	var q = nbd();
 	var r = nbd();
 	div(this, b, q, r);
 	return [q, r];
 }
 
-P.equals = function(b) {
+BigDec.prototype.equals = function(b) {
 	return this.compareTo(b) == 0;
 }
 
-P.max = function(b) {
+BigDec.prototype.max = function(b) {
 	return this.compareTo(b) > 0 ? this : b;
 }
 
-P.min = function(b) {
+BigDec.prototype.min = function(b) {
 	return this.compareTo(b) < 0 ? this : b;
 }
 */
 
-P.multiply = function(b) {
+/**
+ * @param {!BigDec} b
+ * @return {!BigDec}
+ */
+BigDec.prototype.multiply = function(b) {
 	var r = nbd();
 	mul3(this, b, r);
 	return r;
 }
 
-P.signum = function() {
+/**
+ * Returns -1 if this value is negative, 1 if positive, else 0 (if this is equal to zero).
+ * @return {number}
+ */
+BigDec.prototype.signum = function() {
 	return this.m.signum();
 }
 
-P.subtract = function(b) {
+/**
+ * @param {!BigDec} b
+ * @return {!BigDec}
+ */
+BigDec.prototype.subtract = function(b) {
 	var r = nbd();
 	sub3(this, b, r);
 	return r;
 }
 
-// TODO: return same string that java returns
-P.toString = function() {
+/**
+ * @return {!string}
+ */
+BigDec.prototype.toString = function() {
+	// TODO: return same string that java returns
 	var s = this.m.toString();
 	if (this.e != 0) {
 		s += "e" + this.e.toString();
@@ -259,100 +436,167 @@ P.toString = function() {
 	return s;
 }
 
-return BigDec;
 }());
 
-var OpaDef = (function(){
-// #### Contents of OpaDef.js ####
 
+/**
+ * @constructor
+ * @ignore
+ */
+function OpaSortMax() {
+	this.toString = function(){return "SORTMAX";}
+}
 
+/**
+ * @class OpaDef
+ * @hideconstructor
+ */
+var OpaDef = {};
+
+(function(){
+
+/**
+ * @param {!string} s
+ * @return {number}
+ */
 function CC(s) {
 	return s.charCodeAt(0);
 }
 
-var OpaDef = {
-	UNDEFINED    : CC("U"),
-	NULL         : CC("N"),
-	FALSE        : CC("F"),
-	TRUE         : CC("T"),
-	ZERO         : CC("O"),
-	EMPTYBIN     : CC("A"),
-	EMPTYSTR     : CC("R"),
-	EMPTYARRAY   : CC("M"),
-	SORTMAX      : CC("Z"),
+/** @const {number} */
+OpaDef.UNDEFINED    = CC("U");
+/** @const {number} */
+OpaDef.NULL         = CC("N");
+/** @const {number} */
+OpaDef.FALSE        = CC("F");
+/** @const {number} */
+OpaDef.TRUE         = CC("T");
+/** @const {number} */
+OpaDef.ZERO         = CC("O");
+/** @const {number} */
+OpaDef.EMPTYBIN     = CC("A");
+/** @const {number} */
+OpaDef.EMPTYSTR     = CC("R");
+/** @const {number} */
+OpaDef.EMPTYARRAY   = CC("M");
+/** @const {number} */
+OpaDef.SORTMAX      = CC("Z");
 
-	POSVARINT    : CC("D"),
-	NEGVARINT    : CC("E"),
-	POSPOSVARDEC : CC("G"),
-	POSNEGVARDEC : CC("H"),
-	NEGPOSVARDEC : CC("I"),
-	NEGNEGVARDEC : CC("J"),
-	POSBIGINT    : CC("K"),
-	NEGBIGINT    : CC("L"),
-	POSPOSBIGDEC : CC("V"),
-	POSNEGBIGDEC : CC("W"),
-	NEGPOSBIGDEC : CC("X"),
-	NEGNEGBIGDEC : CC("Y"),
+/** @const {number} */
+OpaDef.POSVARINT    = CC("D");
+/** @const {number} */
+OpaDef.NEGVARINT    = CC("E");
+/** @const {number} */
+OpaDef.POSPOSVARDEC = CC("G");
+/** @const {number} */
+OpaDef.POSNEGVARDEC = CC("H");
+/** @const {number} */
+OpaDef.NEGPOSVARDEC = CC("I");
+/** @const {number} */
+OpaDef.NEGNEGVARDEC = CC("J");
+/** @const {number} */
+OpaDef.POSBIGINT    = CC("K");
+/** @const {number} */
+OpaDef.NEGBIGINT    = CC("L");
+/** @const {number} */
+OpaDef.POSPOSBIGDEC = CC("V");
+/** @const {number} */
+OpaDef.POSNEGBIGDEC = CC("W");
+/** @const {number} */
+OpaDef.NEGPOSBIGDEC = CC("X");
+/** @const {number} */
+OpaDef.NEGNEGBIGDEC = CC("Y");
 
-	BINLPVI      : CC("B"),
-	STRLPVI      : CC("S"),
+/** @const {number} */
+OpaDef.BINLPVI      = CC("B");
+/** @const {number} */
+OpaDef.STRLPVI      = CC("S");
 
-	ARRAYSTART   : CC("["),
-	ARRAYEND     : CC("]"),
-	
-	SORTMAX_OBJ  : {
-		toString: function(){return "SORTMAX";}
-	},
+/** @const {number} */
+OpaDef.ARRAYSTART   = CC("[");
+/** @const {number} */
+OpaDef.ARRAYEND     = CC("]");
 
-	ERR_CLOSED : -16394
-};
+/** @const {!OpaSortMax} */
+OpaDef.SORTMAX_OBJ = new OpaSortMax();
 
-return OpaDef;
+/** @const {number} */
+OpaDef.ERR_CLOSED = -16394;
+
 }());
 
-var PartialParser = (function(){
-// #### Contents of PartialParser.js ####
 
 // Dependencies: BigInteger, BigDec, OpaDef, NEWBUF, STRDEC
 
-const S_NEXTOBJ = 1;
-const S_VARINT1 = 2;
-const S_VARINT2 = 3;
-const S_VARDEC1 = 4;
-const S_VARDEC2 = 5;
-const S_BIGINT  = 6;
-const S_BIGDEC1 = 7;
-const S_BIGDEC2 = 8;
-const S_BYTES1  = 9;
-const S_BYTES2  = 10;
-const S_BLOB    = 11;
-const S_STR     = 12;
-const S_ERR     = 13;
+/**
+ * @constructor
+ */
+var PartialParser = function(){};
+
+(function(){
+
+var S_NEXTOBJ = 1;
+var S_VARINT1 = 2;
+var S_VARINT2 = 3;
+var S_VARDEC1 = 4;
+var S_VARDEC2 = 5;
+var S_BIGINT  = 6;
+var S_BIGDEC1 = 7;
+var S_BIGDEC2 = 8;
+var S_BYTES1  = 9;
+var S_BYTES2  = 10;
+var S_BLOB    = 11;
+var S_STR     = 12;
+var S_ERR     = 13;
 
 // note: this temp variable is only used to read varints so it will never store more than a 64 bit integer (low memory)
-const TMPBI1 = new BigInteger(null);
+var TMPBI1 = new BigInteger(null);
 
-function PartialParser() {
+/**
+ * @constructor
+ */
+PartialParser = function() {
+	/** @type {!Array<*>} */
 	this.mContainers = [];
+	/** @type {Array} */
 	this.mCurrCont = null;
+	/** @type {number} */
 	this.mState = S_NEXTOBJ;
+	/** @type {number} */
 	this.mNextState = 0;
+	/** @type {number} */
 	this.mNextState2 = 0;
+	/** @type {!BigInteger|number} */
 	this.mVarintVal = 0;
+	/** @type {number} */
 	this.mVarintMul = 0;
+	/** @type {number} */
 	this.mVarintBitshift = 0;
+	/** @type {number} */
 	this.mDecExp = 0;
+	/** @type {number} */
 	this.mObjType = 0;
+	/** @type {number} */
 	this.mBytesIdx = 0;
+	/** @type {number} */
 	this.mBytesLen = 0;
+	/** @type {Uint8Array} */
 	this.mBytes = null;
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {!string} msg
+ */
 function throwErr(p, msg) {
 	p.mState = S_ERR;
 	throw msg;
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {*} o
+ */
 function hitNext(p, o) {
 	if (p.mCurrCont == null) {
 		throwErr(p, "no array container");
@@ -360,6 +604,11 @@ function hitNext(p, o) {
 	p.mCurrCont.push(o);
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {number} objType
+ * @param {number} nextState
+ */
 function initVarint(p, objType, nextState) {
 	p.mState = S_VARINT1;
 	p.mNextState = nextState;
@@ -369,18 +618,33 @@ function initVarint(p, objType, nextState) {
 	p.mVarintBitshift = 0;
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {number} objType
+ * @param {number} nextState
+ */
 function initBytes(p, objType, nextState) {
 	initVarint(p, objType, S_BYTES1);
 	p.mNextState2 = nextState;
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {boolean} neg
+ * @return {number}
+ */
 function getVarint32(p, neg) {
 	if (typeof p.mVarintVal != "number" || p.mVarintVal > 2147483647) {
 		throwErr(p, "varint out of range");
 	}
-	return neg ? 0 - p.mVarintVal : p.mVarintVal;
+	return neg ? 0 - /** @type {number} */ (p.mVarintVal) : /** @type {number} */ (p.mVarintVal);
 }
 
+/**
+ * @param {boolean} neg
+ * @param {number|!BigInteger} v
+ * @return {number|!BigInteger}
+ */
 function getNum(neg, v) {
 	if (neg) {
 		if (typeof v == "number") {
@@ -392,10 +656,16 @@ function getNum(neg, v) {
 	return v;
 }
 
-// read a byte array in big-endian format that is always positive (does not have a sign bit)
-// custom function similar to bnpFromString(s,256);
-// see also, java constructor: public BigInteger(int signum, byte[] magnitude)
-//   https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html#BigInteger(int,%20byte[])
+/**
+ * read a byte array in big-endian format that is always positive (does not have a sign bit)
+ * custom function similar to bnpFromString(s,256);
+ * see also, java constructor: public BigInteger(int signum, byte[] magnitude)
+ *   https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html#BigInteger(int,%20byte[])
+ * @param {!Uint8Array} b
+ * @param {number} len
+ * @param {!BigInteger} r
+ * @return {!BigInteger}
+ */
 function bigintFromBytes2(b, len, r) {
 	r.t = 0;
 	r.s = 0;
@@ -420,26 +690,45 @@ function bigintFromBytes2(b, len, r) {
 	return r;
 }
 
-function bigIntFromBytes(p, neg) {
-	//var b = p.mBytes.subarray(0, p.mBytesLen);
-	return getNum(neg, bigintFromBytes2(p.mBytes, p.mBytesLen, new BigInteger(null)));
+/**
+ * @param {boolean} neg
+ * @param {!BigInteger} v
+ * @return {!BigInteger}
+ */
+function getBI(neg, v) {
+	if (neg) {
+		BigInteger.ZERO.subTo(v, v);
+	}
+	return v;
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {boolean} neg
+ * @return {!BigInteger}
+ */
+function bigIntFromBytes(p, neg) {
+	//var b = p.mBytes.subarray(0, p.mBytesLen);
+	return getBI(neg, bigintFromBytes2(/** @type {!Uint8Array} */ (p.mBytes), p.mBytesLen, new BigInteger(null)));
+}
+
+/**
+ * @param {number} n
+ * @return {!BigInteger}
+ */
 function bigIntFromNumber(n) {
 	if (n < 0) {
-		var bi = bigIntFromNumber(0 - n);
-		BigInteger.ZERO.subTo(bi, bi);
-		return bi;
+		return getBI(true, bigIntFromNumber(0 - n));
 	}
 	if (n == 0) {
 		return BigInteger.ZERO.clone();
 	}
-	if (!Number.isSafeInteger(n)) {
+	if (!isSafeInteger(n)) {
 		throw "arg is not safe integer";
 	}
-	
+
 	//return new BigInteger(n.toString(16), 16);
-	
+
 	var val = new BigInteger(null);
 	val.s = 0;
 	val.t = 1;
@@ -453,6 +742,10 @@ function bigIntFromNumber(n) {
 	return val;
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {number} bval
+ */
 function varintNextByte(p, bval) {
 	if (p.mVarintBitshift < 28) {
 		p.mVarintVal |= (bval & 0x7F) << p.mVarintBitshift;
@@ -468,33 +761,40 @@ function varintNextByte(p, bval) {
 	} else {
 		if (p.mVarintBitshift == 49) {
 			// mVarintVal is a number; must convert to a BigInteger
-			p.mVarintVal = bigIntFromNumber(p.mVarintVal);
+			p.mVarintVal = bigIntFromNumber(/** @type {number} */ (p.mVarintVal));
 		}
 		TMPBI1.fromInt(bval & 0x7F);
 		TMPBI1.lShiftTo(p.mVarintBitshift, TMPBI1);
-		p.mVarintVal.addTo(TMPBI1, p.mVarintVal);
+		p.mVarintVal.addTo(TMPBI1, /** @type {!BigInteger} */ (p.mVarintVal));
 	}
 	p.mVarintBitshift += 7;
 }
 
+/**
+ * @param {!PartialParser} p
+ * @param {!Uint8Array} b
+ * @return {!string}
+ */
 function getstr(p, b) {
-	var str = p.BUF2STR ? p.BUF2STR.get(b) : null;
+	var str = PartialParser.BUF2STR ? PartialParser.BUF2STR.get(b) : null;
 	return str ? str : STRDEC(b);
 }
 
+/**
+ * @param {!PartialParser} p
+ */
 function clearBytes(p) {
 	if (p.mBytes.length > 4096) {
 		p.mBytes = null;
 	}
 }
 
-var P = PartialParser.prototype;
-
-P.newBuff = function() {
-	return {data: null, idx: 0, len: 0};
-}
-
-P.parseNext = function(b) {
+/**
+ * @param {!PartialParser.Buff} b
+ * @return {Array}
+ * @memberof PartialParser
+ */
+PartialParser.prototype.parseNext = function(b) {
 	var p = this;
 	var buff = b.data;
 	var idx = b.idx;
@@ -534,10 +834,10 @@ P.parseNext = function(b) {
 					case OpaDef.POSNEGBIGDEC: initVarint(p, OpaDef.POSNEGBIGDEC, S_BIGDEC1); continue;
 					case OpaDef.NEGPOSBIGDEC: initVarint(p, OpaDef.NEGPOSBIGDEC, S_BIGDEC1); continue;
 					case OpaDef.NEGNEGBIGDEC: initVarint(p, OpaDef.NEGNEGBIGDEC, S_BIGDEC1); continue;
-					
+
 					case OpaDef.BINLPVI: initBytes(p, OpaDef.BINLPVI, S_BLOB); continue;
 					case OpaDef.STRLPVI: initBytes(p, OpaDef.STRLPVI, S_STR ); continue;
-					
+
 					case OpaDef.ARRAYSTART:
 						if (p.mCurrCont != null) {
 							p.mContainers.push(p.mCurrCont);
@@ -555,14 +855,14 @@ P.parseNext = function(b) {
 							b.len = stop - idx;
 							return tmp;
 						}
-						var parent = p.mContainers.pop();
+						var parent = /** @type {!Array} */ (p.mContainers.pop());
 						parent.push(p.mCurrCont);
 						p.mCurrCont = parent;
 						continue;
 					default:
 						throwErr(p, "unknown char");
 				}
-				
+
 			case S_VARINT1:
 				while (true) {
 					if (idx >= stop) {
@@ -607,7 +907,7 @@ P.parseNext = function(b) {
 				clearBytes(p);
 				p.mState = S_NEXTOBJ;
 				continue;
-				
+
 			case S_VARDEC1:
 				p.mDecExp = getVarint32(p, p.mObjType == OpaDef.NEGPOSVARDEC || p.mObjType == OpaDef.NEGNEGVARDEC);
 				initVarint(p, p.mObjType, S_VARDEC2);
@@ -618,7 +918,7 @@ P.parseNext = function(b) {
 				hitNext(p, new BigDec(m, p.mDecExp));
 				p.mState = S_NEXTOBJ;
 				continue;
-				
+
 			case S_BIGDEC1:
 				p.mDecExp = getVarint32(p, p.mObjType == OpaDef.NEGPOSBIGDEC || p.mObjType == OpaDef.NEGNEGBIGDEC);
 				initBytes(p, p.mObjType, S_BIGDEC2);
@@ -630,7 +930,7 @@ P.parseNext = function(b) {
 				clearBytes(p);
 				p.mState = S_NEXTOBJ;
 				continue;
-				
+
 			case S_BLOB:
 				// TODO: if p.mBytes.length is large then the subarray will be larger than needed
 				//   create smaller array and copy data to smaller array??
@@ -646,34 +946,86 @@ P.parseNext = function(b) {
 				clearBytes(p);
 				p.mState = S_NEXTOBJ;
 				continue;
-				
+
 			default:
 				throwErr(p, "unknown state");
 		}
 	}
 }
 
-// BUF2STR maps {utf-8 bytes -> strings} to avoid conversion (speed up) and improve
-// memory usage (prevent duplicate copies of same string)
-P.BUF2STR = new Map();
+/**
+ * maps {utf-8 bytes -> strings} to avoid conversion (speed up) and improve
+ * memory usage (prevent duplicate copies of same string)
+ * @type {Map<!Uint8Array, !string>}
+ * @const
+ * @memberof PartialParser
+ */
+PartialParser.BUF2STR = (typeof Map == "undefined") ? null : new Map();
 
-return PartialParser;
 }());
 
-var Serializer = (function(){
-// #### Contents of Serializer.js ####
+/**
+ * @constructor
+ * @memberof PartialParser
+ */
+PartialParser.Buff = function() {
+	/** @type {Uint8Array} */
+	this.data = null;
+	/** @type {number} */
+	this.idx = 0;
+	/** @type {number} */
+	this.len = 0;
+};
 
 // Dependencies: BigInteger, BigDec, OpaDef, NEWBUF, STRENC
 
-const SURROGATE_OFFSET = 0x010000 - (0xD800 << 10) - 0xDC00;
-const BIMAXVARINT = new BigInteger("9223372036854775807");
-const BIMINVARINT = BIMAXVARINT.negate();
-const BIGINT31 = new BigInteger("7FFFFFFF", 16);
+/**
+ * @interface
+ */
+var IWriter = function() {};
+
+/**
+ * @param {!Uint8Array} buff
+ */
+IWriter.prototype.write = function(buff) {};
+
+IWriter.prototype.flush = function() {};
+
+
+/**
+ * @constructor
+ * @param {!IWriter} out - Where to write values
+ * @param {number=} sz - Length of internal buffer
+ */
+function Serializer(out, sz) {
+	if (sz && sz <= 10) {
+		throw "buffer len is too small";
+	}
+	/** @type {!IWriter} */
+	this.o = out;
+	/** @type {!Uint8Array} */
+	this.b = NEWBUF(sz ? sz : 4096);
+	/** @type {number} */
+	this.i = 0;
+}
+
+(function(){
+
+var SURROGATE_OFFSET = 0x010000 - (0xD800 << 10) - 0xDC00;
+var BIMAXVARINT = new BigInteger("9223372036854775807");
+var BIMINVARINT = BIMAXVARINT.negate();
+var BIGINT31 = new BigInteger("7FFFFFFF", 16);
 
 // note: potential memory leak here. keeping a temp big int object for serialization, to prevent allocations
 //  it does not get cleared after use. assume memory usage will not be very large for 1 value
-const TMPBI2 = new BigInteger(null);
+var TMPBI2 = new BigInteger(null);
 
+/**
+ * @param {!string} s
+ * @param {number} offset
+ * @param {number} len
+ * @return {number}
+ */
 function getUtf8Len(s, offset, len) {
 	var end = offset + len;
 	var numBytes = len;
@@ -703,6 +1055,10 @@ function getUtf8Len(s, offset, len) {
 	return numBytes;
 }
 
+/**
+ * @param {!Serializer} ser
+ * @param {!string} str
+ */
 function writeUtf8(ser, str) {
 	var end = str.length;
 	//var blen = buff.length;
@@ -750,16 +1106,9 @@ function writeUtf8(ser, str) {
 	ser.i = bpos;
 }
 
-
-function Serializer(out, sz) {
-	if (sz && sz <= 10) {
-		throw "buffer len is too small";
-	}
-	this.o = out;
-	this.b = NEWBUF(sz ? sz : 4096);
-	this.i = 0;
-}
-
+/**
+ * @param {!Serializer} s
+ */
 function flushBuff(s) {
 	if (s.i > 0) {
 		s.o.write(s.i == s.b.length ? s.b : s.b.subarray(0, s.i));
@@ -767,12 +1116,21 @@ function flushBuff(s) {
 	}
 }
 
+/**
+ * @param {!Serializer} s
+ * @param {number} l
+ */
 function ensureSpace(s, l) {
 	if (s.i + l > s.b.length) {
 		flushBuff(s);
 	}
 }
 
+/**
+ * @param {!Serializer} s
+ * @param {number} t
+ * @param {number} v
+ */
 function writeTypeAndVarint(s, t, v) {
 	ensureSpace(s, 10);
 	if (t != 0) {
@@ -790,6 +1148,11 @@ function writeTypeAndVarint(s, t, v) {
 	s.b[s.i++] = v;
 }
 
+/**
+ * @param {!Serializer} s
+ * @param {number} t
+ * @param {!BigInteger} v
+ */
 function writeTypeAndBigBytes(s, t, v) {
 	if (v.signum() < 0) {
 		BigInteger.ZERO.subTo(v, TMPBI2);
@@ -809,18 +1172,23 @@ function writeTypeAndBigBytes(s, t, v) {
 	}
 }
 
+/**
+ * @param {!Serializer} s
+ * @param {number} t
+ * @param {!BigInteger} v
+ */
 function writeBIAsVI(s, t, v) {
 	if (v.signum() < 0) {
 		BigInteger.ZERO.subTo(v, TMPBI2);
 		writeBIAsVI(s, t, TMPBI2);
 		return;
 	}
-	
+
 	ensureSpace(s, 10);
 	if (t != 0) {
 		s.b[s.i++] = t;
 	}
-	
+
 	if (v.compareTo(BIGINT31) > 0) {
 		if (v != TMPBI2) {
 			v.copyTo(TMPBI2);
@@ -831,15 +1199,19 @@ function writeBIAsVI(s, t, v) {
 			v.rShiftTo(7, v);
 		}
 	}
-	
-	v = v.intValue();
-	while (v > 0x7F) {
-		s.b[s.i++] = 0x80 | (v & 0xFF);
-		v >>>= 7;
+
+	var intv = v.intValue();
+	while (intv > 0x7F) {
+		s.b[s.i++] = 0x80 | (intv & 0xFF);
+		intv >>>= 7;
 	}
-	s.b[s.i++] = v;
+	s.b[s.i++] = intv;
 }
 
+/**
+ * @param {!Serializer} s
+ * @param {!BigInteger} v
+ */
 function writeBigInt(s, v) {
 	var sn = v.signum();
 	if (sn == 0) {
@@ -859,6 +1231,10 @@ function writeBigInt(s, v) {
 	}
 }
 
+/**
+ * @param {!Serializer} s
+ * @param {!BigDec} v
+ */
 function writeBigDec(s, v) {
 	if (v.e == 0) {
 		writeBigInt(s, v.m);
@@ -885,16 +1261,22 @@ function writeBigDec(s, v) {
 	}
 }
 
-var P = Serializer.prototype;
-
-P.write1 = function(v) {
+/**
+ * Write a single byte
+ * @param {!number} v
+ */
+Serializer.prototype.write1 = function(v) {
 	if (this.i >= this.b.length) {
 		flushBuff(this);
 	}
 	this.b[this.i++] = v;
 }
 
-P.write = function(b) {
+/**
+ * Write a raw byte array
+ * @param {!Uint8Array} b
+ */
+Serializer.prototype.write = function(b) {
 	if (b.length > this.b.length - this.i) {
 		flushBuff(this);
 		if (b.length >= this.b.length) {
@@ -906,15 +1288,22 @@ P.write = function(b) {
 	this.i += b.length;
 }
 
-P.flush = function() {
+/**
+ * Force any buffered bytes to be written
+ */
+Serializer.prototype.flush = function() {
 	flushBuff(this);
 	if (typeof this.o.flush === "function") {
 		this.o.flush();
 	}
 }
 
-P.writeNumber = function(v) {	
-	if (Number.isSafeInteger(v)) {
+/**
+ * Serialize a number
+ * @param {!number} v
+ */
+Serializer.prototype.writeNumber = function(v) {
+	if (isSafeInteger(v)) {
 		if (v > 0) {
 			writeTypeAndVarint(this, OpaDef.POSVARINT, v);
 		} else if (v == 0) {
@@ -933,14 +1322,18 @@ P.writeNumber = function(v) {
 	}
 }
 
-P.writeString = function(v) {
+/**
+ * Serialize a string
+ * @param {!string} v
+ */
+Serializer.prototype.writeString = function(v) {
 	if (v.length == 0) {
 		this.write1(OpaDef.EMPTYSTR);
 		return;
 	}
 	var b;
-	if (this.STR2BUF) {
-		b = this.STR2BUF.get(v);
+	if (Serializer.STR2BUF) {
+		b = Serializer.STR2BUF.get(v);
 		if (b) {
 			writeTypeAndVarint(this, OpaDef.STRLPVI, b.length);
 			this.write(b);
@@ -958,7 +1351,11 @@ P.writeString = function(v) {
 	}
 }
 
-P.writeArray = function(v) {
+/**
+ * Serialize an Array
+ * @param {!Array} v
+ */
+Serializer.prototype.writeArray = function(v) {
 	if (v.length == 0) {
 		this.write1(OpaDef.EMPTYARRAY);
 	} else {
@@ -970,7 +1367,12 @@ P.writeArray = function(v) {
 	}
 }
 
-P.writeObject = function(v) {
+/**
+ * Serialize any supported value (undefined/null/boolean/number/string/Uint8Array/BigInteger/BigDec/OpaDef.SORTMAX_OBJ)
+ * or an Object with toOpaSO() property, or an Array containing any of the previously listed types.
+ * @param {*} v
+ */
+Serializer.prototype.writeObject = function(v) {
 	// TODO: handle iterable objects?
 	//  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols
 	switch (typeof v) {
@@ -993,9 +1395,10 @@ P.writeObject = function(v) {
 			this.write1(OpaDef.UNDEFINED);
 			break;
 		case "object":
+			v = /** @type {Object} */ (v);
 			if (v === null) {
 				this.write1(OpaDef.NULL);
-			} else if (v.toOpaSO && (typeof v.toOpaSO) == "function") {
+			} else if (v.hasOwnProperty("toOpaSO") && typeof v.toOpaSO == "function") {
 				v.toOpaSO(this);
 			} else if (Array.isArray(v)) {
 				this.writeArray(v);
@@ -1006,6 +1409,7 @@ P.writeObject = function(v) {
 			} else if (v instanceof BigDec) {
 				writeBigDec(this, v);
 			} else if (v.constructor.name == "Uint8Array" || v.constructor.name == "Buffer") {
+				v = /** @type {!Uint8Array} */ (v);
 				if (v.length == 0) {
 					this.write1(OpaDef.EMPTYBIN);
 				} else {
@@ -1021,17 +1425,54 @@ P.writeObject = function(v) {
 	}
 }
 
-P.STR2BUF = new Map();
+/**
+ * maps {strings -> utf-8 bytes} to avoid conversion (speed up)
+ * @type {Map<!string, !Uint8Array>}
+ * @const
+ * @memberof Serializer
+ */
+Serializer.STR2BUF = (typeof Map == "undefined") ? null : new Map();
 
-return Serializer;
 }());
 
-// #### Contents of OpaUtils.js ####
 
+/**
+ * @const
+ * @ignore
+ * @type {number}
+ */
+var MAX_SAFE_INTEGER =  9007199254740991;
+/**
+ * @const
+ * @ignore
+ * @type {number}
+ */
+var MIN_SAFE_INTEGER = 0 - MAX_SAFE_INTEGER;
+/**
+ * @const
+ * @ignore
+ * @type {function(number):boolean}
+ */
+var isInteger = Number.isInteger || function(v) {
+	return typeof v === 'number' && isFinite(v) && Math.floor(v) === v;
+};
+/**
+ * @const
+ * @ignore
+ * @type {function(number):boolean}
+ */
+var isSafeInteger = Number.isSafeInteger || function(v) {
+	return isInteger(v) && v >= MIN_SAFE_INTEGER && v <= MAX_SAFE_INTEGER;
+};
 
+/**
+ * @param {*} o
+ * @return {!string}
+ */
 function opaType(o) {
 	var t = typeof o;
 	if (t == "object") {
+		o = /** @type {Object} */ (o);
 		if (o === null) {
 			return "null";
 		} else if (Array.isArray(o)) {
@@ -1053,99 +1494,153 @@ function opaType(o) {
 	} else if (t == "string" || t == "number" || t == "boolean" || t == "undefined" || t == "bigint") {
 		return t;
 	}
-	throw "unknown object " + o.toString();
+	throw "unknown object";
 }
 
-function indent(space, depth) {
-	var indent = "";
-	if (typeof space === "number") {
-		for (var i = 0; i < space * depth ; ++i) {
-			indent += " ";
+/**
+ * @alias stringify
+ * @param {*} obj
+ * @param {(number|string)=} space
+ * @return {!string}
+ */
+function opaStringify(obj, space) {
+
+	/**
+	 * @param {number|string|undefined} space
+	 * @param {number} depth
+	 * @return {!string}
+	 */
+	function getindent(space, depth) {
+		var indent = "";
+		if (typeof space === "number") {
+			for (var i = 0; i < space * depth ; ++i) {
+				indent += " ";
+			}
+		} else if (typeof space === "string") {
+			for (var i = 0; i <= depth; ++i) {
+				indent += space;
+			}
 		}
-	} else if (typeof space === "string") {
-		for (var i = 0; i <= depth; ++i) {
-			indent += space;
-		}
+		return indent;
 	}
-	return indent;
-}
 
-function opaStringify(obj, space, depth) {
-	switch (opaType(obj)) {
-		case "undefined":
-			return "undefined";
-		case "null":
-			return "null";
-		case "SORTMAX":
-			return "SORTMAX";
-		case "boolean":
-		case "number":
-		//case "BigInteger":
-		//case "BigDec":
+	/**
+	 * @param {*} obj
+	 * @param {number|string|undefined} space
+	 * @param {number} depth
+	 * @return {!string}
+	 */
+	function opaStringifyInternal(obj, space, depth) {
+		switch (opaType(obj)) {
+			case "undefined":
+				return "undefined";
+			case "null":
+				return "null";
+			//case "SORTMAX":
+			//	return "SORTMAX";
+			//case "boolean":
+			//case "number":
+			//case "BigInteger":
+			//case "BigDec":
+			//	return obj.toString();
+			case "Uint8Array":
+			case "Buffer":
+				//var dv = new DataView(obj.buffer, obj.byteOffset, obj.byteLength);
+		    	//for (var i = 0; i < obj.byteLength; ++i) {
+				//	if (dv.getUint8(i) < 32 || dv.getUint8(i) > 126) {
+				//	    //return '"~base64' + BTOA((new TextDecoder("utf-8")).decode(obj)) + '"';
+				//	    return '"~base64' + BTOA(String.fromCharCode.apply(null, obj)) + '"';
+				//	}
+		    	//}
+		    	//return JSON.stringify('~bin' + (new TextDecoder("utf-8")).decode(obj));
+		    	return '"~base64' + BTOA(String.fromCharCode.apply(null, /** @type {Uint8Array} */ (obj))) + '"';
+			case "string":
+				obj = /** @type {!string} */ (obj);
+				return JSON.stringify(obj.charAt(0) == "~" ? "~" + obj : obj);
+			case "Array":
+				obj = /** @type {!Array} */ (obj);
+				if (obj.length == 0) {
+					return "[]";
+				}
+				depth = depth ? depth : 0;
+				var strs = [];
+				for (var i = 0; i < obj.length; ++i) {
+					strs[i] = opaStringifyInternal(obj[i], space, depth + 1);
+				}
+				if (!space) {
+					return "[" + strs.join(",") + "]";
+				}
+				var indent1 = getindent(space, depth);
+				var indent2 = getindent(space, depth + 1);
+				return "[\n" + indent2 + strs.join(",\n" + indent2) + "\n" + indent1 + "]";
+		}
+		if (typeof obj.toString === "function") {
 			return obj.toString();
-		case "Uint8Array":
-		case "Buffer":
-			//var dv = new DataView(obj.buffer, obj.byteOffset, obj.byteLength);
-        	//for (var i = 0; i < obj.byteLength; ++i) {
-			//	if (dv.getUint8(i) < 32 || dv.getUint8(i) > 126) {
-			//	    //return '"~base64' + BTOA((new TextDecoder("utf-8")).decode(obj)) + '"';
-			//	    return '"~base64' + BTOA(String.fromCharCode.apply(null, obj)) + '"';
-			//	}
-        	//}
-        	//return JSON.stringify('~bin' + (new TextDecoder("utf-8")).decode(obj));
-        	return '"~base64' + BTOA(String.fromCharCode.apply(null, obj)) + '"';
-		case "string":
-			return JSON.stringify(obj.charAt(0) == "~" ? "~" + obj : obj);
-		case "Array":
-			if (obj.length == 0) {
-				return "[]";
-			}
-			depth = depth ? depth : 0;
-			var strs = [];
-			for (var i = 0; i < obj.length; ++i) {
-				strs[i] = opaStringify(obj[i], space, depth + 1);
-			}
-			if (!space) {
-				return "[" + strs.join(",") + "]";
-			}
-			var indent1 = indent(space, depth);
-			var indent2 = indent(space, depth + 1);
-			return "[\n" + indent2 + strs.join(",\n" + indent2) + "\n" + indent1 + "]";
+		}
+		throw "unhandled case in switch";
 	}
-	if (typeof obj.toString === "function") {
-		return obj.toString();
-	}
-	throw "unhandled case in switch";
+	
+	return opaStringifyInternal(obj, space, 0);
 }
 
-var StreamClient = (function(){
-// #### Contents of StreamClient.js ####
+/**
+ * Cache the utf-8 bytes for a string in memory. Improves performance slightly by
+ * avoiding an allocation + conversion every time the string is serialized or parsed.
+ * Use for strings that are repeated often.
+ * @param {string} s - The string to cache
+ */
+function cacheString(s) {
+	var b = STRENC(s);
+	if (PartialParser.BUF2STR) {
+		PartialParser.BUF2STR.set(b, s);
+	}
+	if (Serializer.STR2BUF) {
+		Serializer.STR2BUF.set(s, b);
+	}
+}
 
-// dependencies: STRENC PartialParser Serializer Deque Map
+// dependencies: STRENC PartialParser Serializer Queue Map
 
 /**
- * @callback responseCallback
- * @param {Object} result - The result of the operation. Can be null.
- * @param {Object} error  - If response is an error then result is null and error is non-null
+ * @ignore
+ * @typedef {function(*, *=):undefined}
+ */
+var ResponseCallback;
+
+/**
+ * @callback ResponseCallback
+ * @param {*} result - The result of the operation. Can be null.
+ * @param {*=} error - If response is an error then result is null and error is non-null
  */
 
 
 /**
- * Create new StreamClient.
- * @param o - Object that has a write() and flush() method. 
+ * Create new EventClient
+ * @constructor
+ * @param {!IWriter} o - Object that has a write() and flush() method.
  */
-function StreamClient(o) {
+function EventClient(o) {
+	/** @type {!Serializer} */
 	this.s = new Serializer(o);
+	/** @type {number} */
 	this.id = 0;
-	this.mMainCallbacks = new Deque();
+	/** @type {Queue<ResponseCallback>} */
+	this.mMainCallbacks = new Queue();
+	/** @type {!Map<*,!ResponseCallback>} */
 	this.mAsyncCallbacks = new Map();
+	/** @type {!PartialParser} */
 	this.mParser = new PartialParser();
-	this.mBuff = this.mParser.newBuff();
+	/** @type {PartialParser.Buff} */
+	this.mBuff = new PartialParser.Buff();
+	/** @type {number|null} */
 	this.mTimeout = null;
 }
 
-var P = StreamClient.prototype;
+(function(){
 
+/**
+ * @param {EventClient} c
+ */
 function schedTimeout(c) {
 	if (c.mTimeout === null) {
 		// TODO: use process.nextTick() in node?
@@ -1156,11 +1651,20 @@ function schedTimeout(c) {
 	}
 }
 
+/**
+ * @param {EventClient} c
+ * @param {string} cmd
+ */
 function writeCommand(c, cmd) {
 	// note: command cache was removed. STR2BUF (in Serializer) can be used instead
 	c.s.writeString(cmd);
 }
 
+/**
+ * @param {EventClient} c
+ * @param {string} cmd
+ * @param {Array=} args
+ */
 function callNoResponse(c, cmd, args) {
 	// if no callback is specified then send null as async id indicating server must not send response
 	c.s.write1(OpaDef.ARRAYSTART);
@@ -1173,7 +1677,7 @@ function callNoResponse(c, cmd, args) {
 /**
  * Send all buffered requests.
  */
-P.flush = function() {
+EventClient.prototype.flush = function() {
 	if (this.mTimeout != null) {
 		clearTimeout(this.mTimeout);
 		this.mTimeout = null;
@@ -1184,10 +1688,10 @@ P.flush = function() {
 /**
  * Sends the specified command and args to the server. Invokes the specified callback when a response is received.
  * @param {string} cmd - The command to run
- * @param {array} args - The parameters for the command
- * @param {responseCallback} cb - A callback function to invoke when the response is received
+ * @param {Array=} args - The parameters for the command
+ * @param {ResponseCallback=} cb - A callback function to invoke when the response is received
  */
-P.call = function(cmd, args, cb) {
+EventClient.prototype.call = function(cmd, args, cb) {
 	if (!cb) {
 		return callNoResponse(this, cmd, args);
 	}
@@ -1201,10 +1705,18 @@ P.call = function(cmd, args, cb) {
 	this.mMainCallbacks.push(cb);
 }
 
+/**
+ * @param {!EventClient} c
+ * @param {string} cmd
+ * @param {Array} args
+ * @param {!ResponseCallback} cb
+ * @param {number} isP
+ * @return {number}
+ */
 function callId(c, cmd, args, cb, isP) {
 	++c.id;
 	var id = isP ? 0 - c.id : c.id;
-	
+
 	c.s.write1(OpaDef.ARRAYSTART);
 	writeCommand(c, cmd);
 	c.s.writeObject(args);
@@ -1216,25 +1728,25 @@ function callId(c, cmd, args, cb, isP) {
 }
 
 /**
- * Sends the specified command and args to the server with an async id. Using an async id indicates to the 
- * server that the operation response can be sent out of order. Invokes the specified callback when a 
+ * Sends the specified command and args to the server with an async id. Using an async id indicates to the
+ * server that the operation response can be sent out of order. Invokes the specified callback when a
  * response is received.
  * @param {string} cmd - The command to run
- * @param {array} args - The parameters for the command
- * @param {responseCallback} cb - A callback function to invoke when the response is received
+ * @param {!Array} args - The parameters for the command
+ * @param {!ResponseCallback} cb - A callback function to invoke when the response is received
  */
-P.callA = function(cmd, args, cb) {
+EventClient.prototype.callA = function(cmd, args, cb) {
 	callId(this, cmd, args, cb, 0);
 }
 
 /**
  * Same as callA() except that the callback can be invoked multiple times. Use this for subscriptions.
  * @param {string} cmd - The command to run
- * @param {array} args - The parameters for the command
- * @param {responseCallback} cb - A callback function to invoke when the responses are received
+ * @param {!Array} args - The parameters for the command
+ * @param {!ResponseCallback} cb - A callback function to invoke when the responses are received
  * @return {*} - The value that is used when calling unregister()
  */
-P.callAP = function(cmd, args, cb) {
+EventClient.prototype.callAP = function(cmd, args, cb) {
 	return callId(this, cmd, args, cb, 1);
 }
 
@@ -1242,16 +1754,20 @@ P.callAP = function(cmd, args, cb) {
  * Removes the specified async callback from the client. Use this when unsubscribing from a channel.
  * @param {*} id - The value that was returned from callAP()
  */
-P.unregister = function(id) {
+EventClient.prototype.unregister = function(id) {
 	return this.mAsyncCallbacks.delete(id);
 }
 
+/**
+ * @param {!EventClient} c
+ * @param {!Array<*>} msg
+ */
 function onResponse(c, msg) {
 	var cb;
 	var id = msg.length >= 3 ? msg[2] : null;
 	if (id !== null && id !== undefined) {
 		cb = c.mAsyncCallbacks.get(id);
-		if (id > 0) {
+		if (cb != null && (/** @type {number} */(id) > 0)) {
 			c.mAsyncCallbacks.delete(id);
 		}
 	} else {
@@ -1272,10 +1788,9 @@ function onResponse(c, msg) {
 /**
  * Call this method when more data has arrived from server. Buffer will be parsed
  * and callbacks invoked for each complete response received.
- * @param b - Byte buffer containing data to parse. Type is Uint8Array when running in browser.
- *            Type is Buffer when running in node
+ * @param {!Uint8Array} b - Byte buffer containing data to parse
  */
-P.onRecv = function(b) {
+EventClient.prototype.onRecv = function(b) {
 	this.mBuff.data = b;
 	this.mBuff.idx = 0;
 	this.mBuff.len = b.length;
@@ -1292,15 +1807,15 @@ P.onRecv = function(b) {
  * Call this method when connection is closed. All request callbacks that have not received a response
  * will be notified of failure. Every persistent async callback will also be notified of failure.
  */
-P.onClose = function() {
+EventClient.prototype.onClose = function() {
 	var tmp = this.mMainCallbacks;
-	while (tmp.length > 0) {
+	while (tmp.size() > 0) {
 		var cb = tmp.shift();
 		if (cb) {
 			cb(null, OpaDef.ERR_CLOSED);
 		}
 	}
-	
+
 	tmp = this.mAsyncCallbacks;
 	tmp.forEach(function(val, key, map) {
 		if (val) {
@@ -1310,29 +1825,12 @@ P.onClose = function() {
 	tmp.clear();
 }
 
-/**
- * Cache the utf-8 bytes for a string in memory. Improves performance slightly by
- * avoiding an allocation + conversion every time the string is serialized or parsed.
- * Use for strings that are repeated often.
- * @param {string} s - The string to cache
- */
-P.cacheString = function(s) {
-	var b = STRENC(s);
-	if (this.mParser.BUF2STR) {
-		this.mParser.BUF2STR.set(b, s);
-	}
-	if (this.s.STR2BUF) {
-		this.s.STR2BUF.set(s, b);
-	}
-}
-
-return StreamClient;
 }());
 
 
 function newClient(s) {
 	var wrapper = {};
-	var c = new StreamClient(wrapper);
+	var c = new EventClient(wrapper);
 
 	wrapper.write = function(b) {
 		// the node socket docs state that the return value from write() should indicate whether the buffer
@@ -1343,7 +1841,7 @@ function newClient(s) {
 		s.write(b);
 		c.s.b = NEWBUF(c.s.b.length);
 	};
-	
+
 	s.on("data", function(b) {
 		c.onRecv(b);
 	});

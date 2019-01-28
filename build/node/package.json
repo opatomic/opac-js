@@ -1,6 +1,6 @@
 {
   "name": "opatomic-client",
-  "version": "0.1.26",
+  "version": "0.1.29",
   "description": "Opatomic client",
   "keywords": ["opatomic", "client"],
   "homepage": "https://github.com/opatomic/opac-js",
@@ -10,7 +10,6 @@
   },
   "license": "ISC",
   "dependencies": {
-    "double-ended-queue": "*",
     "jsbn": "*"
   }
 }
