@@ -101,8 +101,8 @@ deldir $TMPDIR
 
 # TODO: run some tests!!!
 
-deldir "docs"
-jsdoc "$OPACJSDIR/" -d "docs/" -c "jsdoc.conf.json"
-deldir "docs/fonts"
+deldir "../docs"
+jsdoc "$OPACJSDIR/" -d "../docs/" -c "jsdoc.conf.json"
+deldir "../docs/fonts"
 
 
