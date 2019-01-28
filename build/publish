@@ -12,7 +12,7 @@ VERSION=`cat version.txt`
 
 if [ $? -ne 0 ]; then { echo "command failed" ; exit 1; } fi
 
-git add docs/*
+git add ../docs/*
 
 if [ $? -ne 0 ]; then { echo "command failed" ; exit 1; } fi
 
