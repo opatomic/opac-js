@@ -1,7 +1,8 @@
 {
 	"templates": {
 		"default": {
-			"useLongnameInNav": true
+			"useLongnameInNav": true,
+			"includeDate": false
 		}
 	}
 }
