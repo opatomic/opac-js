@@ -4,7 +4,7 @@ This project contains source code for the node.js
 [opatomic-client](https://www.npmjs.com/package/opatomic-client) package.
 The code can also be built to run in a browser. Running in the browser is
 undocumented for now (to see source for a working example check out the
-admin panel).
+[admin tool](https://github.com/opatomic/admin-browser)).
 
 # Node.js package
 
