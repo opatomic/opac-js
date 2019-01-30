@@ -16,7 +16,7 @@ var BTOA = function(v) {
 	return Buffer.from(v).toString("base64");
 }
 
-var VERSION = "0.1.30";
+var VERSION = "0.1.32";
 
 
 /**
@@ -152,7 +152,7 @@ function BigDec(man, exp) {
 			v.e = 0;
 		} else {
 			v.m = new BigInteger(s.substring(0, epos));
-			v.e = parseInt(s.substr(epos + 1), 10);
+			v.e = parseInt(s.substring(epos + 1), 10);
 			if (!isSafeInteger(v.e)) {
 				throw 'number string "' + s + '" cannot be parsed';
 			}
