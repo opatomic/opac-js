@@ -14,6 +14,65 @@ var ResponseCallback;
 
 
 /**
+ * @constructor
+ * @template K,V
+ * @extends {Map<K,V>}
+ * @ignore
+ */
+var IdMap = function(){}
+if (typeof Map == "function") {
+	IdMap = Map;
+} else {
+	/**
+	 * @constructor
+	 * @template K,V
+	 * @extends {Map<K,V>}
+	 * @ignore
+	 */
+	IdMap = function() {
+		// note: this Map implementation is designed to work with keys that are strings or integers
+		//   it is not a proper polyfill for ES6 Map
+		/** @type {Object} */
+		this.vals = {};
+	}
+
+	/**
+	 * @param {*} key
+	 */
+	IdMap.prototype.get = function(key) {
+		return this.vals[key];
+	}
+
+	/**
+	 * @param {K} key
+	 * @param {V} val
+	 */
+	IdMap.prototype.set = function(key, val) {
+		this.vals[key] = val;
+	}
+
+	/**
+	 * @param {*} key
+	 */
+	IdMap.prototype.delete = function(key) {
+		var exists = key in this.vals;
+		delete this.vals[key];
+		return exists;
+	}
+
+	IdMap.prototype.forEach = function(cb) {
+		for (var p in this.vals) {
+			cb(this.vals[p], p, this);
+		}
+	}
+	
+	IdMap.prototype.clear = function() {
+		this.vals = {};
+	}
+}
+
+
+/**
  * Create new EventClient
  * @constructor
  * @param {!IWriter} o - Object that has a write() and flush() method.
@@ -26,7 +85,7 @@ function EventClient(o) {
 	/** @type {Queue<ResponseCallback>} */
 	this.mMainCallbacks = new Queue();
 	/** @type {!Map<*,!ResponseCallback>} */
-	this.mAsyncCallbacks = new Map();
+	this.mAsyncCallbacks = new IdMap();
 	/** @type {!PartialParser} */
 	this.mParser = new PartialParser();
 	/** @type {PartialParser.Buff} */
