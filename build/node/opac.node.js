@@ -2,28 +2,31 @@
 
 var BigInteger = require("jsbn").BigInteger;
 
-var NEWBUF = function(l) {
-	// TODO: ok to use unsafe here?
-	return Buffer.allocUnsafe(l);
-}
-var STRENC = function(s) {
-	return Buffer.from(s, "utf-8");
-}
-var STRDEC = function(b) {
-	return b.toString("utf-8");
-}
-var BTOA = function(v) {
-	return Buffer.from(v).toString("base64");
+// note: check for Buffer.allocUnsafe because Buffer.from is defined in earlier versions of node but not fully implemented
+var BUFFERFROM = (typeof Buffer.allocUnsafe == 'function') ? Buffer.from : function(a, b, c) {
+	return new Buffer(a, b, c);
 }
 
-var VERSION = "0.1.32";
+// TODO: ok to use allocUnsafe here?
+var NEWBUF = (typeof Buffer.allocUnsafe == 'function') ? Buffer.allocUnsafe : function(len) {return new Buffer(len);};
+
+var STRENC = function(s) {
+	return BUFFERFROM(s, "utf8");
+}
+var STRDEC = function(b) {
+	return b.toString("utf8");
+}
+var BTOA = function(v) {
+	return BUFFERFROM(v).toString("base64");
+}
+
+var VERSION = "0.1.35";
 
 
 /**
- * @classdesc This class is not actually created. It is here to help with type checking.
  * @constructor
  * @extends Array
- * @hideconstructor
+ * @ignore
  */
 function QChunk() {}
 /** @type {QChunk} */
@@ -1615,6 +1618,65 @@ var ResponseCallback;
 
 
 /**
+ * @constructor
+ * @template K,V
+ * @extends {Map<K,V>}
+ * @ignore
+ */
+var IdMap = function(){}
+if (typeof Map == "function") {
+	IdMap = Map;
+} else {
+	/**
+	 * @constructor
+	 * @template K,V
+	 * @extends {Map<K,V>}
+	 * @ignore
+	 */
+	IdMap = function() {
+		// note: this Map implementation is designed to work with keys that are strings or integers
+		//   it is not a proper polyfill for ES6 Map
+		/** @type {Object} */
+		this.vals = {};
+	}
+
+	/**
+	 * @param {*} key
+	 */
+	IdMap.prototype.get = function(key) {
+		return this.vals[key];
+	}
+
+	/**
+	 * @param {K} key
+	 * @param {V} val
+	 */
+	IdMap.prototype.set = function(key, val) {
+		this.vals[key] = val;
+	}
+
+	/**
+	 * @param {*} key
+	 */
+	IdMap.prototype.delete = function(key) {
+		var exists = key in this.vals;
+		delete this.vals[key];
+		return exists;
+	}
+
+	IdMap.prototype.forEach = function(cb) {
+		for (var p in this.vals) {
+			cb(this.vals[p], p, this);
+		}
+	}
+	
+	IdMap.prototype.clear = function() {
+		this.vals = {};
+	}
+}
+
+
+/**
  * Create new EventClient
  * @constructor
  * @param {!IWriter} o - Object that has a write() and flush() method.
@@ -1627,7 +1689,7 @@ function EventClient(o) {
 	/** @type {Queue<ResponseCallback>} */
 	this.mMainCallbacks = new Queue();
 	/** @type {!Map<*,!ResponseCallback>} */
-	this.mAsyncCallbacks = new Map();
+	this.mAsyncCallbacks = new IdMap();
 	/** @type {!PartialParser} */
 	this.mParser = new PartialParser();
 	/** @type {PartialParser.Buff} */
@@ -1834,12 +1896,10 @@ function newClient(s) {
 
 	wrapper.write = function(b) {
 		// the node socket docs state that the return value from write() should indicate whether the buffer
-		// is fully copied. however, this seems to be incorrect. therefore, a new buffer must be allocated
-		// for the serializer.
+		// is fully copied. however, this seems to be incorrect. therefore, a copy is allocated.
 		// TODO: consider a buffer pool to reuse buffers (write() will invoke a callback when done?)
 		// TODO: back-pressure: this function could return true/false indicating whether stream is writable; store/use this somehow
-		s.write(b);
-		c.s.b = NEWBUF(c.s.b.length);
+		s.write(BUFFERFROM(b));
 	};
 
 	s.on("data", function(b) {

@@ -42,6 +42,65 @@ var ResponseCallback;
 
 
 /**
+ * @constructor
+ * @template K,V
+ * @extends {Map&lt;K,V>}
+ * @ignore
+ */
+var IdMap = function(){}
+if (typeof Map == "function") {
+	IdMap = Map;
+} else {
+	/**
+	 * @constructor
+	 * @template K,V
+	 * @extends {Map&lt;K,V>}
+	 * @ignore
+	 */
+	IdMap = function() {
+		// note: this Map implementation is designed to work with keys that are strings or integers
+		//   it is not a proper polyfill for ES6 Map
+		/** @type {Object} */
+		this.vals = {};
+	}
+
+	/**
+	 * @param {*} key
+	 */
+	IdMap.prototype.get = function(key) {
+		return this.vals[key];
+	}
+
+	/**
+	 * @param {K} key
+	 * @param {V} val
+	 */
+	IdMap.prototype.set = function(key, val) {
+		this.vals[key] = val;
+	}
+
+	/**
+	 * @param {*} key
+	 */
+	IdMap.prototype.delete = function(key) {
+		var exists = key in this.vals;
+		delete this.vals[key];
+		return exists;
+	}
+
+	IdMap.prototype.forEach = function(cb) {
+		for (var p in this.vals) {
+			cb(this.vals[p], p, this);
+		}
+	}
+	
+	IdMap.prototype.clear = function() {
+		this.vals = {};
+	}
+}
+
+
+/**
  * Create new EventClient
  * @constructor
  * @param {!IWriter} o - Object that has a write() and flush() method.
@@ -54,7 +113,7 @@ function EventClient(o) {
 	/** @type {Queue&lt;ResponseCallback>} */
 	this.mMainCallbacks = new Queue();
 	/** @type {!Map&lt;*,!ResponseCallback>} */
-	this.mAsyncCallbacks = new Map();
+	this.mAsyncCallbacks = new IdMap();
 	/** @type {!PartialParser} */
 	this.mParser = new PartialParser();
 	/** @type {PartialParser.Buff} */
@@ -264,7 +323,7 @@ EventClient.prototype.onClose = function() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BigDec.html">BigDec</a></li><li><a href="EventClient.html">EventClient</a></li><li><a href="OpaDef.html">OpaDef</a></li><li><a href="PartialParser.html">PartialParser</a></li><li><a href="PartialParser.Buff.html">PartialParser.Buff</a></li><li><a href="QChunk.html">QChunk</a></li><li><a href="Queue.html">Queue</a></li><li><a href="Serializer.html">Serializer</a></li></ul><h3>Interfaces</h3><ul><li><a href="IWriter.html">IWriter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#cacheString">cacheString</a></li><li><a href="global.html#opaType">opaType</a></li><li><a href="global.html#stringify">stringify</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BigDec.html">BigDec</a></li><li><a href="EventClient.html">EventClient</a></li><li><a href="OpaDef.html">OpaDef</a></li><li><a href="PartialParser.html">PartialParser</a></li><li><a href="PartialParser.Buff.html">PartialParser.Buff</a></li><li><a href="Queue.html">Queue</a></li><li><a href="Serializer.html">Serializer</a></li></ul><h3>Interfaces</h3><ul><li><a href="IWriter.html">IWriter</a></li></ul><h3>Global</h3><ul><li><a href="global.html#cacheString">cacheString</a></li><li><a href="global.html#opaType">opaType</a></li><li><a href="global.html#stringify">stringify</a></li></ul>
 </nav>
 
 <br class="clear">
