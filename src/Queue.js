@@ -1,9 +1,8 @@
 
 /**
- * @classdesc This class is not actually created. It is here to help with type checking.
  * @constructor
  * @extends Array
- * @hideconstructor
+ * @ignore
  */
 function QChunk() {}
 /** @type {QChunk} */
