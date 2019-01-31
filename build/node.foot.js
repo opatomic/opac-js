@@ -9,8 +9,8 @@ function newClient(s) {
 		// for the serializer.
 		// TODO: consider a buffer pool to reuse buffers (write() will invoke a callback when done?)
 		// TODO: back-pressure: this function could return true/false indicating whether stream is writable; store/use this somehow
-		s.write(b);
-		c.s.b = NEWBUF(c.s.b.length);
+		s.write(BUFFERFROM(b));
+		//c.s.b = NEWBUF(c.s.b.length);
 	};
 
 	s.on("data", function(b) {

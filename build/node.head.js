@@ -2,17 +2,21 @@
 
 var BigInteger = require("jsbn").BigInteger;
 
-var NEWBUF = function(l) {
-	// TODO: ok to use unsafe here?
-	return Buffer.allocUnsafe(l);
+// note: check for Buffer.allocUnsafe because Buffer.from is defined in earlier versions of node but not fully implemented
+var BUFFERFROM = (typeof Buffer.allocUnsafe == 'function') ? Buffer.from : function(a, b, c) {
+	return new Buffer(a, b, c);
 }
+
+// TODO: ok to use allocUnsafe here?
+var NEWBUF = (typeof Buffer.allocUnsafe == 'function') ? Buffer.allocUnsafe : function(len) {return new Buffer(len);};
+
 var STRENC = function(s) {
-	return Buffer.from(s, "utf-8");
+	return BUFFERFROM(s, "utf8");
 }
 var STRDEC = function(b) {
-	return b.toString("utf-8");
+	return b.toString("utf8");
 }
 var BTOA = function(v) {
-	return Buffer.from(v).toString("base64");
+	return BUFFERFROM(v).toString("base64");
 }
 
