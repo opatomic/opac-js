@@ -1,6 +1,14 @@
 #!/bin/bash
 
 
+function handleErr {
+	SNAME=$(basename $BASH_SOURCE)
+	echo "$SNAME: Error on line $1"
+	exit 1
+}
+
+trap 'handleErr $LINENO' ERR
+
 
 # increment the version build number; awk must write to temp file
 awk -F '.' '{printf("%d.%d.%d",$1,$2,$3+1)}' version.txt > newver.txt
@@ -10,20 +18,14 @@ VERSION=`cat version.txt`
 
 ./build --publish
 
-if [ $? -ne 0 ]; then { echo "command failed" ; exit 1; } fi
-
 git add -A ../docs/
 git add version.txt
 git add -A browser/
 git add -A node/
 
-if [ $? -ne 0 ]; then { echo "command failed" ; exit 1; } fi
-
 git commit -m "build v$VERSION"
-
-if [ $? -ne 0 ]; then { echo "command failed" ; exit 1; } fi
 
 npm publish node
 
-echo published v$VERSION
+echo "published v$VERSION"
 

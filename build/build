@@ -1,5 +1,13 @@
 #!/bin/bash
 
+function handleErr {
+	SNAME=$(basename $BASH_SOURCE)
+	echo "$SNAME: Error on line $1"
+	exit 1
+}
+
+trap 'handleErr $LINENO' ERR
+
 # to minimize browser build, must have java 8+ installed, download
 # closure compiler, and set $CCJAR to the jar file's path.
 #  https://github.com/google/closure-compiler
