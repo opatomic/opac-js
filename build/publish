@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 function handleErr {
 	SNAME=$(basename $BASH_SOURCE)
 	echo "$SNAME: Error on line $1"
@@ -9,6 +8,11 @@ function handleErr {
 
 trap 'handleErr $LINENO' ERR
 
+NUMSTAGED=`git diff --cached --numstat | wc -l`
+if [ $NUMSTAGED -ne 0 ]; then
+	echo "There are $NUMSTAGED staged edits. Please clear git staging area."
+	exit 1
+fi
 
 # increment the version build number; awk must write to temp file
 awk -F '.' '{printf("%d.%d.%d",$1,$2,$3+1)}' version.txt > newver.txt
