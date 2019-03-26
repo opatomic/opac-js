@@ -65,7 +65,7 @@ if (typeof Map == "function") {
 			cb(this.vals[p], p, this);
 		}
 	}
-	
+
 	IdMap.prototype.clear = function() {
 		this.vals = {};
 	}
