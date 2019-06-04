@@ -8,9 +8,9 @@ function handleErr {
 
 trap 'handleErr $LINENO' ERR
 
-NUMSTAGED=`git diff --cached --numstat | wc -l`
-if [ $NUMSTAGED -ne 0 ]; then
-	echo "There are $NUMSTAGED staged edits. Please clear git staging area."
+MODCNT=`git status --porcelain | wc -l`
+if [ $MODCNT -ne 0 ]; then
+	echo "There are $MODCNT changes. Must revert or check in changes."
 	exit 1
 fi
 
