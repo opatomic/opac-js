@@ -1,5 +1,35 @@
 "use strict";
 
+
+
+
+
+
+if (!Buffer.prototype.subarray) {
+	Buffer.prototype.subarray = Buffer.prototype.slice;
+}
+
+if (typeof Uint8Array != "function" || Buffer.prototype.set === undefined || Buffer.prototype.set != Uint8Array.prototype.set) {
+	Buffer.prototype.set = function(array, offset) {
+		// note: this isn't a proper polyfill. it is just what is needed by this library
+		//if (arguments.length < 1) {
+		//	throw new TypeError("set() requires at least 1 parameter");
+		//}
+		offset = arguments.length > 1 ? offset : 0;
+		if (offset + array.length > this.length) {
+			throw new RangeError("offset + source length extends past the end of this array");
+		}
+		for (var i = 0; i < array.length; ++i) {
+			this[offset + i] = array[i];
+		}
+	}
+}
+
+
+
+
+
+
 var libnet = require("net");
 var BigInteger = require("jsbn").BigInteger;
 
@@ -11,6 +41,29 @@ var PartialParser = libopac.PartialParser;
 //Big.prototype.toOpaSO = function(s) {
 //	s.writeObject(new BigDec(this.toString()));
 //}
+
+var MAX_SAFE_INTEGER =  9007199254740991;
+var MIN_SAFE_INTEGER = 0 - MAX_SAFE_INTEGER;
+
+var BufferFrom = typeof Buffer.alloc == 'function' ? Buffer.from : function(a, b, c) {
+	return new Buffer(a, b, c);
+}
+
+function assert(v, m) {
+	if (!v) {
+		throw m;
+	}
+}
+
+function BuffSet(buff, array, offset) {
+	offset = arguments.length > 2 ? offset : 0;
+	if (offset + array.length > buff.length) {
+		throw new RangeError("offset + source length extends past the end");
+	}
+	for (var i = 0; i < array.length; ++i) {
+		buff[offset + i] = array[i];
+	}
+}
 
 function echoResult(result, err) {
 	if (err) {
@@ -37,7 +90,7 @@ function bench(c, its, cmd, args) {
 
 function benchEncStr(str, its, w) {
 	for (var i = 0; i < its; ++i) {
-		w.write(Buffer.from(str, "utf-8"));
+		w.write(BufferFrom(str, "utf-8"));
 	}
 }
 
@@ -92,8 +145,8 @@ function benchEnc() {
 	//bench(c, its, "ECHO", [new BigDec("12345")]);
 	//bench(c, its, "ECHO", [2147483647]);
 	//bench(c, its, "ECHO", [2147483649]);
-	//bench(c, its, "ECHO", [Number.MAX_SAFE_INTEGER]);
-	//bench(c, its, "ECHO", [Number.MIN_SAFE_INTEGER]);
+	//bench(c, its, "ECHO", [MAX_SAFE_INTEGER]);
+	//bench(c, its, "ECHO", [MIN_SAFE_INTEGER]);
 	//bench(c, its, "ECHO", [new BigDec("2147483649")]);
 	//bench(c, its, "ECHO", [new BigDec("9223372036854775807")]);
 	//bench(c, 100000, "ECHO", [new BigDec("89237487234723984789237489237849723984728347982378947")]);
@@ -111,21 +164,21 @@ function benchEnc() {
 	//bench(c, its, "ECHO", [[]]);
 	//bench(c, its, "ECHO", ["h"]);
 	//bench(c, its, "ECHO", ["hello"]);
-	//bench(c, its, "ECHO", [Number.MAX_SAFE_INTEGER]);
-	//bench(c, its, "ECHO", [new BigDec(Number.MAX_SAFE_INTEGER.toString())]);
-	//bench(c, its, "ECHO", [new BigDec(Number.MAX_SAFE_INTEGER.toString() + "e-11")]);
-	//bench(c, its, "ECHO", [Number.MAX_SAFE_INTEGER - 1]);
-	//bench(c, its, "ECHO", [Number.MAX_SAFE_INTEGER + 1]);
-	//bench(c, its, "ECHO", [new BigDec((Number.MAX_SAFE_INTEGER + 1).toString())]);
-	//bench(c, its, "ECHO", [new BigInteger(Number.MAX_SAFE_INTEGER.toString())]);
+	//bench(c, its, "ECHO", [MAX_SAFE_INTEGER]);
+	//bench(c, its, "ECHO", [new BigDec(MAX_SAFE_INTEGER.toString())]);
+	//bench(c, its, "ECHO", [new BigDec(MAX_SAFE_INTEGER.toString() + "e-11")]);
+	//bench(c, its, "ECHO", [MAX_SAFE_INTEGER - 1]);
+	//bench(c, its, "ECHO", [MAX_SAFE_INTEGER + 1]);
+	//bench(c, its, "ECHO", [new BigDec((MAX_SAFE_INTEGER + 1).toString())]);
+	//bench(c, its, "ECHO", [new BigInteger(MAX_SAFE_INTEGER.toString())]);
 	//bench(c, its, "ECHO", [new BigDec("9223372036854775807")]);
 	//bench(c, its, "ECHO", [new BigInteger("922337203685477580700")]);
 	//bench(c, its, "ECHO", [new BigDec("89237487234723984789237489237849723984728347982378947.1")]);
 
-	//bench(c, its, "ECHO", [new BigInteger((Number.MIN_SAFE_INTEGER).toString())]);
-	//bench(c, its, "ECHO", [new BigInteger((Number.MAX_SAFE_INTEGER).toString())]);
-	//bench(c, its, "ECHO", [new BigDec((Number.MIN_SAFE_INTEGER).toString())]);
-	//bench(c, its, "ECHO", [new BigDec((Number.MAX_SAFE_INTEGER).toString())]);
+	//bench(c, its, "ECHO", [new BigInteger((MIN_SAFE_INTEGER).toString())]);
+	//bench(c, its, "ECHO", [new BigInteger((MAX_SAFE_INTEGER).toString())]);
+	//bench(c, its, "ECHO", [new BigDec((MIN_SAFE_INTEGER).toString())]);
+	//bench(c, its, "ECHO", [new BigDec((MAX_SAFE_INTEGER).toString())]);
 	//bench(c, its, "ECHO", [new BigInteger("-922337203685477580700904823049832")]);
 	//bench(c, its, "ECHO", [new BigDec("-922337203685477580700904823049832.1")]);
 
@@ -143,7 +196,7 @@ function benchEnc() {
 
 function runTest(s) {
 	var c = libopac.newClient(s);
-	var binobj = Buffer.from("hello", "utf-8");
+	var binobj = BufferFrom("hello", "utf-8");
 
 	console.log("s.writableHighWaterMark: " + s.writableHighWaterMark);
 	console.log("s.writableLength: " + s.writableLength);
@@ -155,8 +208,8 @@ function runTest(s) {
 	c.call("ECHO", [new BigInteger("1")], echoResult);
 	c.call("ECHO", [new BigInteger("2147483647")], echoResult);
 	c.call("ECHO", [Math.pow(2,49) - 1], echoResult);
-	c.call("ECHO", [Number.MAX_SAFE_INTEGER], echoResult);
-	c.call("ECHO", [new BigInteger(Number.MAX_SAFE_INTEGER.toString())], echoResult);
+	c.call("ECHO", [MAX_SAFE_INTEGER], echoResult);
+	c.call("ECHO", [new BigInteger(MAX_SAFE_INTEGER.toString())], echoResult);
 	//c.call("ECHO", [Big("28374987238497327498273487238424")], echoResult);
 	c.call("ECHO", [new BigInteger("28374987238497327498273487238424")], echoResult);
 	c.call("ECHO", [new BigDec("28374987238497327498273487238424")], echoResult);
@@ -168,11 +221,11 @@ function runTest(s) {
 	c.call("ECHO", [-1.23], echoResult);
 	c.flush();
 
-	var bda = new BigDec("100e2");
-	var bdb = new BigDec("30");
-	var qr = bdb.divideAndRemainder(bda);
-	console.log(qr[0].toString());
-	console.log(qr[1].toString());
+	//var bda = new BigDec("100e2");
+	//var bdb = new BigDec("30");
+	//var qr = bdb.divideAndRemainder(bda);
+	//console.log(qr[0].toString());
+	//console.log(qr[1].toString());
 
 	console.log("TODO: write tests for all object types");
 	console.log("s.writableHighWaterMark: " + s.writableHighWaterMark);
@@ -183,7 +236,7 @@ function runTest(s) {
 	//bench(c, its, "ECHO", [1234]);
 	//bench(c, its, "ECHO", [Math.pow(2,49) - 1]);
 	//bench(c, its, "ECHO", [Math.pow(2,49)]);
-	//bench(c, its, "ECHO", [new BigInteger((Number.MAX_SAFE_INTEGER).toString())]);
+	//bench(c, its, "ECHO", [new BigInteger((MAX_SAFE_INTEGER).toString())]);
 	//bench(c, its, "ECHO", [1]);
 	//bench(c, its, "ECHO", [new BigInteger("1")]);
 	//bench(c, its, "ECHO", [2147483647]);
@@ -194,7 +247,7 @@ function runTest(s) {
 	//bench(c, its, "ECHO", [binobj]);
 	//bench(c, its, "PING");
 
-	//bench(c, its, "ECHO", [new BigInteger((Number.MIN_SAFE_INTEGER).toString())]);
+	//bench(c, its, "ECHO", [new BigInteger((MIN_SAFE_INTEGER).toString())]);
 
 	c.flush();
 
@@ -247,10 +300,10 @@ benchParser([new BigDec("21474836472147483647999.1")], 1000000);
 //benchParser([new BigInteger("9223372036854775808")], 10);
 
 //benchParser(["hello"], 1000000);
-benchParser([new BigInteger("21474836472147483647999")], 1000000);
-benchParser([new BigInteger("21474836472147483647999")], 1000000);
-benchParser([new BigInteger("-21474836472147483647999")], 1000000);
-benchParser([new BigInteger("-21474836472147483647999")], 1000000);
+//benchParser([new BigInteger("21474836472147483647999")], 1000000);
+//benchParser([new BigInteger("21474836472147483647999")], 1000000);
+//benchParser([new BigInteger("-21474836472147483647999")], 1000000);
+//benchParser([new BigInteger("-21474836472147483647999")], 1000000);
 
 /*
 benchParser([new BigInteger("-9223372036854775808")], 1000000);
@@ -261,14 +314,23 @@ benchParser([new BigInteger("9223372036854775808")], 1000000);
 benchParser([new BigInteger("9223372036854775808")], 1000000);
 */
 
-/*
+console.log(libopac.stringify([undefined, null, false, true, -4, -2.23, 0, 1, 1.23, "string", new Buffer([0,1,2,3]), ["subarray"]]));
+
+assert((new BigDec("123e4")).toString() == "123e4");
+assert((new BigDec("123e-4")).toString() == "123e-4");
+assert((new BigDec("123E4")).toString() == "123e4");
+assert((new BigDec("123E4")).toString() == "123e4");
+assert((new BigDec("12.3")).toString() == "123e-1");
+assert((new BigDec("-12.3")).toString() == "-123e-1");
+
+
 var sock = new libnet.Socket();
 sock.setNoDelay(true);
 sock.connect(4567, "localhost", function onConnect() {
 	console.log("connected");
 	runTest(sock);
 });
-*/
+
 
 //console.log("hello from test.js");
 

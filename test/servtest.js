@@ -8,6 +8,26 @@ var BigDec = libopac.BigDec;
 //var PartialParser = libopac.PartialParser;
 
 
+if (!Buffer.prototype.subarray) {
+	Buffer.prototype.subarray = Buffer.prototype.slice;
+}
+
+if (typeof Uint8Array != "function" || Buffer.prototype.set === undefined || Buffer.prototype.set != Uint8Array.prototype.set) {
+	Buffer.prototype.set = function(array, offset) {
+		// note: this isn't a proper polyfill. it is just what is needed by this library
+		//if (arguments.length < 1) {
+		//	throw new TypeError("set() requires at least 1 parameter");
+		//}
+		offset = arguments.length > 1 ? offset : 0;
+		if (offset + array.length > this.length) {
+			throw new RangeError("offset + source length extends past the end of this array");
+		}
+		for (var i = 0; i < array.length; ++i) {
+			this[offset + i] = array[i];
+		}
+	}
+}
+
 
 
 function echoResult(result, err) {
@@ -120,6 +140,14 @@ function testBadValue(v) {
 	}, 1000);
 }
 
+Uint8Array.of = function(v) {
+	var a = new Uint8Array(v.length);
+	for (var i = 0; i < v.length; ++i) {
+		a[i] = v[i];
+	}
+	return a;
+}
+
 function testBadValues() {
 	for (var i = 0; i < BADVALS.length; ++i) {
 		testBadValue(Uint8Array.of(BADVALS[i]));
@@ -142,6 +170,11 @@ testBadValues();
 testBigExp(new BigDec(new BigInteger("1"), -0x7FFFFFFF - 1));
 testBigExp(new BigDec(new BigInteger("1"), 0x7FFFFFFF + 1));
 
+//var v = String.fromCharCode.apply(null, new Uint8Array(4));
+//console.log(new Buffer(v).toString("base64"));
+libopac.stringify([undefined, null, false, true, -4, -2.23, 0, 1, 1.23, "string", new Buffer(4), ["subarray"]]);
+
+console.log("connecting...");
 
 
 var sock = new libnet.Socket();
