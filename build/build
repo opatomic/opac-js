@@ -15,12 +15,11 @@ trap 'handleErr $LINENO' ERR
 # to generate docs, must have jsdoc installed. install for node using the following command
 #  npm install -g jsdoc
 
-# TODO: support running closure compiler from within node?
-
 CCJAR=~/Downloads/closure.compiler/closure-compiler-v20180204.jar
 OPACJSDIR=../src
 LIBDIR=../lib
 TMPDIR=tmp
+OUTDIR=out
 
 
 if [ ! -f $CCJAR ]; then
@@ -45,22 +44,16 @@ function catAllSrc {
 }
 
 
-ensureDir "browser"
-ensureDir "node"
+deldir $OUTDIR
+mkdir $OUTDIR
 
 deldir $TMPDIR
 mkdir $TMPDIR
 
 
-if [[ $# -eq 1 && $1 = "--publish" ]]; then
-	VERSUFF=
-else
-	VERSUFF=-dev
+if [[ -z "$VERSION" ]]; then
+	VERSION=`git describe --tags --long --dirty 2> /dev/null || echo $(cat version.txt)-dev`
 fi
-
-VERSION=`cat version.txt`
-VERSION=$VERSION$VERSUFF
-
 
 printf "var VERSION = \"$VERSION\";\n\n" >> "$TMPDIR/version.js"
 
@@ -70,38 +63,39 @@ cat "$LIBDIR/jsbn/jsbn.js" "$LIBDIR/jsbn/jsbn2.js" >> "$TMPDIR/jsbn.js"
 printf "\nreturn BigInteger;\n}());\n" >> "$TMPDIR/jsbn.js"
 
 
-rm "browser/opac.browser.min.js"
 if [ -f $CCJAR ]; then
+	# TODO: store closure compiler version in source somewhere?
 	java -jar "$CCJAR" --js "$TMPDIR/jsbn.js" --js_output_file "$TMPDIR/jsbn.min.js"
 	java -jar "$CCJAR" --js "browser.head.js" "$TMPDIR/version.js" "$OPACJSDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper --extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE
 
-	printf "// Minimized and bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n\n" >> "browser/opac.browser.min.js"
-	printf "/* BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/) LICENSE file: */\n" >> "browser/opac.browser.min.js"
-	cat "$LIBDIR/jsbn/LICENSE" >> "browser/opac.browser.min.js"
-	printf "\n\n(function(){" >> "browser/opac.browser.min.js"
-	cat "$TMPDIR/jsbn.min.js" "$TMPDIR/bundle.min.js" >> "browser/opac.browser.min.js"
-	printf "}());\n" >> "browser/opac.browser.min.js"
+	printf "// Minimized and bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n\n" >> "$OUTDIR/opac.browser.min.js"
+	printf "/* BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/) LICENSE file: */\n" >> "$OUTDIR/opac.browser.min.js"
+	cat "$LIBDIR/jsbn/LICENSE" >> "$OUTDIR/opac.browser.min.js"
+	printf "\n\n(function(){" >> "$OUTDIR/opac.browser.min.js"
+	cat "$TMPDIR/jsbn.min.js" "$TMPDIR/bundle.min.js" >> "$OUTDIR/opac.browser.min.js"
+	printf "}());\n" >> "$OUTDIR/opac.browser.min.js"
 else
 	echo "CCJAR not found. browser build will not minimize"
 fi
 
 
-printf "// Bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n" > "browser/opac.browser.js"
-printf "(function(){\n" >> "browser/opac.browser.js"
-cat "browser.head.js" >> "browser/opac.browser.js"
-printf "// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):\n" >> "browser/opac.browser.js"
-cat "$LIBDIR/jsbn/LICENSE" "$TMPDIR/jsbn.js" >> "browser/opac.browser.js"
-printf "\n\n" >> "browser/opac.browser.js"
-catAllSrc "browser/opac.browser.js"
-cat "browser.foot.js" >> "browser/opac.browser.js"
-printf "})();\n" >> "browser/opac.browser.js"
+printf "// Bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n" > "$OUTDIR/opac.browser.js"
+printf "(function(){\n" >> "$OUTDIR/opac.browser.js"
+cat "browser.head.js" >> "$OUTDIR/opac.browser.js"
+printf "// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):\n" >> "$OUTDIR/opac.browser.js"
+cat "$LIBDIR/jsbn/LICENSE" "$TMPDIR/jsbn.js" >> "$OUTDIR/opac.browser.js"
+printf "\n\n" >> "$OUTDIR/opac.browser.js"
+catAllSrc "$OUTDIR/opac.browser.js"
+cat "browser.foot.js" >> "$OUTDIR/opac.browser.js"
+printf "})();\n" >> "$OUTDIR/opac.browser.js"
 
 
-cat "node.head.js" > "node/opac.node.js"
-catAllSrc "node/opac.node.js"
-cat "node.foot.js" >> "node/opac.node.js"
-sed -e "s/\\\$VERSION/$VERSION/" "package.json" > "node/package.json"
-cp "../README.md" "node/README.md"
+ensureDir "$OUTDIR/node"
+cat "node.head.js" > "$OUTDIR/node/opac.node.js"
+catAllSrc "$OUTDIR/node/opac.node.js"
+cat "node.foot.js" >> "$OUTDIR/node/opac.node.js"
+sed -e "s/\\\$VERSION/$VERSION/" "package.json" > "$OUTDIR/node/package.json"
+cp "../README.md" "$OUTDIR/node/README.md"
 
 
 deldir $TMPDIR

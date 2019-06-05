@@ -14,22 +14,24 @@ if [ $MODCNT -ne 0 ]; then
 	exit 1
 fi
 
-# increment the version build number; awk must write to temp file
-awk -F '.' '{printf("%d.%d.%d",$1,$2,$3+1)}' version.txt > newver.txt
-mv newver.txt version.txt
-VERSION=`cat version.txt`
+VERSION=`awk -F '.' '{printf("%d.%d.%d",$1,$2,$3+1)}' version.txt`
 
+# run a build to make sure there's no problems building
+# set version so that docs will contain correct version
+VERSION="v$VERSION" ./build
 
-./build --publish
+# TODO: run tests here; do not proceed if they fail
+
+rm -r out
+
+# write new version to file
+printf "$VERSION" > version.txt
 
 git add -A ../docs/
 git add version.txt
-git add -A browser/
-git add -A node/
 
 git commit -m "build v$VERSION"
+git tag "v$VERSION"
 
-npm publish node
-
-echo "published v$VERSION"
+echo "committed and tagged v$VERSION"
 
