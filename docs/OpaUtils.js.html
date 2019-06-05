@@ -137,14 +137,14 @@ function opaStringify(obj, space) {
 			case "Uint8Array":
 			case "Buffer":
 				//var dv = new DataView(obj.buffer, obj.byteOffset, obj.byteLength);
-		    	//for (var i = 0; i &lt; obj.byteLength; ++i) {
+				//for (var i = 0; i &lt; obj.byteLength; ++i) {
 				//	if (dv.getUint8(i) &lt; 32 || dv.getUint8(i) > 126) {
-				//	    //return '"~base64' + BTOA((new TextDecoder("utf-8")).decode(obj)) + '"';
-				//	    return '"~base64' + BTOA(String.fromCharCode.apply(null, obj)) + '"';
+				//		//return '"~base64' + BTOA((new TextDecoder("utf-8")).decode(obj)) + '"';
+				//		return '"~base64' + BTOA(String.fromCharCode.apply(null, obj)) + '"';
 				//	}
-		    	//}
-		    	//return JSON.stringify('~bin' + (new TextDecoder("utf-8")).decode(obj));
-		    	return '"~base64' + BTOA(String.fromCharCode.apply(null, /** @type {Uint8Array} */ (obj))) + '"';
+				//}
+				//return JSON.stringify('~bin' + (new TextDecoder("utf-8")).decode(obj));
+				return '"~base64' + BTOA(String.fromCharCode.apply(null, /** @type {Uint8Array} */ (obj))) + '"';
 			case "string":
 				obj = /** @type {!string} */ (obj);
 				return JSON.stringify(obj.charAt(0) == "~" ? "~" + obj : obj);
@@ -170,7 +170,7 @@ function opaStringify(obj, space) {
 		}
 		throw "unhandled case in switch";
 	}
-	
+
 	return opaStringifyInternal(obj, space, 0);
 }
 
