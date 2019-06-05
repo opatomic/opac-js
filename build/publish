@@ -1,0 +1,22 @@
+#!/bin/bash
+
+function handleErr {
+	SNAME=$(basename $BASH_SOURCE)
+	echo "$SNAME: Error on line $1"
+	exit 1
+}
+
+trap 'handleErr $LINENO' ERR
+
+MODCNT=`git status --porcelain | wc -l`
+if [ $MODCNT -ne 0 ]; then
+	echo "There are $MODCNT changes. Must revert or check in changes."
+	exit 1
+fi
+
+VERSION=`cat version.txt`
+
+VERSION="v$VERSION" ./build
+
+npm publish out/node
+
