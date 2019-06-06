@@ -17,11 +17,8 @@ function testDeps {
 testDeps git jq curl npm
 
 
-GHURL=`git config --get remote.origin.url`
-# see https://stackoverflow.com/a/8979741 for string pattern matching info
-GHURL=${GHURL#*github.com/}
-GHUSER=${GHURL%%/*}
-GHREPO=${GHURL##*/}
+GHUSER="opatomic"
+GHREPO="opac-js"
 if [[ -z "$GHTOKEN" ]]; then
 	if [[ -z "$GHTOKENFILE" ]]; then
 		GHTOKENFILE="$HOME/githubtoken"
