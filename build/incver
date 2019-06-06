@@ -31,7 +31,7 @@ git add -A ../docs/
 git add version.txt
 
 git commit -m "build v$VERSION"
-git tag "v$VERSION"
+git tag -a "v$VERSION" -m "v$VERSION"
 
 echo "committed and tagged v$VERSION"
 
