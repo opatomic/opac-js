@@ -18,7 +18,7 @@ testDeps git jq curl npm
 
 
 GHUSER="opatomic"
-GHREPO="opac-js"
+GHREPO=`basename $(dirname $PWD)`
 if [[ -z "$GHTOKEN" ]]; then
 	if [[ -z "$GHTOKENFILE" ]]; then
 		GHTOKENFILE="$HOME/githubtoken"
