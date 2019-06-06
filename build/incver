@@ -35,3 +35,6 @@ git tag "v$VERSION"
 
 echo "committed and tagged v$VERSION"
 
+git push --follow-tags
+
+
