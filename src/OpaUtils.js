@@ -1,3 +1,7 @@
+/*
+ * Copyright 2018-2019 Opatomic
+ * Open sourced with ISC license. Refer to LICENSE for details.
+ */
 
 /**
  * @const
