@@ -16,7 +16,7 @@ trap 'handleErr $LINENO' ERR
 #  npm install -g jsdoc
 
 CCJAR=~/Downloads/closure.compiler/closure-compiler-v20180204.jar
-OPACJSDIR=../src
+SRCDIR=../src
 LIBDIR=../lib
 TMPDIR=tmp
 OUTDIR=out
@@ -40,7 +40,7 @@ function cleandir {
 }
 
 function catAllSrc {
-	cat "$TMPDIR/version.js" "$OPACJSDIR/Queue.js" "$OPACJSDIR/BigDec.js" "$OPACJSDIR/OpaDef.js" "$OPACJSDIR/PartialParser.js" "$OPACJSDIR/Serializer.js" "$OPACJSDIR/OpaUtils.js" "$OPACJSDIR/EventClient.js" >> $1
+	cat "$TMPDIR/version.js" "$SRCDIR/Queue.js" "$SRCDIR/BigDec.js" "$SRCDIR/OpaDef.js" "$SRCDIR/PartialParser.js" "$SRCDIR/Serializer.js" "$SRCDIR/OpaUtils.js" "$SRCDIR/EventClient.js" >> $1
 }
 
 
@@ -64,7 +64,7 @@ printf "\nreturn BigInteger;\n}());\n" >> "$TMPDIR/jsbn.js"
 if [ -f $CCJAR ]; then
 	# TODO: store closure compiler version in source somewhere?
 	java -jar "$CCJAR" --js "$TMPDIR/jsbn.js" --js_output_file "$TMPDIR/jsbn.min.js"
-	java -jar "$CCJAR" --js "browser.head.js" "$TMPDIR/version.js" "$OPACJSDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper --extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE
+	java -jar "$CCJAR" --js "browser.head.js" "$TMPDIR/version.js" "$SRCDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper --extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE
 
 	OUTFILE="$OUTDIR/opac.browser.min.js"
 	printf "// Minimized and bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n\n" >> "$OUTFILE"
@@ -103,7 +103,7 @@ deldir $TMPDIR
 
 # TODO: run some tests!!!
 
-jsdoc "$OPACJSDIR/" -d "$DOCSDIR" -c "jsdoc.conf.json"
+jsdoc "$SRCDIR/" -d "$DOCSDIR" -c "jsdoc.conf.json"
 deldir "$DOCSDIR/fonts"
 
 
