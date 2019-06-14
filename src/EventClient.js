@@ -117,21 +117,12 @@ function schedTimeout(c) {
 /**
  * @param {EventClient} c
  * @param {string} cmd
- */
-function writeCommand(c, cmd) {
-	// note: command cache was removed. STR2BUF (in Serializer) can be used instead
-	c.s.writeString(cmd);
-}
-
-/**
- * @param {EventClient} c
- * @param {string} cmd
  * @param {Array=} args
  */
 function callNoResponse(c, cmd, args) {
 	// if no callback is specified then send null as async id indicating server must not send response
 	c.s.write1(OpaDef.ARRAYSTART);
-	writeCommand(c, cmd);
+	c.s.writeObject(cmd);
 	c.s.writeObject(args ? args : null);
 	c.s.write1(OpaDef.NULL);
 	c.s.write1(OpaDef.ARRAYEND);
@@ -159,7 +150,7 @@ EventClient.prototype.call = function(cmd, args, cb) {
 		return callNoResponse(this, cmd, args);
 	}
 	this.s.write1(OpaDef.ARRAYSTART);
-	writeCommand(this, cmd);
+	this.s.writeObject(cmd);
 	if (args) {
 		this.s.writeObject(args);
 	}
@@ -181,7 +172,7 @@ function callId(c, cmd, args, cb, isP) {
 	var id = isP ? 0 - c.id : c.id;
 
 	c.s.write1(OpaDef.ARRAYSTART);
-	writeCommand(c, cmd);
+	c.s.writeObject(cmd);
 	c.s.writeObject(args);
 	c.s.writeNumber(id);
 	c.s.write1(OpaDef.ARRAYEND);
