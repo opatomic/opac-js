@@ -241,18 +241,18 @@ function writeBIAsVI(s, t, v) {
 function writeBigInt(s, v) {
 	var sn = v.signum();
 	if (sn == 0) {
-		s.write1(OpaDef.ZERO);
+		s.write1(CH_ZERO);
 	} else if (sn > 0) {
 		if (v.compareTo(BIMAXVARINT) <= 0) {
-			writeBIAsVI(s, OpaDef.POSVARINT, v);
+			writeBIAsVI(s, CH_POSVARINT, v);
 		} else {
-			writeTypeAndBigBytes(s, OpaDef.POSBIGINT, v);
+			writeTypeAndBigBytes(s, CH_POSBIGINT, v);
 		}
 	} else {
 		if (v.compareTo(BIMINVARINT) >= 0) {
-			writeBIAsVI(s, OpaDef.NEGVARINT, v);
+			writeBIAsVI(s, CH_NEGVARINT, v);
 		} else {
-			writeTypeAndBigBytes(s, OpaDef.NEGBIGINT, v);
+			writeTypeAndBigBytes(s, CH_NEGBIGINT, v);
 		}
 	}
 }
@@ -269,18 +269,18 @@ function writeBigDec(s, v) {
 		var scale = v.e < 0 ? 0 - v.e : v.e;
 		if (v.signum() > 0) {
 			if (v.m.compareTo(BIMAXVARINT) <= 0) {
-				writeTypeAndVarint(s, negExp ? OpaDef.NEGPOSVARDEC : OpaDef.POSPOSVARDEC, scale);
+				writeTypeAndVarint(s, negExp ? CH_NEGPOSVARDEC : CH_POSPOSVARDEC, scale);
 				writeBIAsVI(s, 0, v.m);
 			} else {
-				writeTypeAndVarint(s, negExp ? OpaDef.NEGPOSBIGDEC : OpaDef.POSPOSBIGDEC, scale);
+				writeTypeAndVarint(s, negExp ? CH_NEGPOSBIGDEC : CH_POSPOSBIGDEC, scale);
 				writeTypeAndBigBytes(s, 0, v.m);
 			}
 		} else {
 			if (v.m.compareTo(BIMINVARINT) >= 0) {
-				writeTypeAndVarint(s, negExp ? OpaDef.NEGNEGVARDEC : OpaDef.POSNEGVARDEC, scale);
+				writeTypeAndVarint(s, negExp ? CH_NEGNEGVARDEC : CH_POSNEGVARDEC, scale);
 				writeBIAsVI(s, 0, v.m);
 			} else {
-				writeTypeAndVarint(s, negExp ? OpaDef.NEGNEGBIGDEC : OpaDef.POSNEGBIGDEC, scale);
+				writeTypeAndVarint(s, negExp ? CH_NEGNEGBIGDEC : CH_POSNEGBIGDEC, scale);
 				writeTypeAndBigBytes(s, 0, v.m);
 			}
 		}
@@ -331,11 +331,11 @@ Serializer.prototype.flush = function() {
 Serializer.prototype.writeNumber = function(v) {
 	if (isSafeInteger(v)) {
 		if (v > 0) {
-			writeTypeAndVarint(this, OpaDef.POSVARINT, v);
+			writeTypeAndVarint(this, CH_POSVARINT, v);
 		} else if (v == 0) {
-			this.write1(OpaDef.ZERO);
+			this.write1(CH_ZERO);
 		} else {
-			writeTypeAndVarint(this, OpaDef.NEGVARINT, 0 - v);
+			writeTypeAndVarint(this, CH_NEGVARINT, 0 - v);
 		}
 	} else {
 		if (typeof v != "number") {
@@ -354,25 +354,25 @@ Serializer.prototype.writeNumber = function(v) {
  */
 Serializer.prototype.writeString = function(v) {
 	if (v.length == 0) {
-		this.write1(OpaDef.EMPTYSTR);
+		this.write1(CH_EMPTYSTR);
 		return;
 	}
 	var b;
 	if (Serializer.STR2BUF) {
 		b = Serializer.STR2BUF.get(v);
 		if (b) {
-			writeTypeAndVarint(this, OpaDef.STRLPVI, b.length);
+			writeTypeAndVarint(this, CH_STRLPVI, b.length);
 			this.write(b);
 			return;
 		}
 	}
 	if (v.length < 1024) {
 		// TODO: what is the proper cutoff string length to use the built-in encoder vs iterating over each char?
-		writeTypeAndVarint(this, OpaDef.STRLPVI, getUtf8Len(v, 0, v.length));
+		writeTypeAndVarint(this, CH_STRLPVI, getUtf8Len(v, 0, v.length));
 		writeUtf8(this, v);
 	} else {
 		b = STRENC(v);
-		writeTypeAndVarint(this, OpaDef.STRLPVI, b.length);
+		writeTypeAndVarint(this, CH_STRLPVI, b.length);
 		this.write(b);
 	}
 }
@@ -383,13 +383,13 @@ Serializer.prototype.writeString = function(v) {
  */
 Serializer.prototype.writeArray = function(v) {
 	if (v.length == 0) {
-		this.write1(OpaDef.EMPTYARRAY);
+		this.write1(CH_EMPTYARRAY);
 	} else {
-		this.write1(OpaDef.ARRAYSTART);
+		this.write1(CH_ARRAYSTART);
 		for (var i = 0; i < v.length; ++i) {
 			this.writeObject(v[i]);
 		}
-		this.write1(OpaDef.ARRAYEND);
+		this.write1(CH_ARRAYEND);
 	}
 }
 
@@ -415,21 +415,21 @@ Serializer.prototype.writeObject = function(v) {
 			writeBigInt(this, new BigInteger(v.toString()));
 			break;
 		case "boolean":
-			this.write1(v ? OpaDef.TRUE : OpaDef.FALSE);
+			this.write1(v ? CH_TRUE : CH_FALSE);
 			break;
 		case "undefined":
-			this.write1(OpaDef.UNDEFINED);
+			this.write1(CH_UNDEFINED);
 			break;
 		case "object":
 			v = /** @type {Object} */ (v);
 			if (v === null) {
-				this.write1(OpaDef.NULL);
+				this.write1(CH_NULL);
 			} else if (v.hasOwnProperty("toOpaSO") && typeof v.toOpaSO == "function") {
 				v.toOpaSO(this);
 			} else if (Array.isArray(v)) {
 				this.writeArray(v);
 			} else if (v === OpaDef.SORTMAX_OBJ) {
-				this.write1(OpaDef.SORTMAX);
+				this.write1(CH_SORTMAX);
 			} else if (v instanceof BigInteger) {
 				writeBigInt(this, v);
 			} else if (v instanceof BigDec) {
@@ -437,9 +437,9 @@ Serializer.prototype.writeObject = function(v) {
 			} else if (v.constructor.name == "Uint8Array" || v.constructor.name == "Buffer") {
 				v = /** @type {!Uint8Array} */ (v);
 				if (v.length == 0) {
-					this.write1(OpaDef.EMPTYBIN);
+					this.write1(CH_EMPTYBIN);
 				} else {
-					writeTypeAndVarint(this, OpaDef.BINLPVI, v.length);
+					writeTypeAndVarint(this, CH_BINLPVI, v.length);
 					this.write(v);
 				}
 			} else {

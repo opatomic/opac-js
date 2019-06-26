@@ -4,6 +4,135 @@
  */
 
 /**
+ * @const {number}
+ * @ignore
+ */
+var CH_UNDEFINED    = "U".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_NULL         = "N".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_FALSE        = "F".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_TRUE         = "T".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_ZERO         = "O".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_EMPTYBIN     = "A".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_EMPTYSTR     = "R".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_EMPTYARRAY   = "M".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_SORTMAX      = "Z".charCodeAt(0);
+
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_POSVARINT    = "D".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_NEGVARINT    = "E".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_POSPOSVARDEC = "G".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_POSNEGVARDEC = "H".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_NEGPOSVARDEC = "I".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_NEGNEGVARDEC = "J".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_POSBIGINT    = "K".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_NEGBIGINT    = "L".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_POSPOSBIGDEC = "V".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_POSNEGBIGDEC = "W".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_NEGPOSBIGDEC = "X".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_NEGNEGBIGDEC = "Y".charCodeAt(0);
+
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_BINLPVI      = "B".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_STRLPVI      = "S".charCodeAt(0);
+
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_ARRAYSTART   = "[".charCodeAt(0);
+/**
+ * @const {number}
+ * @ignore
+ */
+var CH_ARRAYEND     = "]".charCodeAt(0);
+
+/**
  * @constructor
  * @ignore
  */

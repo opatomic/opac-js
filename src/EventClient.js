@@ -121,11 +121,11 @@ function schedTimeout(c) {
  */
 function callNoResponse(c, cmd, args) {
 	// if no callback is specified then send null as async id indicating server must not send response
-	c.s.write1(OpaDef.ARRAYSTART);
+	c.s.write1(CH_ARRAYSTART);
 	c.s.writeObject(cmd);
 	c.s.writeObject(args ? args : null);
-	c.s.write1(OpaDef.NULL);
-	c.s.write1(OpaDef.ARRAYEND);
+	c.s.write1(CH_NULL);
+	c.s.write1(CH_ARRAYEND);
 }
 
 /**
@@ -149,12 +149,12 @@ EventClient.prototype.call = function(cmd, args, cb) {
 	if (!cb) {
 		return callNoResponse(this, cmd, args);
 	}
-	this.s.write1(OpaDef.ARRAYSTART);
+	this.s.write1(CH_ARRAYSTART);
 	this.s.writeObject(cmd);
 	if (args) {
 		this.s.writeObject(args);
 	}
-	this.s.write1(OpaDef.ARRAYEND);
+	this.s.write1(CH_ARRAYEND);
 	schedTimeout(this);
 	this.mMainCallbacks.push(cb);
 }
@@ -171,11 +171,11 @@ function callId(c, cmd, args, cb, isP) {
 	++c.id;
 	var id = isP ? 0 - c.id : c.id;
 
-	c.s.write1(OpaDef.ARRAYSTART);
+	c.s.write1(CH_ARRAYSTART);
 	c.s.writeObject(cmd);
 	c.s.writeObject(args);
 	c.s.writeNumber(id);
-	c.s.write1(OpaDef.ARRAYEND);
+	c.s.write1(CH_ARRAYEND);
 	schedTimeout(c);
 	c.mAsyncCallbacks.set(id, cb);
 	return id;
