@@ -23,9 +23,9 @@ OUTDIR=out
 DOCSDIR=../docs
 
 
-if [ ! -f $CCJAR ]; then
+if [[ ! -f "$CCJAR" ]]; then
 	# if $CCJAR file does not exist, search current directory for CC
-	CCJAR=`find *closure*compiler*.jar | tail -1`
+	CCJAR=`find *closure*compiler*.jar 2> /dev/null | tail -1`
 fi
 
 function deldir {
@@ -61,7 +61,7 @@ cat "$LIBDIR/jsbn/jsbn.js" "$LIBDIR/jsbn/jsbn2.js" >> "$TMPDIR/jsbn.js"
 printf "\nreturn BigInteger;\n}());\n" >> "$TMPDIR/jsbn.js"
 
 
-if [ -f $CCJAR ]; then
+if [[ -f "$CCJAR" ]]; then
 	# TODO: store closure compiler version in source somewhere?
 	java -jar "$CCJAR" --js "$TMPDIR/jsbn.js" --js_output_file "$TMPDIR/jsbn.min.js"
 	java -jar "$CCJAR" --js "browser.head.js" "$TMPDIR/version.js" "$SRCDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper --extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE
