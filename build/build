@@ -1,12 +1,4 @@
-#!/bin/bash
-
-function handleErr {
-	SNAME=$(basename $BASH_SOURCE)
-	echo "$SNAME: Error on line $1"
-	exit 1
-}
-
-trap 'handleErr $LINENO' ERR
+#!/bin/sh
 
 # to minimize browser build, must have java 8+ installed, download
 # closure compiler, and set $CCJAR to the jar file's path.
@@ -15,7 +7,6 @@ trap 'handleErr $LINENO' ERR
 # to generate docs, must have jsdoc installed. install for node using the following command
 #  npm install -g jsdoc
 
-CCJAR=~/Downloads/closure.compiler/closure-compiler-v20180204.jar
 SRCDIR=../src
 LIBDIR=../lib
 TMPDIR=tmp
@@ -23,24 +14,24 @@ OUTDIR=out
 DOCSDIR=../docs
 
 
-if [[ ! -f "$CCJAR" ]]; then
+if [ ! -f "$CCJAR" ]; then
 	# if $CCJAR file does not exist, search current directory for CC
-	CCJAR=`find *closure*compiler*.jar 2> /dev/null | tail -1`
+	CCJAR=$(find ./*closure*compiler*.jar 2> /dev/null | tail -1)
 fi
 
-function deldir {
+deldir() {
 	if [ -d "$1" ]; then
 		rm -r "$1"
 	fi
 }
 
-function cleandir {
-	deldir $1
-	mkdir $1
+cleandir() {
+	deldir "$1"
+	mkdir "$1"
 }
 
-function catAllSrc {
-	cat "$TMPDIR/version.js" "$SRCDIR/Queue.js" "$SRCDIR/BigDec.js" "$SRCDIR/OpaDef.js" "$SRCDIR/PartialParser.js" "$SRCDIR/Serializer.js" "$SRCDIR/OpaUtils.js" "$SRCDIR/EventClient.js" >> $1
+catAllSrc() {
+	cat "$TMPDIR/version.js" "$SRCDIR/Queue.js" "$SRCDIR/BigDec.js" "$SRCDIR/OpaDef.js" "$SRCDIR/PartialParser.js" "$SRCDIR/Serializer.js" "$SRCDIR/OpaUtils.js" "$SRCDIR/EventClient.js" >> "$1"
 }
 
 
@@ -49,11 +40,10 @@ cleandir $TMPDIR
 cleandir $DOCSDIR
 
 
-if [[ -z "$VERSION" ]]; then
-	VERSION=`git describe --tags --long --dirty 2> /dev/null || echo $(cat version.txt)-dev`
-fi
+VERSION="$(./verget)"
 
-printf "var VERSION = \"$VERSION\";\n\n" >> "$TMPDIR/version.js"
+printf "var VERSION = \"%s\";\n\n" "$VERSION" >> "$TMPDIR/version.js"
+
 
 
 printf "var BigInteger = (function(){\n" > "$TMPDIR/jsbn.js"
@@ -61,7 +51,7 @@ cat "$LIBDIR/jsbn/jsbn.js" "$LIBDIR/jsbn/jsbn2.js" >> "$TMPDIR/jsbn.js"
 printf "\nreturn BigInteger;\n}());\n" >> "$TMPDIR/jsbn.js"
 
 
-if [[ -f "$CCJAR" ]]; then
+if [ -f "$CCJAR" ]; then
 	# TODO: store closure compiler version in source somewhere?
 	java -jar "$CCJAR" --js "$TMPDIR/jsbn.js" --js_output_file "$TMPDIR/jsbn.min.js"
 	java -jar "$CCJAR" --js "browser.head.js" "$TMPDIR/version.js" "$SRCDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper --extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE
@@ -105,5 +95,4 @@ deldir $TMPDIR
 
 jsdoc "$SRCDIR/" -d "$DOCSDIR" -c "jsdoc.conf.json"
 deldir "$DOCSDIR/fonts"
-
 
