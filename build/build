@@ -35,16 +35,13 @@ catAllSrc() {
 }
 
 
-cleandir $OUTDIR
-cleandir $TMPDIR
-cleandir $DOCSDIR
-
-
 VERSION="$(./verget)"
 
+cleandir "$OUTDIR"
+cleandir "$TMPDIR"
+cleandir "$DOCSDIR"
+
 printf "var VERSION = \"%s\";\n\n" "$VERSION" >> "$TMPDIR/version.js"
-
-
 
 printf "var BigInteger = (function(){\n" > "$TMPDIR/jsbn.js"
 cat "$LIBDIR/jsbn/jsbn.js" "$LIBDIR/jsbn/jsbn2.js" >> "$TMPDIR/jsbn.js"
