@@ -314,42 +314,42 @@ PartialParser.prototype.parseNext = function(b) {
 					return null;
 				}
 				switch (buff[idx++]) {
-					case OpaDef.UNDEFINED:  hitNext(p, undefined); continue;
-					case OpaDef.NULL:       hitNext(p, null);      continue;
-					case OpaDef.FALSE:      hitNext(p, false);     continue;
-					case OpaDef.TRUE:       hitNext(p, true);      continue;
-					case OpaDef.ZERO:       hitNext(p, 0);         continue;
-					case OpaDef.EMPTYBIN:   hitNext(p, NEWBUF(0)); continue;
-					case OpaDef.EMPTYSTR:   hitNext(p, "");        continue;
-					case OpaDef.EMPTYARRAY: hitNext(p, []);        continue;
-					case OpaDef.SORTMAX:    hitNext(p, OpaDef.SORTMAX_OBJ); continue;
+					case CH_UNDEFINED:  hitNext(p, undefined); continue;
+					case CH_NULL:       hitNext(p, null);      continue;
+					case CH_FALSE:      hitNext(p, false);     continue;
+					case CH_TRUE:       hitNext(p, true);      continue;
+					case CH_ZERO:       hitNext(p, 0);         continue;
+					case CH_EMPTYBIN:   hitNext(p, NEWBUF(0)); continue;
+					case CH_EMPTYSTR:   hitNext(p, "");        continue;
+					case CH_EMPTYARRAY: hitNext(p, []);        continue;
+					case CH_SORTMAX:    hitNext(p, OpaDef.SORTMAX_OBJ); continue;
 
-					case OpaDef.NEGVARINT: initVarint(p, OpaDef.NEGVARINT, S_VARINT2); continue;
-					case OpaDef.POSVARINT: initVarint(p, OpaDef.POSVARINT, S_VARINT2); continue;
+					case CH_NEGVARINT: initVarint(p, CH_NEGVARINT, S_VARINT2); continue;
+					case CH_POSVARINT: initVarint(p, CH_POSVARINT, S_VARINT2); continue;
 
-					case OpaDef.NEGBIGINT: initBytes(p, OpaDef.NEGBIGINT, S_BIGINT); continue;
-					case OpaDef.POSBIGINT: initBytes(p, OpaDef.POSBIGINT, S_BIGINT); continue;
+					case CH_NEGBIGINT: initBytes(p, CH_NEGBIGINT, S_BIGINT); continue;
+					case CH_POSBIGINT: initBytes(p, CH_POSBIGINT, S_BIGINT); continue;
 
-					case OpaDef.POSPOSVARDEC: initVarint(p, OpaDef.POSPOSVARDEC, S_VARDEC1); continue;
-					case OpaDef.POSNEGVARDEC: initVarint(p, OpaDef.POSNEGVARDEC, S_VARDEC1); continue;
-					case OpaDef.NEGPOSVARDEC: initVarint(p, OpaDef.NEGPOSVARDEC, S_VARDEC1); continue;
-					case OpaDef.NEGNEGVARDEC: initVarint(p, OpaDef.NEGNEGVARDEC, S_VARDEC1); continue;
+					case CH_POSPOSVARDEC: initVarint(p, CH_POSPOSVARDEC, S_VARDEC1); continue;
+					case CH_POSNEGVARDEC: initVarint(p, CH_POSNEGVARDEC, S_VARDEC1); continue;
+					case CH_NEGPOSVARDEC: initVarint(p, CH_NEGPOSVARDEC, S_VARDEC1); continue;
+					case CH_NEGNEGVARDEC: initVarint(p, CH_NEGNEGVARDEC, S_VARDEC1); continue;
 
-					case OpaDef.POSPOSBIGDEC: initVarint(p, OpaDef.POSPOSBIGDEC, S_BIGDEC1); continue;
-					case OpaDef.POSNEGBIGDEC: initVarint(p, OpaDef.POSNEGBIGDEC, S_BIGDEC1); continue;
-					case OpaDef.NEGPOSBIGDEC: initVarint(p, OpaDef.NEGPOSBIGDEC, S_BIGDEC1); continue;
-					case OpaDef.NEGNEGBIGDEC: initVarint(p, OpaDef.NEGNEGBIGDEC, S_BIGDEC1); continue;
+					case CH_POSPOSBIGDEC: initVarint(p, CH_POSPOSBIGDEC, S_BIGDEC1); continue;
+					case CH_POSNEGBIGDEC: initVarint(p, CH_POSNEGBIGDEC, S_BIGDEC1); continue;
+					case CH_NEGPOSBIGDEC: initVarint(p, CH_NEGPOSBIGDEC, S_BIGDEC1); continue;
+					case CH_NEGNEGBIGDEC: initVarint(p, CH_NEGNEGBIGDEC, S_BIGDEC1); continue;
 
-					case OpaDef.BINLPVI: initBytes(p, OpaDef.BINLPVI, S_BLOB); continue;
-					case OpaDef.STRLPVI: initBytes(p, OpaDef.STRLPVI, S_STR ); continue;
+					case CH_BINLPVI: initBytes(p, CH_BINLPVI, S_BLOB); continue;
+					case CH_STRLPVI: initBytes(p, CH_STRLPVI, S_STR ); continue;
 
-					case OpaDef.ARRAYSTART:
+					case CH_ARRAYSTART:
 						if (p.mCurrCont != null) {
 							p.mContainers.push(p.mCurrCont);
 						}
 						p.mCurrCont = [];
 						continue;
-					case OpaDef.ARRAYEND:
+					case CH_ARRAYEND:
 						if (p.mCurrCont == null) {
 							throwErr(p, "array end token when not in array");
 						}
@@ -383,7 +383,7 @@ PartialParser.prototype.parseNext = function(b) {
 					}
 				}
 			case S_VARINT2:
-				hitNext(p, getNum(p.mObjType == OpaDef.NEGVARINT, p.mVarintVal));
+				hitNext(p, getNum(p.mObjType == CH_NEGVARINT, p.mVarintVal));
 				p.mState = S_NEXTOBJ;
 				continue;
 			case S_BYTES1:
@@ -407,29 +407,29 @@ PartialParser.prototype.parseNext = function(b) {
 				p.mState = p.mNextState2;
 				continue;
 			case S_BIGINT:
-				hitNext(p, bigIntFromBytes(p, p.mObjType == OpaDef.NEGBIGINT));
+				hitNext(p, bigIntFromBytes(p, p.mObjType == CH_NEGBIGINT));
 				//p.mBytes = null;
 				clearBytes(p);
 				p.mState = S_NEXTOBJ;
 				continue;
 
 			case S_VARDEC1:
-				p.mDecExp = getVarint32(p, p.mObjType == OpaDef.NEGPOSVARDEC || p.mObjType == OpaDef.NEGNEGVARDEC);
+				p.mDecExp = getVarint32(p, p.mObjType == CH_NEGPOSVARDEC || p.mObjType == CH_NEGNEGVARDEC);
 				initVarint(p, p.mObjType, S_VARDEC2);
 				continue;
 			case S_VARDEC2:
-				var m = getNum(p.mObjType == OpaDef.POSNEGVARDEC || p.mObjType == OpaDef.NEGNEGVARDEC, p.mVarintVal);
+				var m = getNum(p.mObjType == CH_POSNEGVARDEC || p.mObjType == CH_NEGNEGVARDEC, p.mVarintVal);
 				m = (typeof m == "number") ? bigIntFromNumber(m) : m;
 				hitNext(p, new BigDec(m, p.mDecExp));
 				p.mState = S_NEXTOBJ;
 				continue;
 
 			case S_BIGDEC1:
-				p.mDecExp = getVarint32(p, p.mObjType == OpaDef.NEGPOSBIGDEC || p.mObjType == OpaDef.NEGNEGBIGDEC);
+				p.mDecExp = getVarint32(p, p.mObjType == CH_NEGPOSBIGDEC || p.mObjType == CH_NEGNEGBIGDEC);
 				initBytes(p, p.mObjType, S_BIGDEC2);
 				continue;
 			case S_BIGDEC2:
-				var m = bigIntFromBytes(p, p.mObjType == OpaDef.POSNEGBIGDEC || p.mObjType == OpaDef.NEGNEGBIGDEC);
+				var m = bigIntFromBytes(p, p.mObjType == CH_POSNEGBIGDEC || p.mObjType == CH_NEGNEGBIGDEC);
 				hitNext(p, new BigDec(m, p.mDecExp));
 				//p.mBytes = null;
 				clearBytes(p);
@@ -498,7 +498,7 @@ PartialParser.Buff = function() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.2</a>
 </footer>
 
 <script> prettyPrint(); </script>
