@@ -92,8 +92,9 @@ function writeUtf8(ser, str) {
 	var buff = ser.b;
 	for (var i = 0; i < end; ++i) {
 		if (bpos + 4 > buff.length) {
+			ser.i = bpos;
 			flushBuff(ser);
-			bpos = 0;
+			bpos = ser.i;
 			buff = ser.b;
 		}
 		var ch = str.charCodeAt(i);
