@@ -69,7 +69,7 @@ function getUtf8Len(s, offset, len) {
 				var ch2 = s.charCodeAt(i + 1);
 				// confirm valid low surrogate
 				if (ch2 >= 0xDC00 && ch2 <= 0xDFFF) {
-					numBytes += 3;
+					numBytes += 2;
 					++i;
 					continue;
 				}
