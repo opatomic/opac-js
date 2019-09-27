@@ -2,7 +2,8 @@
 var libnet = require("net");
 var BigInteger = require("jsbn").BigInteger;
 
-var libopac = require("../build/node/opac.node.js");
+//var libopac = require("../build/node/opac.node.js");
+var libopac = require("opatomic-client");
 var OpaDef = libopac.OpaDef;
 var BigDec = libopac.BigDec;
 //var PartialParser = libopac.PartialParser;
@@ -169,6 +170,8 @@ function testBigExp(v) {
 testBadValues();
 testBigExp(new BigDec(new BigInteger("1"), -0x7FFFFFFF - 1));
 testBigExp(new BigDec(new BigInteger("1"), 0x7FFFFFFF + 1));
+testBigExp(new BigDec(new BigInteger("123456789012345678901234567890"), -0x7FFFFFFF - 1));
+testBigExp(new BigDec(new BigInteger("-123456789012345678901234567890"), 0x7FFFFFFF + 1));
 
 //var v = String.fromCharCode.apply(null, new Uint8Array(4));
 //console.log(new Buffer(v).toString("base64"));
