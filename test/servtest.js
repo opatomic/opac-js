@@ -31,7 +31,7 @@ if (typeof Uint8Array != "function" || Buffer.prototype.set === undefined || Buf
 
 
 
-function echoResult(result, err) {
+function echoResult(err, result) {
 	if (err) {
 		console.log("ERROR: " + libopac.stringify(err));
 	} else {
@@ -39,7 +39,7 @@ function echoResult(result, err) {
 	}
 }
 
-function expectErr(result, err) {
+function expectErr(err, result) {
 	if (result) {
 		console.log("ERR: expected err; got result " + libopac.stringify(result));
 	}

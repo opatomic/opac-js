@@ -19,7 +19,7 @@ var libnet = require("net");
 var libopac = require("opatomic-client");
 var BigInteger = require("jsbn").BigInteger;
 
-function echoResult(result, err) {
+function echoResult(err, result) {
 	if (err) {
 		console.log("ERROR: " + libopac.stringify(err));
 	} else {
@@ -50,7 +50,7 @@ sock.connect(4567, "localhost", function() {
 
 	var chid = c.callAP("SUBSCRIBE", ["channelName"], echoResult);
 	c.call("PUBLISH", ["channelName", "chan message"]);
-	c.callA("UNSUBSCRIBE", ["channelName"], function(result, err) {
+	c.callA("UNSUBSCRIBE", ["channelName"], function(err, result) {
 		if (err) {
 			console.log("Error: could not unsubscribe; " + err);
 		} else {
