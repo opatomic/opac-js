@@ -597,7 +597,7 @@ Use for strings that are repeated often.
     
 
     
-    <h4 class="name" id="ResponseCallback"><span class="type-signature"></span>ResponseCallback<span class="signature">(result, error<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ResponseCallback"><span class="type-signature"></span>ResponseCallback<span class="signature">(error, result<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
     
 
     
@@ -639,7 +639,7 @@ Use for strings that are repeated often.
 
         <tr>
             
-                <td class="name"><code>result</code></td>
+                <td class="name"><code>error</code></td>
             
 
             <td class="type">
@@ -663,14 +663,14 @@ Use for strings that are repeated often.
 
             
 
-            <td class="description last">The result of the operation. Can be null.</td>
+            <td class="description last">Error or null if no error occurred.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>error</code></td>
+                <td class="name"><code>result</code></td>
             
 
             <td class="type">
@@ -696,7 +696,7 @@ Use for strings that are repeated often.
 
             
 
-            <td class="description last">If response is an error then result is null and error is non-null</td>
+            <td class="description last">The result of the operation if error didn't occur (error is null).</td>
         </tr>
 
     

@@ -41,8 +41,8 @@ var ResponseCallback;
 
 /**
  * @callback ResponseCallback
- * @param {*} result - The result of the operation. Can be null.
- * @param {*=} error - If response is an error then result is null and error is non-null
+ * @param {*}  error  - Error or null if no error occurred.
+ * @param {*=} result - The result of the operation if error didn't occur (error is null).
  */
 
 
@@ -259,10 +259,10 @@ function onResponse(c, msg) {
 	if (cb != null) {
 		if (msg.length >= 2) {
 			// failure
-			cb(msg[0], msg[1]);
+			cb(msg[1], msg[0]);
 		} else {
 			// success
-			cb(msg[0]);
+			cb(null, msg[0]);
 		}
 	}
 }
@@ -294,14 +294,14 @@ EventClient.prototype.onClose = function() {
 	while (tmp.size() > 0) {
 		var cb = tmp.shift();
 		if (cb) {
-			cb(null, OpaDef.ERR_CLOSED);
+			cb(OpaDef.ERR_CLOSED);
 		}
 	}
 
 	tmp = this.mAsyncCallbacks;
 	tmp.forEach(function(val, key, map) {
 		if (val) {
-			val(null, OpaDef.ERR_CLOSED);
+			val(OpaDef.ERR_CLOSED);
 		}
 	});
 	tmp.clear();
