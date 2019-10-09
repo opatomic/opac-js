@@ -124,6 +124,30 @@ const BADVALS = [
 	[OpaDef.POSPOSBIGDEC, 1, 0],       // bigint length is 0
 	[OpaDef.POSPOSBIGDEC, 1, 1, 0],    // mantissa is 0
 	[OpaDef.POSPOSBIGDEC, 1, 2, 0, 1], // MSB is 0
+
+	// invalid utf8:
+	[OpaDef.STRLPVI, 1, 0xff],
+	[OpaDef.STRLPVI, 2, 0xc2, 0x41],
+	[OpaDef.STRLPVI, 1, 0x80],
+	[OpaDef.STRLPVI, 1, 0xc2],
+	[OpaDef.STRLPVI, 1, 0xe0],
+	[OpaDef.STRLPVI, 2, 0xe0,0xff],
+	[OpaDef.STRLPVI, 3, 0xe0,0x80,0xff],
+	[OpaDef.STRLPVI, 1, 0xe1],
+	[OpaDef.STRLPVI, 2, 0xe1,0xff],
+	[OpaDef.STRLPVI, 1, 0xed],
+	[OpaDef.STRLPVI, 2, 0xed,0xa0],
+	[OpaDef.STRLPVI, 3, 0xed,0x80,0xff],
+	[OpaDef.STRLPVI, 1, 0xf0],
+	[OpaDef.STRLPVI, 2, 0xf0,0x80],
+	[OpaDef.STRLPVI, 2, 0xf0,0xff],
+	[OpaDef.STRLPVI, 3, 0xf0,0x90,0xff],
+	[OpaDef.STRLPVI, 1, 0xf1],
+	[OpaDef.STRLPVI, 2, 0xf1,0xff],
+	[OpaDef.STRLPVI, 3, 0xf1,0x81,0xff],
+	[OpaDef.STRLPVI, 1, 0xf4],
+	[OpaDef.STRLPVI, 2, 0xf4,0x90],
+	[OpaDef.STRLPVI, 3, 0xf4,0x80,0xff],
 ];
 
 function testBadValue(v) {
