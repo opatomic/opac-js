@@ -83,6 +83,7 @@ catAllSrc "$OUTDIR/node/opac.node.js"
 cat "node.foot.js" >> "$OUTDIR/node/opac.node.js"
 sed -e "s/\\\$VERSION/$VERSION/" "package.json" > "$OUTDIR/node/package.json"
 cp "../README.md" "$OUTDIR/node/README.md"
+cp "../LICENSE" "$OUTDIR/node/"
 
 
 deldir $TMPDIR
