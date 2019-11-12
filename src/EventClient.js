@@ -115,20 +115,6 @@ function schedTimeout(c) {
 }
 
 /**
- * @param {EventClient} c
- * @param {string} cmd
- * @param {Array=} args
- */
-function callNoResponse(c, cmd, args) {
-	// if no callback is specified then send null as async id indicating server must not send response
-	c.s.write1(CH_ARRAYSTART);
-	c.s.writeObject(cmd);
-	c.s.writeObject(args ? args : null);
-	c.s.write1(CH_NULL);
-	c.s.write1(CH_ARRAYEND);
-}
-
-/**
  * Send all buffered requests.
  */
 EventClient.prototype.flush = function() {
@@ -140,23 +126,38 @@ EventClient.prototype.flush = function() {
 }
 
 /**
+ * @param {EventClient} c
+ * @param {*} asyncid
+ * @param {string} cmd
+ * @param {Array=} args
+ */
+function writeRequest(c, asyncid, cmd, args) {
+	c.s.write1(CH_ARRAYSTART);
+	c.s.writeObject(asyncid);
+	c.s.writeObject(cmd);
+	if (args) {
+		for (var i = 0; i < args.length; ++i) {
+			c.s.writeObject(args[i]);
+		}
+	}
+	c.s.write1(CH_ARRAYEND);
+}
+
+/**
  * Sends the specified command and args to the server. Invokes the specified callback when a response is received.
  * @param {string} cmd - The command to run
  * @param {Array=} args - The parameters for the command
  * @param {ResponseCallback=} cb - A callback function to invoke when the response is received
  */
 EventClient.prototype.call = function(cmd, args, cb) {
-	if (!cb) {
-		return callNoResponse(this, cmd, args);
+	if (cb) {
+		writeRequest(this, null, cmd, args);
+		this.mMainCallbacks.push(cb);
+	} else {
+		// no callback function: send false as asyncid so server does not send a response
+		writeRequest(this, false, cmd, args);
 	}
-	this.s.write1(CH_ARRAYSTART);
-	this.s.writeObject(cmd);
-	if (args) {
-		this.s.writeObject(args);
-	}
-	this.s.write1(CH_ARRAYEND);
 	schedTimeout(this);
-	this.mMainCallbacks.push(cb);
 }
 
 /**
@@ -171,13 +172,9 @@ function callId(c, cmd, args, cb, isP) {
 	++c.id;
 	var id = isP ? 0 - c.id : c.id;
 
-	c.s.write1(CH_ARRAYSTART);
-	c.s.writeObject(cmd);
-	c.s.writeObject(args);
-	c.s.writeNumber(id);
-	c.s.write1(CH_ARRAYEND);
-	schedTimeout(c);
+	writeRequest(c, id, cmd, args);
 	c.mAsyncCallbacks.set(id, cb);
+	schedTimeout(c);
 	return id;
 }
 
@@ -217,8 +214,11 @@ EventClient.prototype.unregister = function(id) {
  * @param {!Array<*>} msg
  */
 function onResponse(c, msg) {
+	if (msg.length < 2 || msg.length > 3) {
+		throw "response array is wrong length";
+	}
 	var cb;
-	var id = msg.length >= 3 ? msg[2] : null;
+	var id = msg[0];
 	if (id !== null && id !== undefined) {
 		cb = c.mAsyncCallbacks.get(id);
 		if (cb != null && (/** @type {number} */(id) > 0)) {
@@ -229,12 +229,11 @@ function onResponse(c, msg) {
 	}
 
 	if (cb != null) {
-		if (msg.length >= 2) {
-			// failure
-			cb(msg[1], msg[0]);
-		} else {
-			// success
-			cb(null, msg[0]);
+		cb(msg.length > 2 ? msg[2] : null, msg[1]);
+	} else {
+		// TODO: callback for unknown asyncid
+		if (console.log) {
+			console.log("unknown async id: " + id);
 		}
 	}
 }
