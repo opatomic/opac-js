@@ -30,3 +30,7 @@ var STRDEC = function(b) {
 
 var BTOA = window.btoa;
 
+var NEXTTICK = function(cb) {
+	return setTimeout(cb, 0);
+}
+

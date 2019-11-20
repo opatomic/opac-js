@@ -20,3 +20,8 @@ var BTOA = function(v) {
 	return BUFFERFROM(v).toString("base64");
 }
 
+var NEXTTICK = function(cb) {
+	process.nextTick(cb);
+	return null;
+}
+
