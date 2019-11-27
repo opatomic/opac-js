@@ -70,8 +70,8 @@ sock.connect(4567, "localhost", function() {
 ## API
  - newClient(socket)
  - client.call(opname[, args[, callback]])
- - client.callA(opname[, args[, callback]])
- - client.callAP(opname[, args[, callback]])
+ - client.callA(opname, args, callback)
+ - client.callAP(opname, args, callback)
  - client.unregister(id)
  - cacheString(str)
 
