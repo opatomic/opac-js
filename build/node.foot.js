@@ -28,6 +28,7 @@ module.exports.opaType = opaType;
 module.exports.OpaDef = OpaDef;
 module.exports.BigDec = BigDec;
 module.exports.newClient = newClient;
+module.exports.cacheString = cacheString;
 
 module.exports.PartialParser = PartialParser;
 
