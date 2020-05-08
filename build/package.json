@@ -2,7 +2,7 @@
   "name": "opatomic-client",
   "version": "$VERSION",
   "description": "Opatomic client",
-  "keywords": ["opatomic", "client"],
+  "keywords": ["opatomic", "client", "opa", "opac"],
   "homepage": "https://github.com/opatomic/opac-js",
   "main": "opac.node.js",
   "scripts": {
@@ -10,6 +10,6 @@
   },
   "license": "ISC",
   "dependencies": {
-    "jsbn": "*"
+    "jsbn": "1.1.0"
   }
 }
