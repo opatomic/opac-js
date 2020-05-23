@@ -92,6 +92,38 @@ function opaStringify(obj, space) {
 	}
 
 	/**
+	 * @param {!Uint8Array} b
+	 * @return {!string}
+	 */
+	function stringifyBlob(b) {
+		var res = "'";
+		for (var i = 0; i < b.length; ++i) {
+			var ch = b[i];
+			if (ch >= 0x20 && ch < 0x7F) {
+				if (ch == 92 || ch == 39) {
+					// escape backslash or single-quote character
+					res += "\\";
+				}
+				res += String.fromCharCode(ch);
+			} else if (ch == 9) {
+				res += "\\t";
+			} else if (ch == 10) {
+				res += "\\n";
+			} else if (ch == 13) {
+				res += "\\r";
+			} else {
+				res += "\\x";
+				if (ch < 16) {
+					res += "0";
+				}
+				res += ch.toString(16);
+			}
+		}
+		res += "'";
+		return res;
+	}
+
+	/**
 	 * @param {*} obj
 	 * @param {number|string|undefined} space
 	 * @param {number} depth
@@ -112,18 +144,9 @@ function opaStringify(obj, space) {
 			//	return obj.toString();
 			case "Uint8Array":
 			case "Buffer":
-				//var dv = new DataView(obj.buffer, obj.byteOffset, obj.byteLength);
-				//for (var i = 0; i < obj.byteLength; ++i) {
-				//	if (dv.getUint8(i) < 32 || dv.getUint8(i) > 126) {
-				//		//return '"~base64' + BTOA((new TextDecoder("utf-8")).decode(obj)) + '"';
-				//		return '"~base64' + BTOA(String.fromCharCode.apply(null, obj)) + '"';
-				//	}
-				//}
-				//return JSON.stringify('~bin' + (new TextDecoder("utf-8")).decode(obj));
-				return '"~base64' + BTOA(String.fromCharCode.apply(null, /** @type {Uint8Array} */ (obj))) + '"';
+				return stringifyBlob(/** @type {!Uint8Array} */ (obj));
 			case "string":
-				obj = /** @type {!string} */ (obj);
-				return JSON.stringify(obj.charAt(0) == "~" ? "~" + obj : obj);
+				return JSON.stringify(/** @type {!string} */ (obj));
 			case "Array":
 				obj = /** @type {!Array} */ (obj);
 				if (obj.length == 0) {

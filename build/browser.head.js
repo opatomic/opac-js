@@ -28,8 +28,6 @@ var STRDEC = function(b) {
 	return DECODER.decode(b);
 }
 
-var BTOA = window.btoa;
-
 var NEXTTICK = function(cb) {
 	return setTimeout(cb, 0);
 }

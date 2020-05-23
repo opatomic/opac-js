@@ -16,9 +16,6 @@ var STRENC = function(s) {
 var STRDEC = function(b) {
 	return b.toString("utf8");
 }
-var BTOA = function(v) {
-	return BUFFERFROM(v).toString("base64");
-}
 
 var NEXTTICK = function(cb) {
 	process.nextTick(cb);
