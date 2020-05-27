@@ -123,6 +123,7 @@ function schedTimeout(c) {
 EventClient.prototype.flush = function() {
 	if (this.mTimeout !== null) {
 		clearTimeout(this.mTimeout);
+		this.mFlushScheduled = false;
 		this.mTimeout = null;
 	}
 	this.s.flush();
