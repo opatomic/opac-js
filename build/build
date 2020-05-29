@@ -37,6 +37,8 @@ catAllSrc() {
 
 VERSION="$(./verget)"
 
+echo "building v$VERSION"
+
 cleandir "$OUTDIR"
 cleandir "$TMPDIR"
 cleandir "$DOCSDIR"
