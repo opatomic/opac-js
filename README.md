@@ -18,6 +18,7 @@ Install with:
 var libnet = require("net");
 var libopac = require("opatomic-client");
 var BigInteger = require("jsbn").BigInteger;
+var BigDec = libopac.BigDec;
 
 function echoResult(err, result) {
 	if (err) {
@@ -40,6 +41,7 @@ sock.connect(4567, "localhost", function() {
 
 	c.call("INCR", ["TESTkey", -4], echoResult);
 	c.call("INCR", ["TESTkey", new BigInteger("12345678901234567890")], echoResult);
+	c.call("INCR", ["TESTkey.dec", new BigDec("-1.234")], echoResult);
 
 	// callA() can be used for long running ops so they don't block responses
 	// note: op may still block other responses (depends on server implementation)
