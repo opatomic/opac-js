@@ -49,6 +49,7 @@ printf "var BigInteger = (function(){\n" > "$TMPDIR/jsbn.js"
 cat "$LIBDIR/jsbn/jsbn.js" "$LIBDIR/jsbn/jsbn2.js" >> "$TMPDIR/jsbn.js"
 printf "\nreturn BigInteger;\n}());\n" >> "$TMPDIR/jsbn.js"
 
+# TODO: figure out how to do source mapping for minimized files? (helps with debugging)
 
 if [ -f "$CCJAR" ]; then
 	# TODO: store closure compiler version in source somewhere?
