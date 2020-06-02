@@ -341,10 +341,42 @@ BigDec.prototype.subtract = function(b) {
  * @return {!string}
  */
 BigDec.prototype.toString = function() {
-	// TODO: return same string that java returns
+	// this function should return a result similar to Java's BigDecimal.toString()
 	var s = this.m.toString();
-	if (this.e != 0) {
-		s += "e" + this.e.toString();
+	var e = this.e;
+	if (e != 0) {
+		var isneg = s.charAt(0) == "-";
+		s = isneg ? s.substring(1) : s;
+
+		// try to add some 0's to beginning or end of significand
+		// TODO: configurable numbers for max 0's to append/prepend?
+		//   for now, it's set to 5 for both append/prepend
+		if (e > 0) {
+			if (e &lt;= 5) {
+				for (; e > 0; --e) {
+					s += "0";
+				}
+			}
+		} else if (s.length + e >= -5) {
+			while (s.length + e &lt;= 0) {
+				s = "0" + s;
+			}
+			var idx = s.length + e;
+			s = s.substring(0, idx) + "." + s.substring(idx);
+			e = 0;
+		}
+
+		if (e != 0 &amp;&amp; s.length > 1) {
+			// wasn't able to add 0's to beginning or end;
+			// fall back to scientific notation
+			e += s.length - 1;
+			s = s.substring(0, 1) + "." + s.substring(1);
+		}
+
+		s = isneg ? "-" + s : s;
+		if (e != 0) {
+			s += "e" + e.toString();
+		}
 	}
 	return s;
 }
