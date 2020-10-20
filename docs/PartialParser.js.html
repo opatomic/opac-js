@@ -319,6 +319,8 @@ PartialParser.prototype.parseNext = function(b) {
 					case CH_FALSE:      hitNext(p, false);     continue;
 					case CH_TRUE:       hitNext(p, true);      continue;
 					case CH_ZERO:       hitNext(p, 0);         continue;
+					case CH_NEGINF:     hitNext(p, -Infinity); continue;
+					case CH_POSINF:     hitNext(p, Infinity);  continue;
 					case CH_EMPTYBIN:   hitNext(p, NEWBUF(0)); continue;
 					case CH_EMPTYSTR:   hitNext(p, "");        continue;
 					case CH_EMPTYARRAY: hitNext(p, []);        continue;
