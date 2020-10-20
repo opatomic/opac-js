@@ -338,12 +338,16 @@ Serializer.prototype.writeNumber = function(v) {
 		} else {
 			writeTypeAndVarint(this, CH_NEGVARINT, 0 - v);
 		}
+	} else if (v === -Infinity) {
+		this.write1(CH_NEGINF);
+	} else if (v === Infinity) {
+		this.write1(CH_POSINF);
 	} else {
 		if (typeof v != "number") {
 			throw "not a number";
 		}
-		if (isNaN(v) || !isFinite(v)) {
-			throw "number is NaN or Infinity or -Infinity; cannot be serialized";
+		if (isNaN(v)) {
+			throw "number is NaN; cannot be serialized";
 		}
 		writeBigDec(this, new BigDec(v.toString()));
 	}
