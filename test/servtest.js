@@ -9,6 +9,8 @@ var BigDec = libopac.BigDec;
 //var PartialParser = libopac.PartialParser;
 
 
+var NEWBUF = (typeof Buffer.allocUnsafe == 'function') ? Buffer.allocUnsafe : function(len) {return new Buffer(len);};
+
 if (!Buffer.prototype.subarray) {
 	Buffer.prototype.subarray = Buffer.prototype.slice;
 }
@@ -199,7 +201,7 @@ testBigExp(new BigDec(new BigInteger("-123456789012345678901234567890"), 0x7FFFF
 
 //var v = String.fromCharCode.apply(null, new Uint8Array(4));
 //console.log(new Buffer(v).toString("base64"));
-libopac.stringify([undefined, null, false, true, -4, -2.23, 0, 1, 1.23, "string", new Buffer(4), ["subarray"]]);
+libopac.stringify([undefined, null, false, true, -4, -2.23, 0, 1, 1.23, "string", NEWBUF(4), ["subarray"]]);
 
 console.log("connecting...");
 
