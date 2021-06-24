@@ -158,71 +158,63 @@ var OpaDef = {};
 
 (function(){
 
-/**
- * @param {!string} s
- * @return {number}
- */
-function CC(s) {
-	return s.charCodeAt(0);
-}
+/** @const {number} */
+OpaDef.UNDEFINED    = CH_UNDEFINED;
+/** @const {number} */
+OpaDef.NULL         = CH_NULL;
+/** @const {number} */
+OpaDef.FALSE        = CH_FALSE;
+/** @const {number} */
+OpaDef.TRUE         = CH_TRUE;
+/** @const {number} */
+OpaDef.ZERO         = CH_ZERO;
+/** @const {number} */
+OpaDef.NEGINF       = CH_NEGINF;
+/** @const {number} */
+OpaDef.POSINF       = CH_POSINF;
+/** @const {number} */
+OpaDef.EMPTYBIN     = CH_EMPTYBIN;
+/** @const {number} */
+OpaDef.EMPTYSTR     = CH_EMPTYSTR;
+/** @const {number} */
+OpaDef.EMPTYARRAY   = CH_EMPTYARRAY;
+/** @const {number} */
+OpaDef.SORTMAX      = CH_SORTMAX;
 
 /** @const {number} */
-OpaDef.UNDEFINED    = CC("U");
+OpaDef.POSVARINT    = CH_POSVARINT;
 /** @const {number} */
-OpaDef.NULL         = CC("N");
+OpaDef.NEGVARINT    = CH_NEGVARINT;
 /** @const {number} */
-OpaDef.FALSE        = CC("F");
+OpaDef.POSPOSVARDEC = CH_POSPOSVARDEC;
 /** @const {number} */
-OpaDef.TRUE         = CC("T");
+OpaDef.POSNEGVARDEC = CH_POSNEGVARDEC;
 /** @const {number} */
-OpaDef.ZERO         = CC("O");
+OpaDef.NEGPOSVARDEC = CH_NEGPOSVARDEC;
 /** @const {number} */
-OpaDef.NEGINF       = CC("P");
+OpaDef.NEGNEGVARDEC = CH_NEGNEGVARDEC;
 /** @const {number} */
-OpaDef.POSINF       = CC("Q");
+OpaDef.POSBIGINT    = CH_POSBIGINT;
 /** @const {number} */
-OpaDef.EMPTYBIN     = CC("A");
+OpaDef.NEGBIGINT    = CH_NEGBIGINT;
 /** @const {number} */
-OpaDef.EMPTYSTR     = CC("R");
+OpaDef.POSPOSBIGDEC = CH_POSPOSBIGDEC;
 /** @const {number} */
-OpaDef.EMPTYARRAY   = CC("M");
+OpaDef.POSNEGBIGDEC = CH_POSNEGBIGDEC;
 /** @const {number} */
-OpaDef.SORTMAX      = CC("Z");
+OpaDef.NEGPOSBIGDEC = CH_NEGPOSBIGDEC;
+/** @const {number} */
+OpaDef.NEGNEGBIGDEC = CH_NEGNEGBIGDEC;
 
 /** @const {number} */
-OpaDef.POSVARINT    = CC("D");
+OpaDef.BINLPVI      = CH_BINLPVI;
 /** @const {number} */
-OpaDef.NEGVARINT    = CC("E");
-/** @const {number} */
-OpaDef.POSPOSVARDEC = CC("G");
-/** @const {number} */
-OpaDef.POSNEGVARDEC = CC("H");
-/** @const {number} */
-OpaDef.NEGPOSVARDEC = CC("I");
-/** @const {number} */
-OpaDef.NEGNEGVARDEC = CC("J");
-/** @const {number} */
-OpaDef.POSBIGINT    = CC("K");
-/** @const {number} */
-OpaDef.NEGBIGINT    = CC("L");
-/** @const {number} */
-OpaDef.POSPOSBIGDEC = CC("V");
-/** @const {number} */
-OpaDef.POSNEGBIGDEC = CC("W");
-/** @const {number} */
-OpaDef.NEGPOSBIGDEC = CC("X");
-/** @const {number} */
-OpaDef.NEGNEGBIGDEC = CC("Y");
+OpaDef.STRLPVI      = CH_STRLPVI;
 
 /** @const {number} */
-OpaDef.BINLPVI      = CC("B");
+OpaDef.ARRAYSTART   = CH_ARRAYSTART;
 /** @const {number} */
-OpaDef.STRLPVI      = CC("S");
-
-/** @const {number} */
-OpaDef.ARRAYSTART   = CC("[");
-/** @const {number} */
-OpaDef.ARRAYEND     = CC("]");
+OpaDef.ARRAYEND     = CH_ARRAYEND;
 
 /** @const {!OpaSortMax} */
 OpaDef.SORTMAX_OBJ = new OpaSortMax();
