@@ -18,9 +18,12 @@ var MIN_SAFE_INTEGER = 0 - MAX_SAFE_INTEGER;
 /**
  * @const
  * @ignore
- * @type {function(number):boolean}
+ * @type {function(*):boolean}
  */
-var isInteger = Number.isInteger || function(v) {
+ // note: must cast type of Number.isInteger due to bug (in closure compiler?). They have the
+ //  function type declared as function(number):boolean when it should be function(*):boolean.
+ // TODO: remove this type cast in future if bug gets fixed?
+var isInteger = (/** @type {function(*):boolean} */ (Number.isInteger)) || function(v) {
 	return typeof v === 'number' && isFinite(v) && Math.floor(v) === v;
 };
 /**
