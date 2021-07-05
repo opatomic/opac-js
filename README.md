@@ -50,16 +50,20 @@ sock.connect(4567, "localhost", function() {
 	c.call("ECHO", ["Hello", "ExtraArg!"], echoResult);
 	c.call("BADCMD", ["Hello"], echoResult);
 
-	var chid = c.callAP("SUBSCRIBE", ["channelName"], echoResult);
-	c.call("PUBLISH", ["channelName", "chan message"]);
-	c.callA("UNSUBSCRIBE", ["channelName"], function(err, result) {
+	c.registerCB("_pubsub", echoResult);
+	c.call("SUBSCRIBE",  ["channelName", "channelName2", "channelName3", "channelName2"]);
+	c.call("PSUBSCRIBE", ["c*", "ch*", "n*", "*"]);
+	c.call("PUBLISH", ["channelName", "chan message 1"]);
+	c.call("PUNSUBSCRIBE");
+	c.call("UNSUBSCRIBE", ["channelName", "channelName2", "channelName3", "channelName2"], function(err, result) {
 		if (err) {
 			console.log("Error: could not unsubscribe; " + err);
 		} else {
 			console.log("Unsubscribed");
-			c.unregister(chid);
+			c.registerCB("_pubsub", null);
 		}
 	});
+	c.call("PUBLISH", ["channelName", "chan message 2"]);
 
 	// TODO: add example with bigdec
 
@@ -73,8 +77,8 @@ sock.connect(4567, "localhost", function() {
  - newClient(socket)
  - client.call(opname[, args[, callback]])
  - client.callA(opname, args, callback)
- - client.callAP(opname, args, callback)
- - client.unregister(id)
+ - client.registerCB(asyncID, callback)
+ - client.callID(asyncID, opname, args)
  - cacheString(str)
 
 

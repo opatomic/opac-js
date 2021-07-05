@@ -51,11 +51,12 @@ function runTest2(c) {
 	c.call("PING");
 	c.call("PING");
 	c.call("ECHO", [0], echoResult);
-	var sub1 = c.callAP("SUBSCRIBE", ["ch1"], echoResult);
+	c.registerCB("_pubsub", echoResult);
+	c.call("SUBSCRIBE", ["ch1"]);
 	c.call("PUBLISH", ["ch1","msg1"], echoResult);
 	c.call("PUBLISH", ["ch1","msg2"], echoResult);
 	c.call("PUBLISH", ["ch2","msg3"], echoResult);
-	var sub2 = c.callAP("SUBSCRIBE", ["ch2"], echoResult);
+	c.call("SUBSCRIBE", ["ch2"]);
 	c.call("PUBLISH", ["ch2","msg4"], echoResult);
 	//c.call("QUIT");
 }
