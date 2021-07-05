@@ -926,7 +926,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="EventClient.js.html">EventClient.js</a>, <a href="EventClient.js.html#line156">line 156</a>
+        <a href="EventClient.js.html">EventClient.js</a>, <a href="EventClient.js.html#line157">line 157</a>
     </li></ul></dd>
     
 
@@ -1111,7 +1111,7 @@ response is received.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="EventClient.js.html">EventClient.js</a>, <a href="EventClient.js.html#line193">line 193</a>
+        <a href="EventClient.js.html">EventClient.js</a>, <a href="EventClient.js.html#line200">line 200</a>
     </li></ul></dd>
     
 
@@ -1147,7 +1147,7 @@ response is received.
     
 
     
-    <h4 class="name" id="callAP"><span class="type-signature"></span>callAP<span class="signature">(cmd, args<span class="signature-attributes">non-null</span>, cb<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; {*}</span></h4>
+    <h4 class="name" id="callID"><span class="type-signature"></span>callID<span class="signature">(id, cmd, args<span class="signature-attributes">non-null</span>)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1155,7 +1155,8 @@ response is received.
 
 
 <div class="description">
-    Same as callA() except that the callback can be invoked multiple times. Use this for subscriptions.
+    Run specified command on the server with a specified async id. Any responses to the command
+will invoke the callback that was given as a parameter to register().
 </div>
 
 
@@ -1187,6 +1188,29 @@ response is received.
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Async id (provided by calling register())</td>
+        </tr>
+
     
 
         <tr>
@@ -1234,29 +1258,6 @@ response is received.
         </tr>
 
     
-
-        <tr>
-            
-                <td class="name"><code>cb</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#ResponseCallback">ResponseCallback</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">A callback function to invoke when the responses are received</td>
-        </tr>
-
-    
     </tbody>
 </table>
 
@@ -1294,7 +1295,7 @@ response is received.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="EventClient.js.html">EventClient.js</a>, <a href="EventClient.js.html#line204">line 204</a>
+        <a href="EventClient.js.html">EventClient.js</a>, <a href="EventClient.js.html#line188">line 188</a>
     </li></ul></dd>
     
 
@@ -1319,28 +1320,6 @@ response is received.
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    - The value that is used when calling unregister()
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">*</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -1493,7 +1472,7 @@ will be notified of failure. Every persistent async callback will also be notifi
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="EventClient.js.html">EventClient.js</a>, <a href="EventClient.js.html#line267">line 267</a>
+        <a href="EventClient.js.html">EventClient.js</a>, <a href="EventClient.js.html#line261">line 261</a>
     </li></ul></dd>
     
 
@@ -1631,7 +1610,7 @@ and callbacks invoked for each complete response received.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="EventClient.js.html">EventClient.js</a>, <a href="EventClient.js.html#line250">line 250</a>
+        <a href="EventClient.js.html">EventClient.js</a>, <a href="EventClient.js.html#line244">line 244</a>
     </li></ul></dd>
     
 
@@ -1667,7 +1646,7 @@ and callbacks invoked for each complete response received.
     
 
     
-    <h4 class="name" id="unregister"><span class="type-signature"></span>unregister<span class="signature">(id)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="registerCB"><span class="type-signature"></span>registerCB<span class="signature">(id, cb<span class="signature-attributes">nullable</span>)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1675,7 +1654,7 @@ and callbacks invoked for each complete response received.
 
 
 <div class="description">
-    Removes the specified async callback from the client. Use this when unsubscribing from a channel.
+    Register a callback to an async id that can be used by callID().
 </div>
 
 
@@ -1698,6 +1677,8 @@ and callbacks invoked for each complete response received.
 
         <th>Type</th>
 
+        
+        <th>Attributes</th>
         
 
         
@@ -1724,10 +1705,52 @@ and callbacks invoked for each complete response received.
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">The value that was returned from callAP()</td>
+            <td class="description last">Async ID</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cb</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#ResponseCallback">ResponseCallback</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">A callback function to invoke when each response is received.
+                                   Use null to remove registered callback</td>
         </tr>
 
     
@@ -1768,7 +1791,7 @@ and callbacks invoked for each complete response received.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="EventClient.js.html">EventClient.js</a>, <a href="EventClient.js.html#line212">line 212</a>
+        <a href="EventClient.js.html">EventClient.js</a>, <a href="EventClient.js.html#line173">line 173</a>
     </li></ul></dd>
     
 

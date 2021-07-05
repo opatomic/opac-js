@@ -173,6 +173,7 @@ function writeRequest(c, asyncid, cmd, args) {
 		}
 	}
 	c.s.write1(CH_ARRAYEND);
+	schedTimeout(c);
 }
 
 /**
@@ -189,25 +190,31 @@ EventClient.prototype.call = function(cmd, args, cb) {
 		// no callback function: send false as asyncid so server does not send a response
 		writeRequest(this, false, cmd, args);
 	}
-	schedTimeout(this);
 }
 
 /**
- * @param {!EventClient} c
- * @param {string} cmd
- * @param {Array} args
- * @param {!ResponseCallback} cb
- * @param {number} isP
- * @return {number}
+ * Register a callback to an async id that can be used by callID().
+ * @param {*} id - Async ID
+ * @param {?ResponseCallback} cb - A callback function to invoke when each response is received.
+                                   Use null to remove registered callback
  */
-function callId(c, cmd, args, cb, isP) {
-	++c.id;
-	var id = isP ? 0 - c.id : c.id;
+EventClient.prototype.registerCB = function(id, cb) {
+	if (cb == null) {
+		this.mAsyncCallbacks.delete(id);
+	} else {
+		this.mAsyncCallbacks.set(id, cb);
+	}
+}
 
-	writeRequest(c, id, cmd, args);
-	c.mAsyncCallbacks.set(id, cb);
-	schedTimeout(c);
-	return id;
+/**
+ * Run specified command on the server with a specified async id. Any responses to the command
+ * will invoke the callback that was given as a parameter to register().
+ * @param {*} id - Async id (provided by calling register())
+ * @param {string} cmd - The command to run
+ * @param {!Array} args - The parameters for the command
+ */
+EventClient.prototype.callID = function(id, cmd, args) {
+	writeRequest(this, id, cmd, args);
 }
 
 /**
@@ -219,26 +226,13 @@ function callId(c, cmd, args, cb, isP) {
  * @param {!ResponseCallback} cb - A callback function to invoke when the response is received
  */
 EventClient.prototype.callA = function(cmd, args, cb) {
-	callId(this, cmd, args, cb, 0);
-}
-
-/**
- * Same as callA() except that the callback can be invoked multiple times. Use this for subscriptions.
- * @param {string} cmd - The command to run
- * @param {!Array} args - The parameters for the command
- * @param {!ResponseCallback} cb - A callback function to invoke when the responses are received
- * @return {*} - The value that is used when calling unregister()
- */
-EventClient.prototype.callAP = function(cmd, args, cb) {
-	return callId(this, cmd, args, cb, 1);
-}
-
-/**
- * Removes the specified async callback from the client. Use this when unsubscribing from a channel.
- * @param {*} id - The value that was returned from callAP()
- */
-EventClient.prototype.unregister = function(id) {
-	return this.mAsyncCallbacks.delete(id);
+	var c = this;
+	var asyncId = ++c.id;
+	c.registerCB(asyncId, function(err, result) {
+		c.registerCB(asyncId, null);
+		cb(err, result);
+	});
+	c.callID(asyncId, cmd, args);
 }
 
 /**
@@ -253,7 +247,7 @@ function onResponse(c, msg) {
 	var id = msg[0];
 	if (id !== null &amp;&amp; id !== undefined) {
 		cb = c.mAsyncCallbacks.get(id);
-		if (cb != null &amp;&amp; (/** @type {number} */(id) > 0)) {
+		if (cb != null &amp;&amp; isInteger(id) &amp;&amp; (/** @type {number} */(id) > 0)) {
 			c.mAsyncCallbacks.delete(id);
 		}
 	} else {
