@@ -157,6 +157,7 @@ function testBadValue(v) {
 	var s = connect(4567, "localhost", function() {
 		var c = libopac.newClient(s);
 		c.s.write1(OpaDef.ARRAYSTART);
+		c.s.write1(OpaDef.NULL);
 		c.s.writeString("ECHO");
 		c.s.write1(OpaDef.ARRAYSTART);
 		c.s.write(v);
