@@ -165,27 +165,42 @@ EventClient.prototype.call = function(cmd, args, cb) {
 }
 
 /**
- * Register a callback to an async id that can be used by callID().
- * @param {*} id - Async ID
- * @param {?ResponseCallback} cb - A callback function to invoke when each response is received.
-                                   Use null to remove registered callback
+ * @param {EventClient} c
+ * @param {*} id
+ * @param {?ResponseCallback} cb
  */
-EventClient.prototype.registerCB = function(id, cb) {
+function regCB(c, id, cb) {
 	if (cb == null) {
-		this.mAsyncCallbacks.delete(id);
+		c.mAsyncCallbacks.delete(id);
 	} else {
-		this.mAsyncCallbacks.set(id, cb);
+		c.mAsyncCallbacks.set(id, cb);
 	}
 }
 
 /**
+ * Register a callback to an async id that can be used by callID().
+ * @param {string} id - Async ID: must be a string.
+ * @param {?ResponseCallback} cb - A callback function to invoke when each response is received.
+                                   Use null to remove registered callback.
+ */
+EventClient.prototype.registerCB = function(id, cb) {
+	if (typeof id != "string") {
+		throw "id must be a string";
+	}
+	regCB(this, id, cb);
+}
+
+/**
  * Run specified command on the server with a specified async id. Any responses to the command
- * will invoke the callback that was given as a parameter to register().
- * @param {*} id - Async id (provided by calling register())
+ * will invoke the callback that was given as a parameter to registerCB().
+ * @param {string} id - Async id
  * @param {string} cmd - The command to run
  * @param {!Array} args - The parameters for the command
  */
 EventClient.prototype.callID = function(id, cmd, args) {
+	if (typeof id != "string") {
+		throw "id must be a string";
+	}
 	writeRequest(this, id, cmd, args);
 }
 
@@ -199,12 +214,12 @@ EventClient.prototype.callID = function(id, cmd, args) {
  */
 EventClient.prototype.callA = function(cmd, args, cb) {
 	var c = this;
-	var asyncId = ++c.id;
-	c.registerCB(asyncId, function(err, result) {
-		c.registerCB(asyncId, null);
+	var id = ++c.id;
+	regCB(c, id, function(err, result) {
+		regCB(c, id, null);
 		cb(err, result);
 	});
-	c.callID(asyncId, cmd, args);
+	writeRequest(c, id, cmd, args);
 }
 
 /**
