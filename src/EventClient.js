@@ -156,8 +156,8 @@ function writeRequest(c, asyncid, cmd, args) {
  */
 EventClient.prototype.call = function(cmd, args, cb) {
 	if (cb) {
-		writeRequest(this, null, cmd, args);
 		this.mMainCallbacks.push(cb);
+		writeRequest(this, null, cmd, args);
 	} else {
 		// no callback function: send false as asyncid so server does not send a response
 		writeRequest(this, false, cmd, args);
