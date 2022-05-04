@@ -104,7 +104,7 @@ function EventClient(o) {
 (function(){
 
 /**
- * @param {EventClient} c
+ * @param {!EventClient} c
  */
 function schedTimeout(c) {
 	if (!c.mFlushScheduled) {
@@ -130,7 +130,7 @@ EventClient.prototype.flush = function() {
 }
 
 /**
- * @param {EventClient} c
+ * @param {!EventClient} c
  * @param {*} asyncid
  * @param {string} cmd
  * @param {Array=} args
@@ -165,7 +165,7 @@ EventClient.prototype.call = function(cmd, args, cb) {
 }
 
 /**
- * @param {EventClient} c
+ * @param {!EventClient} c
  * @param {*} id
  * @param {?ResponseCallback} cb
  */
