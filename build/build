@@ -9,7 +9,7 @@
 
 SRCDIR=../src
 LIBDIR=../lib
-TMPDIR=tmp
+OTMPDIR=tmp
 OUTDIR=out
 DOCSDIR=../docs
 
@@ -31,7 +31,7 @@ cleandir() {
 }
 
 catAllSrc() {
-	cat "$TMPDIR/version.js" "$SRCDIR/Queue.js" "$SRCDIR/BigDec.js" "$SRCDIR/OpaDef.js" "$SRCDIR/PartialParser.js" "$SRCDIR/Serializer.js" "$SRCDIR/OpaUtils.js" "$SRCDIR/EventClient.js" >> "$1"
+	cat "$OTMPDIR/version.js" "$SRCDIR/Queue.js" "$SRCDIR/BigDec.js" "$SRCDIR/OpaDef.js" "$SRCDIR/PartialParser.js" "$SRCDIR/Serializer.js" "$SRCDIR/OpaUtils.js" "$SRCDIR/EventClient.js" >> "$1"
 }
 
 
@@ -40,28 +40,28 @@ VERSION="$(./verget)"
 echo "building v$VERSION"
 
 cleandir "$OUTDIR"
-cleandir "$TMPDIR"
+cleandir "$OTMPDIR"
 cleandir "$DOCSDIR"
 
-printf "var VERSION = \"%s\";\n\n" "$VERSION" >> "$TMPDIR/version.js"
+printf "var VERSION = \"%s\";\n\n" "$VERSION" >> "$OTMPDIR/version.js"
 
-printf "var BigInteger = (function(){\n" > "$TMPDIR/jsbn.js"
-cat "$LIBDIR/jsbn/jsbn.js" "$LIBDIR/jsbn/jsbn2.js" >> "$TMPDIR/jsbn.js"
-printf "\nreturn BigInteger;\n}());\n" >> "$TMPDIR/jsbn.js"
+printf "var BigInteger = (function(){\n" > "$OTMPDIR/jsbn.js"
+cat "$LIBDIR/jsbn/jsbn.js" "$LIBDIR/jsbn/jsbn2.js" >> "$OTMPDIR/jsbn.js"
+printf "\nreturn BigInteger;\n}());\n" >> "$OTMPDIR/jsbn.js"
 
 # TODO: figure out how to do source mapping for minimized files? (helps with debugging)
 
 if [ -f "$CCJAR" ]; then
 	# TODO: store closure compiler version in source somewhere?
-	java -jar "$CCJAR" --js "$TMPDIR/jsbn.js" --js_output_file "$TMPDIR/jsbn.min.js"
-	java -jar "$CCJAR" --js "browser.head.js" "$TMPDIR/version.js" "$SRCDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --js_output_file "$TMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper --extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE
+	java -jar "$CCJAR" --js "$OTMPDIR/jsbn.js" --js_output_file "$OTMPDIR/jsbn.min.js"
+	java -jar "$CCJAR" --js "browser.head.js" "$OTMPDIR/version.js" "$SRCDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --js_output_file "$OTMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper --extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE
 
 	OUTFILE="$OUTDIR/opac.browser.min.js"
 	printf "// Minimized and bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n\n" >> "$OUTFILE"
 	printf "/* BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/) LICENSE file: */\n" >> "$OUTFILE"
 	cat "$LIBDIR/jsbn/LICENSE" >> "$OUTFILE"
 	printf "\n\n(function(){" >> "$OUTFILE"
-	cat "$TMPDIR/jsbn.min.js" "$TMPDIR/bundle.min.js" >> "$OUTFILE"
+	cat "$OTMPDIR/jsbn.min.js" "$OTMPDIR/bundle.min.js" >> "$OUTFILE"
 	printf "}());\n" >> "$OUTFILE"
 else
 	echo "CCJAR not found. browser build will not minimize"
@@ -73,7 +73,7 @@ printf "// Bundled source code for opatomic client. see https://github.com/opato
 printf "(function(){\n" >> "$OUTFILE"
 cat "browser.head.js" >> "$OUTFILE"
 printf "// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):\n" >> "$OUTFILE"
-cat "$LIBDIR/jsbn/LICENSE" "$TMPDIR/jsbn.js" >> "$OUTFILE"
+cat "$LIBDIR/jsbn/LICENSE" "$OTMPDIR/jsbn.js" >> "$OUTFILE"
 printf "\n\n" >> "$OUTFILE"
 catAllSrc "$OUTFILE"
 cat "browser.foot.js" >> "$OUTFILE"
@@ -89,7 +89,7 @@ cp "../README.md" "$OUTDIR/node/README.md"
 cp "../LICENSE" "$OUTDIR/node/"
 
 
-deldir $TMPDIR
+deldir $OTMPDIR
 
 
 # TODO: run some tests!!!
