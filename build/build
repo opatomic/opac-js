@@ -43,7 +43,9 @@ printf "\nreturn BigInteger;\n}());\n" >> "$OTMPDIR/jsbn.js"
 
 if [ -f "$CCJAR" ]; then
 	# TODO: store closure compiler version in source somewhere?
+	echo "minimizing jsbn with closure compiler..."
 	java -jar "$CCJAR" --js "$OTMPDIR/jsbn.js" --js_output_file "$OTMPDIR/jsbn.min.js"
+	echo "minimizing opac with closure compiler..."
 	java -jar "$CCJAR" --js "browser.head.js" "$OTMPDIR/version.js" "$SRCDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --js_output_file "$OTMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper --extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE
 
 	OUTFILE="$OUTDIR/opac.browser.min.js"
@@ -58,6 +60,7 @@ else
 fi
 
 
+echo "assembling sources for full-size opac..."
 OUTFILE="$OUTDIR/opac.browser.js"
 printf "// Bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n" > "$OUTFILE"
 printf "(function(){\n" >> "$OUTFILE"
@@ -84,6 +87,7 @@ rm -rf "${OTMPDIR:?}/"*
 
 # TODO: run some tests!!!
 
+echo "generating docs..."
 mkdir -p "$DOCSDIR"
 rm -rf "${DOCSDIR:?}/"*
 jsdoc "$SRCDIR/" -d "$DOCSDIR" -c "jsdoc.conf.json"
