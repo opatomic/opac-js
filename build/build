@@ -19,17 +19,6 @@ if [ ! -f "$CCJAR" ]; then
 	CCJAR=$(find ./*closure*compiler*.jar 2> /dev/null | tail -1)
 fi
 
-deldir() {
-	if [ -d "$1" ]; then
-		rm -r "$1"
-	fi
-}
-
-cleandir() {
-	deldir "$1"
-	mkdir "$1"
-}
-
 catAllSrc() {
 	cat "$OTMPDIR/version.js" "$SRCDIR/Queue.js" "$SRCDIR/BigDec.js" "$SRCDIR/OpaDef.js" "$SRCDIR/PartialParser.js" "$SRCDIR/Serializer.js" "$SRCDIR/OpaUtils.js" "$SRCDIR/EventClient.js" >> "$1"
 }
@@ -39,9 +28,12 @@ VERSION="$(./verget)"
 
 echo "building v$VERSION"
 
-cleandir "$OUTDIR"
-cleandir "$OTMPDIR"
-cleandir "$DOCSDIR"
+mkdir -p "$OUTDIR"
+mkdir -p "$OTMPDIR"
+mkdir -p "$DOCSDIR"
+rm -rf "${OUTDIR:?}/"*
+rm -rf "${OTMPDIR:?}/"*
+rm -rf "${DOCSDIR:?}/"*
 
 printf "var VERSION = \"%s\";\n\n" "$VERSION" >> "$OTMPDIR/version.js"
 
@@ -89,11 +81,11 @@ cp "../README.md" "$OUTDIR/node/README.md"
 cp "../LICENSE" "$OUTDIR/node/"
 
 
-deldir $OTMPDIR
+rm -rf "${OTMPDIR:?}/"*
 
 
 # TODO: run some tests!!!
 
 jsdoc "$SRCDIR/" -d "$DOCSDIR" -c "jsdoc.conf.json"
-deldir "$DOCSDIR/fonts"
+rm -rf "$DOCSDIR/fonts"
 
