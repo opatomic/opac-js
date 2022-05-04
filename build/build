@@ -30,10 +30,8 @@ echo "building v$VERSION"
 
 mkdir -p "$OUTDIR"
 mkdir -p "$OTMPDIR"
-mkdir -p "$DOCSDIR"
 rm -rf "${OUTDIR:?}/"*
 rm -rf "${OTMPDIR:?}/"*
-rm -rf "${DOCSDIR:?}/"*
 
 printf "var VERSION = \"%s\";\n\n" "$VERSION" >> "$OTMPDIR/version.js"
 
@@ -86,6 +84,8 @@ rm -rf "${OTMPDIR:?}/"*
 
 # TODO: run some tests!!!
 
+mkdir -p "$DOCSDIR"
+rm -rf "${DOCSDIR:?}/"*
 jsdoc "$SRCDIR/" -d "$DOCSDIR" -c "jsdoc.conf.json"
 rm -rf "$DOCSDIR/fonts"
 
