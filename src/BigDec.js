@@ -232,11 +232,11 @@ BigDec.prototype.clone = function() {
  * @return {number}
  */
 BigDec.prototype.compareTo = function(b) {
-	if (this.m.s < 0) {
-		if (b.m.s >= 0) {
+	if (this.m.signum() < 0) {
+		if (b.m.signum() >= 0) {
 			return -1;
 		}
-	} else if (b.m.s < 0) {
+	} else if (b.m.signum() < 0) {
 		return 1;
 	}
 
