@@ -133,11 +133,11 @@ function opaStringify(obj, space) {
 	 * @return {!string}
 	 */
 	function opaStringifyInternal(obj, space, depth) {
-		switch (opaType(obj)) {
+		var t = opaType(obj);
+		switch (t) {
 			case "undefined":
-				return "undefined";
 			case "null":
-				return "null";
+				return t;
 			//case "SORTMAX":
 			//	return "SORTMAX";
 			//case "boolean":
