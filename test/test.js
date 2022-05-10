@@ -65,7 +65,7 @@ function BuffSet(buff, array, offset) {
 	}
 }
 
-function echoResult(result, err) {
+function echoResult(err, result) {
 	if (err) {
 		console.log("ERROR: " + libopac.stringify(err));
 	} else {
