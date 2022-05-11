@@ -462,7 +462,7 @@ Serializer.prototype.writeObject = function(v) {
  * @const
  * @memberof Serializer
  */
-Serializer.STR2BUF = (typeof Map == "undefined") ? null : new Map();
+Serializer.STR2BUF = (typeof Map == "function") ? new Map() : null;
 
 }());
 

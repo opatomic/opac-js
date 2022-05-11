@@ -439,7 +439,7 @@ PartialParser.prototype.parseNext = function(b) {
  * @const
  * @memberof PartialParser
  */
-PartialParser.BUF2STR = (typeof Map == "undefined") ? null : new Map();
+PartialParser.BUF2STR = (typeof Map == "function") ? new Map() : null;
 
 }());
 
