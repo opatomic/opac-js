@@ -87,7 +87,7 @@ function opaStringify(obj, space) {
 				indent += " ";
 			}
 		} else if (typeof space === "string") {
-			for (var i = 0; i <= depth; ++i) {
+			for (var i = 0; i < depth; ++i) {
 				indent += space;
 			}
 		}
