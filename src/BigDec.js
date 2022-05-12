@@ -198,7 +198,7 @@ function div(a, b, q, r) {
 			q.e = 0;
 		}
 		if (r) {
-			r.e = 0;
+			r.e = a.e;
 		}
 	}
 }
