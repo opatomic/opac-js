@@ -41,6 +41,29 @@ printf "\nreturn BigInteger;\n}());\n" >> "$OTMPDIR/jsbn.js"
 
 # TODO: figure out how to do source mapping for minimized files? (helps with debugging)
 
+echo "assembling sources for full-size opac..."
+OUTFILE="$OUTDIR/opac.browser.js"
+printf "// Bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n" > "$OUTFILE"
+printf "(function(){\n" >> "$OUTFILE"
+cat "browser.head.js" >> "$OUTFILE"
+cat "bigintFromBytes-jsbn.js" >> "$OUTFILE"
+printf "// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):\n" >> "$OUTFILE"
+cat "$LIBDIR/jsbn/LICENSE" "$OTMPDIR/jsbn.js" >> "$OUTFILE"
+printf "\n\n" >> "$OUTFILE"
+catAllSrc "$OUTFILE"
+cat "browser.foot.js" >> "$OUTFILE"
+printf "})();\n" >> "$OUTFILE"
+
+mkdir "$OUTDIR/node"
+cat "node.head.js" > "$OUTDIR/node/opac.node.js"
+cat "bigintFromBytes-jsbn.js" >> "$OUTDIR/node/opac.node.js"
+catAllSrc "$OUTDIR/node/opac.node.js"
+cat "node.foot.js" >> "$OUTDIR/node/opac.node.js"
+sed -e "s/\\\$VERSION/$VERSION/" "package.json" > "$OUTDIR/node/package.json"
+cp "../README.md" "$OUTDIR/node/README.md"
+cp "../LICENSE" "$OUTDIR/node/"
+
+
 if [ -f "$CCJAR" ]; then
 	# TODO: store closure compiler version in source somewhere?
 	echo "minimizing jsbn with closure compiler..."
@@ -58,30 +81,6 @@ if [ -f "$CCJAR" ]; then
 else
 	echo "CCJAR not found. browser build will not minimize"
 fi
-
-
-echo "assembling sources for full-size opac..."
-OUTFILE="$OUTDIR/opac.browser.js"
-printf "// Bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n" > "$OUTFILE"
-printf "(function(){\n" >> "$OUTFILE"
-cat "browser.head.js" >> "$OUTFILE"
-cat "bigintFromBytes-jsbn.js" >> "$OUTFILE"
-printf "// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):\n" >> "$OUTFILE"
-cat "$LIBDIR/jsbn/LICENSE" "$OTMPDIR/jsbn.js" >> "$OUTFILE"
-printf "\n\n" >> "$OUTFILE"
-catAllSrc "$OUTFILE"
-cat "browser.foot.js" >> "$OUTFILE"
-printf "})();\n" >> "$OUTFILE"
-
-
-mkdir "$OUTDIR/node"
-cat "node.head.js" > "$OUTDIR/node/opac.node.js"
-cat "bigintFromBytes-jsbn.js" >> "$OUTDIR/node/opac.node.js"
-catAllSrc "$OUTDIR/node/opac.node.js"
-cat "node.foot.js" >> "$OUTDIR/node/opac.node.js"
-sed -e "s/\\\$VERSION/$VERSION/" "package.json" > "$OUTDIR/node/package.json"
-cp "../README.md" "$OUTDIR/node/README.md"
-cp "../LICENSE" "$OUTDIR/node/"
 
 
 rm -rf "${OTMPDIR:?}/"*
