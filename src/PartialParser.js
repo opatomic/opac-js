@@ -187,12 +187,11 @@ function getstr(p, b) {
 }
 
 /**
+ * @param {!PartialParser} p
  * @param {!PartialParser.Buff} b
  * @return {Array}
- * @memberof PartialParser
  */
-PartialParser.prototype.parseNext = function(b) {
-	var p = this;
+function parseNext(p, b) {
 	var buff = b.data;
 	var idx = b.idx;
 	var stop = b.idx + b.len;
@@ -341,6 +340,15 @@ PartialParser.prototype.parseNext = function(b) {
 				throwErr(p, "unknown state");
 		}
 	}
+}
+
+/**
+ * @param {!PartialParser.Buff} b
+ * @return {Array}
+ * @memberof PartialParser
+ */
+PartialParser.prototype.parseNext = function(b) {
+	return parseNext(this, b);
 }
 
 /**
