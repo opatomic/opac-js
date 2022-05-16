@@ -86,6 +86,18 @@ function hitNext(p, o) {
 
 /**
  * @param {!PartialParser} p
+ * @param {*} o
+ */
+function hitNextAndReset(p, o) {
+	hitNext(p, o);
+	if (p.mBytes.length > 4096) {
+		p.mBytes = EMPTYBUF;
+	}
+	p.mState = S_NEXTOBJ;
+}
+
+/**
+ * @param {!PartialParser} p
  * @param {number} objType
  * @param {number} nextState
  */
@@ -137,92 +149,6 @@ function getNum(neg, v) {
 }
 
 /**
- * read a byte array in big-endian format that is always positive (does not have a sign bit)
- * custom function similar to bnpFromString(s,256);
- * see also, java constructor: public BigInteger(int signum, byte[] magnitude)
- *   https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html#BigInteger(int,%20byte[])
- * @param {!Uint8Array} b
- * @param {number} len
- * @param {!BigInteger} r
- * @return {!BigInteger}
- */
-function bigintFromBytes2(b, len, r) {
-	r.t = 0;
-	r.s = 0;
-	var i = len;
-	var sh = 0;
-	while (--i >= 0) {
-		var x = b[i] & 0xff;
-		if (sh == 0) {
-			r[r.t++] = x;
-		} else if (sh + 8 > r.DB) {
-			r[r.t - 1] |= (x & ((1 << (r.DB - sh)) - 1)) << sh;
-			r[r.t++] = (x >> (r.DB - sh));
-		} else {
-			r[r.t - 1] |= x << sh;
-		}
-		sh += 8;
-		if (sh >= r.DB) {
-			sh -= r.DB;
-		}
-	}
-	r.clamp();
-	return r;
-}
-
-/**
- * @param {boolean} neg
- * @param {!BigInteger} v
- * @return {!BigInteger}
- */
-function getBI(neg, v) {
-	if (neg) {
-		BigInteger.ZERO.subTo(v, v);
-	}
-	return v;
-}
-
-/**
- * @param {!PartialParser} p
- * @param {boolean} neg
- * @return {!BigInteger}
- */
-function bigIntFromBytes(p, neg) {
-	//var b = p.mBytes.subarray(0, p.mBytesLen);
-	return getBI(neg, bigintFromBytes2(p.mBytes, p.mBytesLen, new BigInteger(null)));
-}
-
-/**
- * @param {number} n
- * @return {!BigInteger}
- */
-function bigIntFromNumber(n) {
-	if (n < 0) {
-		return getBI(true, bigIntFromNumber(0 - n));
-	}
-	if (n == 0) {
-		return BigInteger.ZERO.clone();
-	}
-	if (!isSafeInteger(n)) {
-		throw "arg is not safe integer";
-	}
-
-	//return new BigInteger(n.toString(16), 16);
-
-	var val = new BigInteger(null);
-	val.s = 0;
-	val.t = 1;
-	val[0] = n & val.DM;
-	n = Math.floor(n/val.DV);
-	for (var i = 1; n > 0; ++i) {
-		val[i] = n & val.DM;
-		++val.t;
-		n = Math.floor(n/val.DV);
-	}
-	return val;
-}
-
-/**
  * @param {!PartialParser} p
  * @param {number} bval
  */
@@ -258,15 +184,6 @@ function varintNextByte(p, bval) {
 function getstr(p, b) {
 	var str = PartialParser.BUF2STR ? PartialParser.BUF2STR.get(b) : null;
 	return str ? str : STRDEC(b);
-}
-
-/**
- * @param {!PartialParser} p
- */
-function clearBytes(p) {
-	if (p.mBytes.length > 4096) {
-		p.mBytes = EMPTYBUF;
-	}
 }
 
 /**
@@ -384,9 +301,7 @@ PartialParser.prototype.parseNext = function(b) {
 				p.mState = p.mNextState2;
 				continue;
 			case S_BIGINT:
-				hitNext(p, bigIntFromBytes(p, p.mObjType == CH_NEGBIGINT));
-				clearBytes(p);
-				p.mState = S_NEXTOBJ;
+				hitNextAndReset(p, bigIntFromBytes(p.mObjType == CH_NEGBIGINT, p.mBytes, 0, p.mBytesLen));
 				continue;
 
 			case S_VARDEC1:
@@ -405,10 +320,8 @@ PartialParser.prototype.parseNext = function(b) {
 				initBytes(p, p.mObjType, S_BIGDEC2);
 				continue;
 			case S_BIGDEC2:
-				var m = bigIntFromBytes(p, p.mObjType == CH_POSNEGBIGDEC || p.mObjType == CH_NEGNEGBIGDEC);
-				hitNext(p, new BigDec(m, p.mDecExp));
-				clearBytes(p);
-				p.mState = S_NEXTOBJ;
+				var m = bigIntFromBytes(p.mObjType == CH_POSNEGBIGDEC || p.mObjType == CH_NEGNEGBIGDEC, p.mBytes, 0, p.mBytesLen);
+				hitNextAndReset(p, new BigDec(m, p.mDecExp));
 				continue;
 
 			case S_BLOB:
@@ -421,9 +334,7 @@ PartialParser.prototype.parseNext = function(b) {
 				p.mState = S_NEXTOBJ;
 				continue;
 			case S_STR:
-				hitNext(p, getstr(p, p.mBytes.subarray(0, p.mBytesLen)));
-				clearBytes(p);
-				p.mState = S_NEXTOBJ;
+				hitNextAndReset(p, getstr(p, p.mBytes.subarray(0, p.mBytesLen)));
 				continue;
 
 			default:

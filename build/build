@@ -46,7 +46,7 @@ if [ -f "$CCJAR" ]; then
 	echo "minimizing jsbn with closure compiler..."
 	java -jar "$CCJAR" --js "$OTMPDIR/jsbn.js" --js_output_file "$OTMPDIR/jsbn.min.js"
 	echo "minimizing opac with closure compiler..."
-	java -jar "$CCJAR" --js "browser.head.js" "$OTMPDIR/version.js" "$SRCDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --js_output_file "$OTMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper --extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE
+	java -jar "$CCJAR" --js "browser.head.js" "bigintFromBytes-jsbn.js" "$OTMPDIR/version.js" "$SRCDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --js_output_file "$OTMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper --extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE
 
 	OUTFILE="$OUTDIR/opac.browser.min.js"
 	printf "// Minimized and bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n\n" >> "$OUTFILE"
@@ -65,6 +65,7 @@ OUTFILE="$OUTDIR/opac.browser.js"
 printf "// Bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n" > "$OUTFILE"
 printf "(function(){\n" >> "$OUTFILE"
 cat "browser.head.js" >> "$OUTFILE"
+cat "bigintFromBytes-jsbn.js" >> "$OUTFILE"
 printf "// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):\n" >> "$OUTFILE"
 cat "$LIBDIR/jsbn/LICENSE" "$OTMPDIR/jsbn.js" >> "$OUTFILE"
 printf "\n\n" >> "$OUTFILE"
@@ -75,6 +76,7 @@ printf "})();\n" >> "$OUTFILE"
 
 mkdir "$OUTDIR/node"
 cat "node.head.js" > "$OUTDIR/node/opac.node.js"
+cat "bigintFromBytes-jsbn.js" >> "$OUTDIR/node/opac.node.js"
 catAllSrc "$OUTDIR/node/opac.node.js"
 cat "node.foot.js" >> "$OUTDIR/node/opac.node.js"
 sed -e "s/\\\$VERSION/$VERSION/" "package.json" > "$OUTDIR/node/package.json"
