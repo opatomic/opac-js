@@ -24,11 +24,18 @@ BigInteger.prototype.DV;
 /** @type {number} */
 BigInteger.prototype.s;
 
+/**
+ * @return {undefined}
+ */
 BigInteger.prototype.clamp = function() {};
 
 /** @return {!BigInteger} */
 BigInteger.prototype.negate = function() {};
-/** @param {!BigInteger} r */
+
+/**
+ * @param {!BigInteger} r
+ * @return {undefined}
+ */
 BigInteger.prototype.copyTo = function(r) {};
 
 /**
@@ -40,18 +47,21 @@ BigInteger.prototype.compareTo = function(a) {};
 /**
  * @param {!BigInteger} a
  * @param {!BigInteger} r
+ * @return {undefined}
  */
 BigInteger.prototype.addTo = function(a,r) {};
 
 /**
  * @param {!BigInteger} a
  * @param {!BigInteger} r
+ * @return {undefined}
  */
 BigInteger.prototype.subTo = function(a,r) {};
 
 /**
  * @param {!BigInteger} a
  * @param {!BigInteger} r
+ * @return {undefined}
  */
 BigInteger.prototype.multiplyTo = function(a,r) {};
 
@@ -59,18 +69,21 @@ BigInteger.prototype.multiplyTo = function(a,r) {};
  * @param {!BigInteger} m
  * @param {BigInteger} q
  * @param {BigInteger} r
+ * @return {undefined}
  */
 BigInteger.prototype.divRemTo = function(m,q,r) {};
 
 /**
  * @param {number} n
  * @param {!BigInteger} r
+ * @return {undefined}
  */
 BigInteger.prototype.lShiftTo = function(n,r) {};
 
 /**
  * @param {number} n
  * @param {!BigInteger} r
+ * @return {undefined}
  */
 BigInteger.prototype.rShiftTo = function(n,r) {};
 
@@ -81,11 +94,13 @@ BigInteger.prototype.toByteArray = function() {};
 
 /**
  * @param {number} n
+ * @return {undefined}
  */
 BigInteger.prototype.dMultiply = function(n) {};
 
 /**
  * @param {number} x
+ * @return {undefined}
  */
 BigInteger.prototype.fromInt = function(x) {};
 
