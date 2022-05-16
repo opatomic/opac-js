@@ -1,11 +1,21 @@
 /**
+ * @param {!BigInteger} a
+ * @param {!BigInteger} b
+ * @return {!BigInteger}
+ */
+function bigIntNegateTo(a, b) {
+	BigInteger.ZERO.subTo(a, b);
+	return b;
+}
+
+/**
  * @param {number} n
  * @return {!BigInteger}
  */
 function bigIntFromNumber(n) {
 	if (n < 0) {
 		var posval = bigIntFromNumber(0 - n);
-		return BigInteger.ZERO.subTo(posval, posval);
+		return bigIntNegateTo(posval, posval);
 	}
 	if (n == 0) {
 		return BigInteger.ZERO.clone();
@@ -62,6 +72,6 @@ function bigIntFromBytes(neg, b, idx, len) {
 		}
 	}
 	r.clamp();
-	return neg ? BigInteger.ZERO.subTo(r, r) : r;
+	return neg ? bigIntNegateTo(r, r) : r;
 }
 
