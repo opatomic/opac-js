@@ -29,6 +29,9 @@ var S_ERR     = 13;
 // note: this temp variable is only used to read varints so it will never store more than a 64 bit integer (low memory)
 var TMPBI1 = new BigInteger(null);
 
+/** @const {!Uint8Array} */
+var EMPTYBUF = NEWBUF(0);
+
 /**
  * @constructor
  */
@@ -57,8 +60,8 @@ PartialParser = function() {
 	this.mBytesIdx = 0;
 	/** @type {number} */
 	this.mBytesLen = 0;
-	/** @type {Uint8Array} */
-	this.mBytes = null;
+	/** @type {!Uint8Array} */
+	this.mBytes = EMPTYBUF;
 }
 
 /**
@@ -186,7 +189,7 @@ function getBI(neg, v) {
  */
 function bigIntFromBytes(p, neg) {
 	//var b = p.mBytes.subarray(0, p.mBytesLen);
-	return getBI(neg, bigintFromBytes2(/** @type {!Uint8Array} */ (p.mBytes), p.mBytesLen, new BigInteger(null)));
+	return getBI(neg, bigintFromBytes2(p.mBytes, p.mBytesLen, new BigInteger(null)));
 }
 
 /**
@@ -262,7 +265,7 @@ function getstr(p, b) {
  */
 function clearBytes(p) {
 	if (p.mBytes.length > 4096) {
-		p.mBytes = null;
+		p.mBytes = EMPTYBUF;
 	}
 }
 
@@ -362,7 +365,7 @@ PartialParser.prototype.parseNext = function(b) {
 				continue;
 			case S_BYTES1:
 				p.mBytesLen = getVarint32(p, false);
-				if (p.mBytes == null || p.mBytes.length < p.mBytesLen) {
+				if (p.mBytes.length < p.mBytesLen) {
 					p.mBytes = NEWBUF(p.mBytesLen);
 				}
 				p.mBytesIdx = 0;
@@ -382,7 +385,6 @@ PartialParser.prototype.parseNext = function(b) {
 				continue;
 			case S_BIGINT:
 				hitNext(p, bigIntFromBytes(p, p.mObjType == CH_NEGBIGINT));
-				//p.mBytes = null;
 				clearBytes(p);
 				p.mState = S_NEXTOBJ;
 				continue;
@@ -405,7 +407,6 @@ PartialParser.prototype.parseNext = function(b) {
 			case S_BIGDEC2:
 				var m = bigIntFromBytes(p, p.mObjType == CH_POSNEGBIGDEC || p.mObjType == CH_NEGNEGBIGDEC);
 				hitNext(p, new BigDec(m, p.mDecExp));
-				//p.mBytes = null;
 				clearBytes(p);
 				p.mState = S_NEXTOBJ;
 				continue;
@@ -416,12 +417,11 @@ PartialParser.prototype.parseNext = function(b) {
 				//   create simple array if len is short (not buffer/uint8array)? what is the cutoff length?
 				hitNext(p, p.mBytes.subarray(0, p.mBytesLen));
 				// cannot reuse buffer! since it is returned to caller
-				p.mBytes = null;
+				p.mBytes = EMPTYBUF;
 				p.mState = S_NEXTOBJ;
 				continue;
 			case S_STR:
 				hitNext(p, getstr(p, p.mBytes.subarray(0, p.mBytesLen)));
-				//p.mBytes = null;
 				clearBytes(p);
 				p.mState = S_NEXTOBJ;
 				continue;
