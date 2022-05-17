@@ -182,8 +182,7 @@ function writeTypeAndVarint(s, t, v) {
  */
 function writeTypeAndBigBytes(s, t, v) {
 	if (v.signum() < 0) {
-		BigInteger.ZERO.subTo(v, TMPBI2);
-		writeTypeAndBigBytes(s, t, TMPBI2);
+		writeTypeAndBigBytes(s, t, bigIntNegateTo(v, TMPBI2));
 		return;
 	}
 	var bitLen = v.bitLength();
@@ -206,8 +205,7 @@ function writeTypeAndBigBytes(s, t, v) {
  */
 function writeBIAsVI(s, t, v) {
 	if (v.signum() < 0) {
-		BigInteger.ZERO.subTo(v, TMPBI2);
-		writeBIAsVI(s, t, TMPBI2);
+		writeBIAsVI(s, t, bigIntNegateTo(v, TMPBI2));
 		return;
 	}
 

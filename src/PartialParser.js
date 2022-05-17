@@ -142,7 +142,7 @@ function getNum(neg, v) {
 		if (typeof v == "number") {
 			return 0 - v;
 		} else {
-			BigInteger.ZERO.subTo(v, v);
+			bigIntNegateTo(v, v);
 		}
 	}
 	return v;
