@@ -15,6 +15,9 @@ var IWriter = function() {};
  */
 IWriter.prototype.write = function(buff) {};
 
+/**
+ * Write all buffered bytes
+ */
 IWriter.prototype.flush = function() {};
 
 
