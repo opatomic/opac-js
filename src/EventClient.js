@@ -80,7 +80,7 @@ if (typeof Map == "function") {
 /**
  * Create new EventClient
  * @constructor
- * @param {!IWriter} o - Object that has a write() and flush() method.
+ * @param {!IWriter} o - Object that has a write(), flush(), and close() method.
  */
 function EventClient(o) {
 	/** @type {!Serializer} */

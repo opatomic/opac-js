@@ -20,6 +20,11 @@ IWriter.prototype.write = function(buff) {};
  */
 IWriter.prototype.flush = function() {};
 
+/**
+ * Close the stream and release all used resources
+ */
+IWriter.prototype.close = function() {};
+
 
 /**
  * @constructor
