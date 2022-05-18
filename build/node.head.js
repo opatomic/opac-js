@@ -1,7 +1,5 @@
 "use strict";
 
-var BigInteger = require("jsbn").BigInteger;
-
 // note: check for Buffer.allocUnsafe because Buffer.from is defined in earlier versions of node but not fully implemented
 var BUFFERFROM = (typeof Buffer.allocUnsafe == 'function') ? Buffer.from : function(a, b, c) {
 	return new Buffer(a, b, c);

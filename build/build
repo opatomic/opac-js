@@ -55,16 +55,20 @@ cat "browser.foot.js" >> "$OUTFILE"
 printf "})();\n" >> "$OUTFILE"
 
 mkdir "$OUTDIR/node"
-cat "node.head.js" > "$OUTDIR/node/opac.node.js"
-cat "bigintFromBytes-jsbn.js" >> "$OUTDIR/node/opac.node.js"
-catAllSrc "$OUTDIR/node/opac.node.js"
-cat "node.foot.js" >> "$OUTDIR/node/opac.node.js"
+cat "node.head.js" > "$OTMPDIR/opac.node.noreqs.js"
+cat "bigintFromBytes-jsbn.js" >> "$OTMPDIR/opac.node.noreqs.js"
+catAllSrc "$OTMPDIR/opac.node.noreqs.js"
+cat "node.foot.js" >> "$OTMPDIR/opac.node.noreqs.js"
+cat "node.reqs.js" "$OTMPDIR/opac.node.noreqs.js" > "$OUTDIR/node/opac.node.js"
 sed -e "s/\\\$VERSION/$VERSION/" "package.json" > "$OUTDIR/node/package.json"
 cp "../README.md" "$OUTDIR/node/README.md"
 cp "../LICENSE" "$OUTDIR/node/"
 
 
 if [ -f "$CCJAR" ]; then
+	echo "validating node source with closure compiler..."
+	java -jar "$CCJAR" --js "$OTMPDIR/opac.node.noreqs.js" --process_common_js_modules --externs "biginteger.externs.js" --externs "node.externs.js" --checks_only --module_resolution NODE --extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE
+
 	# TODO: store closure compiler version in source somewhere?
 	echo "minimizing jsbn with closure compiler..."
 	java -jar "$CCJAR" --js "$OTMPDIR/jsbn.js" --js_output_file "$OTMPDIR/jsbn.min.js"

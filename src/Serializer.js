@@ -12,6 +12,7 @@ var IWriter = function() {};
 
 /**
  * @param {!Uint8Array} buff
+ * @return {boolean} false indicates caller should stop writing data; otherwise true
  */
 IWriter.prototype.write = function(buff) {};
 
@@ -41,6 +42,8 @@ function Serializer(out, sz) {
 	this.b = NEWBUF(sz ? sz : 4096);
 	/** @type {number} */
 	this.i = 0;
+	/** @type {boolean} */
+	this.c = true;
 }
 
 (function(){
@@ -146,7 +149,7 @@ function writeUtf8(ser, str) {
  */
 function flushBuff(s) {
 	if (s.i > 0) {
-		s.o.write(s.i == s.b.length ? s.b : s.b.subarray(0, s.i));
+		s.c = s.o.write(s.i == s.b.length ? s.b : s.b.subarray(0, s.i));
 		s.i = 0;
 	}
 }
@@ -313,7 +316,7 @@ Serializer.prototype.write = function(b) {
 	if (b.length > this.b.length - this.i) {
 		flushBuff(this);
 		if (b.length >= this.b.length) {
-			this.o.write(b);
+			this.c = this.o.write(b);
 			return;
 		}
 	}

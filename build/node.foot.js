@@ -1,29 +1,52 @@
+/**
+ * @constructor
+ * @implements IWriter
+ * @param {!net.Socket} s
+ */
+function SocketAdapter(s) {
+	/** @type {!net.Socket} */
+	this.s = s;
+	/** @type {EventClient} */
+	this.c = null;
+	/** @type {boolean} */
+	this.closed = false;
+}
 
-function newClient(s) {
-	var wrapper = {};
-	var c = new EventClient(wrapper);
-
-	wrapper.close = function() {
-		wrapper.closed = true;
-		c.onClose();
-	}
-
-	wrapper.write = function(b) {
-		if (wrapper.closed) {
-			wrapper.close();
-		} else {
-			try {
-				// the node socket docs state that the return value from write() should indicate whether the buffer
-				// is fully copied. however, this seems to be incorrect. therefore, a copy is allocated.
-				// TODO: consider a buffer pool to reuse buffers (write() will invoke a callback when done?)
-				// TODO: back-pressure: this function could return true/false indicating whether stream is writable; store/use this somehow
-				s.write(BUFFERFROM(b));
-			} catch (e) {
-				// TODO: add logging here somehow? invoke an error callback specified by user?
-				wrapper.close();
-			}
+SocketAdapter.prototype.write = function(b) {
+	if (this.closed) {
+		this.close();
+		return false;
+	} else {
+		try {
+			// the node socket docs state that the return value from write() should indicate whether the buffer
+			// is fully copied. however, this seems to be incorrect. therefore, a copy is allocated.
+			// TODO: consider a buffer pool to reuse buffers (write() will invoke a callback when done?)
+			return this.s.write(BUFFERFROM(b));
+		} catch (e) {
+			// TODO: add logging here somehow? invoke an error callback specified by user?
+			this.close();
+			return false;
 		}
-	};
+	}
+}
+
+SocketAdapter.prototype.flush = function() {}
+
+SocketAdapter.prototype.close = function() {
+	this.closed = true;
+	this.s.destroy();
+	if (this.c) {
+		this.c.onClose();
+	}
+}
+
+/**
+ * @param {!net.Socket} s
+ */
+function newClient(s) {
+	var wrapper = new SocketAdapter(s);
+	var c = new EventClient(wrapper);
+	wrapper.c = c;
 
 	s.on("data", function(b) {
 		c.onRecv(b);
