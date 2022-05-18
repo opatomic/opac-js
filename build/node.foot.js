@@ -42,6 +42,7 @@ SocketAdapter.prototype.close = function() {
 
 /**
  * @param {!net.Socket} s
+ * @return {!EventClient}
  */
 function newClient(s) {
 	var wrapper = new SocketAdapter(s);
