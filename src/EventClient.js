@@ -76,15 +76,67 @@ if (typeof Map == "function") {
 	}
 }
 
+function consoleLog(v) {
+	if (console && console.log) {
+		console.log(v);
+	}
+}
+
+/**
+ * Configurable client options
+ * @constructor
+ */
+function ClientConfig() {
+	/**
+	 * Size of the serializer buffer in bytes
+	 * @type {number}
+	 */
+	this.sendBuffLen = 4096;
+}
+
+/**
+ * Callback to invoke when a response is received without a registered callback.
+ * @param {*}  id     - Response's async ID
+ * @param {*}  result - The result of the operation if error didn't occur (error is null).
+ * @param {*=} error  - Error or null if no error occurred.
+ */
+ClientConfig.prototype.unknownIdHandler = function(id, result, error) {
+	consoleLog("unknown async id: " + opaStringify(id));
+}
+
+/**
+ * Callback to invoke when an uncaught exception occurs.
+ * @param {*}  exception - Exception that was caught
+ * @param {*=} context   - An object representing the context of the exception
+ */
+ClientConfig.prototype.uncaughtExceptionHandler = function(exception, context) {
+	exception = exception || "";
+	consoleLog("uncaught exception: " + exception);
+}
+
+/**
+ * Callback to invoke when an internal error occurs in the client. Examples could include parse
+ * errors or serialization errors.
+ * @param {*}  exception - Exception that was caught
+ * @param {*=} context   - An object representing the context of the exception
+ */
+ClientConfig.prototype.clientErrorHandler = function(exception, context) {
+	exception = exception || "";
+	consoleLog("client error: " + exception);
+}
 
 /**
  * Create new EventClient
  * @constructor
  * @param {!IWriter} o - Object that has a write(), flush(), and close() method.
+ * @param {ClientConfig=} cfg - Client options. See ClientConfig for details.
  */
-function EventClient(o) {
+function EventClient(o, cfg) {
+	cfg = cfg || new ClientConfig();
+	/** @type {!IWriter} */
+	this.o = o;
 	/** @type {!Serializer} */
-	this.s = new Serializer(o);
+	this.s = new Serializer(o, cfg.sendBuffLen);
 	/** @type {number} */
 	this.id = 0;
 	/** @type {Queue<ResponseCallback>} */
@@ -99,6 +151,8 @@ function EventClient(o) {
 	this.mTimeout = null;
 	/** @type {boolean} */
 	this.mFlushScheduled = false;
+	/** @type {!ClientConfig} */
+	this.mConfig = cfg;
 }
 
 (function(){
@@ -129,6 +183,25 @@ EventClient.prototype.flush = function() {
 	this.s.flush();
 }
 
+function handleUncaughtException(e) {
+	// TODO: don't log? have another callback?
+	consoleLog(e);
+}
+
+/**
+ * @param {!Function} cb
+ * @param {Array=} args
+ */
+function invokeCallback(obj, cb, args) {
+	try {
+		if (cb != null) {
+			cb.apply(obj, args);
+		}
+	} catch (e) {
+		handleUncaughtException(e);
+	}
+}
+
 /**
  * @param {!EventClient} c
  * @param {*} asyncid
@@ -136,16 +209,23 @@ EventClient.prototype.flush = function() {
  * @param {Array=} args
  */
 function writeRequest(c, asyncid, cmd, args) {
-	c.s.write1(CH_ARRAYSTART);
-	c.s.writeObject(asyncid);
-	c.s.writeObject(cmd);
-	if (args) {
-		for (var i = 0; i < args.length; ++i) {
-			c.s.writeObject(args[i]);
+	try {
+		// note: The following function calls could throw an exception - especially since objects
+		//       can define a toOpaSO() method and could throw from within caller's codebase.
+		c.s.write1(CH_ARRAYSTART);
+		c.s.writeObject(asyncid);
+		c.s.writeObject(cmd);
+		if (args) {
+			for (var i = 0; i < args.length; ++i) {
+				c.s.writeObject(args[i]);
+			}
 		}
+		c.s.write1(CH_ARRAYEND);
+		schedTimeout(c);
+	} catch (e) {
+		invokeCallback(c.mConfig, c.mConfig.clientErrorHandler, [e]);
+		invokeCallback(c.o, c.o.close);
 	}
-	c.s.write1(CH_ARRAYEND);
-	schedTimeout(c);
 }
 
 /**
@@ -205,6 +285,20 @@ EventClient.prototype.callID = function(id, cmd, args) {
 }
 
 /**
+ * @param {!EventClient} c
+ * @param {!ResponseCallback} cb
+ * @param {*} err
+ * @param {*=} result
+ */
+function invokeResponseCallback(c, cb, err, result) {
+	try {
+		cb(err, result);
+	} catch (e) {
+		invokeCallback(c.mConfig, c.mConfig.uncaughtExceptionHandler, [e]);
+	}
+}
+
+/**
  * Sends the specified command and args to the server with an async id. Using an async id indicates to the
  * server that the operation response can be sent out of order. Invokes the specified callback when a
  * response is received.
@@ -217,7 +311,7 @@ EventClient.prototype.callA = function(cmd, args, cb) {
 	var id = ++c.id;
 	regCB(c, id, function(err, result) {
 		regCB(c, id, null);
-		cb(err, result);
+		invokeResponseCallback(c, cb, err, result);
 	});
 	writeRequest(c, id, cmd, args);
 }
@@ -242,12 +336,9 @@ function onResponse(c, msg) {
 	}
 
 	if (cb != null) {
-		cb(msg.length > 2 ? msg[2] : null, msg[1]);
+		invokeResponseCallback(c, cb, msg.length > 2 ? msg[2] : null, msg[1]);
 	} else {
-		// TODO: callback for unknown asyncid
-		if (console.log) {
-			console.log("unknown async id: " + id);
-		}
+		invokeCallback(c.mConfig, c.mConfig.unknownIdHandler, msg);
 	}
 }
 
@@ -257,15 +348,21 @@ function onResponse(c, msg) {
  * @param {!Uint8Array} b - Byte buffer containing data to parse
  */
 EventClient.prototype.onRecv = function(b) {
-	this.mBuff.data = b;
-	this.mBuff.idx = 0;
-	this.mBuff.len = b.length;
-	while (true) {
-		var obj = this.mParser.parseNext(this.mBuff);
-		if (obj == null) {
-			break;
+	var c = this;
+	try {
+		c.mBuff.data = b;
+		c.mBuff.idx = 0;
+		c.mBuff.len = b.length;
+		while (true) {
+			var obj = c.mParser.parseNext(c.mBuff);
+			if (obj == null) {
+				break;
+			}
+			onResponse(c, obj);
 		}
-		onResponse(this, obj);
+	} catch (e) {
+		invokeCallback(c.mConfig, c.mConfig.clientErrorHandler, [e]);
+		invokeCallback(c.o, c.o.close);
 	}
 }
 
@@ -275,18 +372,14 @@ EventClient.prototype.onRecv = function(b) {
  */
 EventClient.prototype.onClose = function() {
 	var tmp = this.mMainCallbacks;
+	var cbArgs = [OpaDef.ERR_CLOSED];
 	while (tmp.size() > 0) {
-		var cb = tmp.shift();
-		if (cb) {
-			cb(OpaDef.ERR_CLOSED);
-		}
+		invokeResponseCallback(this, tmp.shift(), cbArgs);
 	}
 
 	tmp = this.mAsyncCallbacks;
 	tmp.forEach(function(val, key, map) {
-		if (val) {
-			val(OpaDef.ERR_CLOSED);
-		}
+		invokeResponseCallback(this, val, cbArgs);
 	});
 	tmp.clear();
 }
