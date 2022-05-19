@@ -70,4 +70,5 @@ module.exports.newClient = newClient;
 module.exports.cacheString = cacheString;
 module.exports.PartialParser = PartialParser;
 module.exports.Serializer = Serializer;
+module.exports.Queue = Queue;
 
