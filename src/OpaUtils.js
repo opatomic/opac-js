@@ -64,7 +64,7 @@ function opaType(o) {
 	} else if (t == "string" || t == "number" || t == "boolean" || t == "undefined" || t == "bigint") {
 		return t;
 	}
-	throw "unknown object";
+	throw new Error("unknown object");
 }
 
 /**
@@ -170,7 +170,7 @@ function opaStringify(obj, space) {
 		if (typeof obj.toString === "function") {
 			return obj.toString();
 		}
-		throw "unhandled case in switch";
+		throw new Error("unhandled case in switch");
 	}
 
 	return opaStringifyInternal(obj, space, 0);

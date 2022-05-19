@@ -21,7 +21,7 @@ function bigIntFromNumber(n) {
 		return BigInteger.ZERO.clone();
 	}
 	if (!isSafeInteger(n)) {
-		throw "arg is not safe integer";
+		throw new Error("arg is not safe integer");
 	}
 
 	//return new BigInteger(n.toString(16), 16);

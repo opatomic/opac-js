@@ -34,7 +34,7 @@ IWriter.prototype.close = function() {};
  */
 function Serializer(out, sz) {
 	if (sz && sz <= 10) {
-		throw "buffer len is too small";
+		throw new Error("buffer len is too small");
 	}
 	/** @type {!IWriter} */
 	this.o = out;
@@ -201,7 +201,7 @@ function writeTypeAndBigBytes(s, t, v) {
 	// TODO: implement a function that doesn't require memory allocation
 	var buff = v.toByteArray();
 	if (!(buff.length == numBytes || buff.length == numBytes + 1)) {
-		throw "BigInteger.toByteArray() returned unexpected value";
+		throw new Error("BigInteger.toByteArray() returned unexpected value");
 	}
 	writeTypeAndVarint(s, t, numBytes);
 	for (var i = buff.length - numBytes; i < buff.length; ++i) {
@@ -353,10 +353,10 @@ Serializer.prototype.writeNumber = function(v) {
 		this.write1(CH_POSINF);
 	} else {
 		if (typeof v != "number") {
-			throw "not a number";
+			throw new Error("not a number");
 		}
 		if (isNaN(v)) {
-			throw "number is NaN; cannot be serialized";
+			throw new Error("number is NaN; cannot be serialized");
 		}
 		writeBigDec(this, new BigDec(v.toString()));
 	}
@@ -457,11 +457,11 @@ Serializer.prototype.writeObject = function(v) {
 					this.write(v);
 				}
 			} else {
-				throw "unsupported object type " + v.constructor.name;
+				throw new Error("unsupported object type " + v.constructor.name);
 			}
 			break;
 		default:
-			throw "unsupported type " + typeof v;
+			throw new Error("unsupported type " + typeof v);
 	}
 }
 

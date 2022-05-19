@@ -70,7 +70,7 @@ PartialParser = function() {
  */
 function throwErr(p, msg) {
 	p.mState = S_ERR;
-	throw msg;
+	throw new Error(msg);
 }
 
 /**
@@ -163,7 +163,7 @@ function varintNextByte(p, bval) {
 		p.mVarintVal += (bval & 0x7F) * p.mVarintMul;
 		p.mVarintMul *= 128;
 	} else if (p.mVarintBitshift > 56) {
-		throw "varint too big";
+		throwErr(p, "varint too big");
 	} else {
 		if (p.mVarintBitshift == 49) {
 			// mVarintVal is a number; must convert to a BigInteger

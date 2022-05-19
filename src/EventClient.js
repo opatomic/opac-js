@@ -265,7 +265,7 @@ function regCB(c, id, cb) {
  */
 EventClient.prototype.registerCB = function(id, cb) {
 	if (typeof id != "string") {
-		throw "id must be a string";
+		throw new Error("id must be a string");
 	}
 	regCB(this, id, cb);
 }
@@ -279,7 +279,7 @@ EventClient.prototype.registerCB = function(id, cb) {
  */
 EventClient.prototype.callID = function(id, cmd, args) {
 	if (typeof id != "string") {
-		throw "id must be a string";
+		throw new Error("id must be a string");
 	}
 	writeRequest(this, id, cmd, args);
 }
@@ -322,7 +322,7 @@ EventClient.prototype.callA = function(cmd, args, cb) {
  */
 function onResponse(c, msg) {
 	if (msg.length < 2 || msg.length > 3) {
-		throw "response array is wrong length";
+		throw new Error("response array is wrong length");
 	}
 	var cb;
 	var id = msg[0];

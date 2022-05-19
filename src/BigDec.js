@@ -39,7 +39,7 @@ function BigDec(man, exp) {
 			v.m = new BigInteger(s.substring(0, epos));
 			v.e = parseInt(s.substring(epos + 1), 10);
 			if (!isSafeInteger(v.e)) {
-				throw 'number string "' + s + '" cannot be parsed';
+				throw new Error('number string "' + s + '" cannot be parsed');
 			}
 		}
 		if (decPos >= 0) {
@@ -71,7 +71,7 @@ function nbd() { return new BigDec(new BigInteger(null), 0); }
  */
 function extend(a, amount) {
 	if (amount < 0) {
-		throw "invalid extension. must be >= 0";
+		throw new Error("invalid extension. must be >= 0");
 	} else if (amount == 0) {
 		return a;
 	}
@@ -177,7 +177,7 @@ function div(a, b, q, r) {
 	} else if (b.signum() == 0) {
 		// TODO: use NaN?
 		// actually, can probably define x/0 to be 0. see https://www.hillelwayne.com/post/divide-by-zero/
-		throw "cannot divide by 0";
+		throw new Error("cannot divide by 0");
 	} else if (a.signum() == 0) {
 		if (q) {
 			a.copyTo(q);
