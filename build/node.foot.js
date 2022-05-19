@@ -42,11 +42,12 @@ SocketAdapter.prototype.close = function() {
 
 /**
  * @param {!net.Socket} s
+ * @param {ClientConfig=} cfg - Client options. See ClientConfig for details.
  * @return {!EventClient}
  */
-function newClient(s) {
+function newClient(s, cfg) {
 	var wrapper = new SocketAdapter(s);
-	var c = new EventClient(wrapper);
+	var c = new EventClient(wrapper, cfg);
 	wrapper.c = c;
 
 	s.on("data", function(b) {
