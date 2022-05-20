@@ -175,12 +175,17 @@ function schedTimeout(c) {
  * Send all buffered requests.
  */
 EventClient.prototype.flush = function() {
-	if (this.mTimeout !== null) {
-		clearTimeout(this.mTimeout);
-		this.mFlushScheduled = false;
-		this.mTimeout = null;
+	try {
+		if (this.mTimeout !== null) {
+			clearTimeout(this.mTimeout);
+			this.mFlushScheduled = false;
+			this.mTimeout = null;
+		}
+		this.s.flush();
+	} catch (e) {
+		invokeCallback(this.mConfig, this.mConfig.clientErrorHandler, [e]);
+		invokeCallback(this.o, this.o.close);
 	}
-	this.s.flush();
 }
 
 function handleUncaughtException(e) {
