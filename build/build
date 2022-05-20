@@ -11,7 +11,7 @@ SRCDIR=../src
 LIBDIR=../lib
 OTMPDIR=tmp
 OUTDIR=out
-DOCSDIR=../docs
+DOCSDIR="$OUTDIR/docs"
 
 
 if [ ! -f "$CCJAR" ]; then
@@ -97,4 +97,10 @@ mkdir -p "$DOCSDIR"
 rm -rf "${DOCSDIR:?}/"*
 jsdoc "$SRCDIR/" -d "$DOCSDIR" -c "jsdoc.conf.json"
 rm -rf "$DOCSDIR/fonts"
+
+cd "$DOCSDIR" || exit 1
+[ "$AUTHTS" = "" ] || find . -exec touch "--date=@$AUTHTS" {} +
+find . -type f -printf '%P\n' | LC_ALL=C sort | zip -rqX "../opac-js-$VERSION-docs.zip" -@
+cd - > /dev/null
+
 
