@@ -15,18 +15,11 @@ function SocketAdapter(s) {
 SocketAdapter.prototype.write = function(b) {
 	if (this.closed) {
 		return false;
-	} else {
-		try {
-			// the node socket docs state that the return value from write() should indicate whether the buffer
-			// is fully copied. however, this seems to be incorrect. therefore, a copy is allocated.
-			// TODO: consider a buffer pool to reuse buffers (write() will invoke a callback when done?)
-			return this.s.write(BUFFERFROM(b));
-		} catch (e) {
-			// TODO: add logging here somehow? invoke an error callback specified by user?
-			this.close();
-			return false;
-		}
 	}
+	// the node socket docs state that the return value from write() should indicate whether the buffer
+	// is fully copied. however, this seems to be incorrect. therefore, a copy is allocated.
+	// TODO: consider a buffer pool to reuse buffers (write() will invoke a callback when done?)
+	return this.s.write(BUFFERFROM(b));
 }
 
 SocketAdapter.prototype.flush = function() {}
