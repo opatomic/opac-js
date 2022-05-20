@@ -14,7 +14,6 @@ function SocketAdapter(s) {
 
 SocketAdapter.prototype.write = function(b) {
 	if (this.closed) {
-		this.close();
 		return false;
 	} else {
 		try {
