@@ -1,12 +1,12 @@
-// define some jsbn BigInteger methods and properties
-// note: this does not include all properties or methods (just what's needed)
-//   also, some of these methods are actually supposed to be protected
+/**
+ * @externs
+ */
 
 /**
+ * note: this does not match the actual implementation which also supports RNG params
  * @constructor
  * @param {number|string|Array=} a
  * @param {number=} b
- * note: this does not match the actual implementation which also supports RNG params
  */
 var BigInteger = function(a,b) {};
 
@@ -15,77 +15,191 @@ var BigInteger = function(a,b) {};
  * @const
  */
 BigInteger.ZERO;
-/** @const @type {number} */
-BigInteger.prototype.DB;
-/** @const @type {number} */
-BigInteger.prototype.DM;
-/** @const @type {number} */
-BigInteger.prototype.DV;
-/** @type {number} */
-BigInteger.prototype.s;
 
 /**
- * @return {void}
+ * @type {!BigInteger}
+ * @const
  */
-BigInteger.prototype.clamp = function() {};
-
-/** @return {!BigInteger} */
-BigInteger.prototype.negate = function() {};
+BigInteger.ONE;
 
 /**
- * @param {!BigInteger} r
- * @return {void}
+ * @return {!BigInteger}
  */
-BigInteger.prototype.copyTo = function(r) {};
+BigInteger.prototype.abs = function() {};
 
 /**
- * @param {!BigInteger} a
+ * @param {!BigInteger} val
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.add = function(val) {};
+
+/**
+ * @param {!BigInteger} val
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.and = function(val) {};
+
+/**
+ * @param {!BigInteger} val
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.andNot = function(val) {};
+
+/**
  * @return {number}
  */
-BigInteger.prototype.compareTo = function(a) {};
+BigInteger.prototype.bitCount = function() {};
 
 /**
- * @param {!BigInteger} a
- * @param {!BigInteger} r
- * @return {void}
+ * @return {number}
  */
-BigInteger.prototype.addTo = function(a,r) {};
+BigInteger.prototype.bitLength = function() {};
 
 /**
- * @param {!BigInteger} a
- * @param {!BigInteger} r
- * @return {void}
+ * @param {number} n
+ * @return {!BigInteger}
  */
-BigInteger.prototype.subTo = function(a,r) {};
+BigInteger.prototype.clearBit = function(n) {};
 
 /**
- * @param {!BigInteger} a
- * @param {!BigInteger} r
- * @return {void}
+ * @param {!BigInteger} val
+ * @return {number}
  */
-BigInteger.prototype.multiplyTo = function(a,r) {};
+BigInteger.prototype.compareTo = function(val) {};
+
+/**
+ * @param {!BigInteger} val
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.divide = function(val) {};
+
+/**
+ * @param {!BigInteger} val
+ * @return {!Array<BigInteger>}
+ */
+BigInteger.prototype.divideAndRemainder = function(val) {};
+
+/**
+ * @param {number} n
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.flipBit = function(n) {};
+
+/**
+ * @param {!BigInteger} val
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.gcd = function(val) {};
+
+/**
+ * @return {!number}
+ */
+BigInteger.prototype.getLowestSetBit = function() {};
+
+/**
+ * @return {number}
+ */
+BigInteger.prototype.intValue = function() {};
+
+/**
+ * @param {!BigInteger} val
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.max = function(val) {};
+
+/**
+ * @param {!BigInteger} val
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.min = function(val) {};
 
 /**
  * @param {!BigInteger} m
- * @param {BigInteger} q
- * @param {BigInteger} r
- * @return {void}
+ * @return {!BigInteger}
  */
-BigInteger.prototype.divRemTo = function(m,q,r) {};
+BigInteger.prototype.mod = function(m) {};
+
+/**
+ * @param {!BigInteger} m
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.modInverse = function(m) {};
+
+/**
+ * @param {!BigInteger} exponent
+ * @param {!BigInteger} m
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.modPow = function(exponent, m) {};
+
+/**
+ * @param {!BigInteger} val
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.multiply = function(val) {};
+
+/**
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.negate = function() {};
+
+/**
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.not = function() {};
+
+/**
+ * @param {!BigInteger} val
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.or = function(val) {};
+
+/**
+ * @param {number} exponent
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.pow = function(exponent) {};
+
+/**
+ * @param {!BigInteger} val
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.remainder = function(val) {};
 
 /**
  * @param {number} n
- * @param {!BigInteger} r
- * @return {void}
+ * @return {!BigInteger}
  */
-BigInteger.prototype.lShiftTo = function(n,r) {};
+BigInteger.prototype.setBit = function(n) {};
 
 /**
  * @param {number} n
- * @param {!BigInteger} r
- * @return {void}
+ * @return {!BigInteger}
  */
-BigInteger.prototype.rShiftTo = function(n,r) {};
+BigInteger.prototype.shiftLeft = function(n) {};
+
+/**
+ * @param {number} n
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.shiftRight = function(n) {};
+
+/**
+ * @return {number}
+ */
+BigInteger.prototype.signum = function() {};
+
+/**
+ * @param {!BigInteger} val
+ * @return {!BigInteger}
+ */
+BigInteger.prototype.subtract = function(val) {};
+
+/**
+ * @param {number} n
+ * @return {boolean}
+ */
+BigInteger.prototype.testBit = function(n) {};
 
 /**
  * @return {!Array<number>}
@@ -93,27 +207,27 @@ BigInteger.prototype.rShiftTo = function(n,r) {};
 BigInteger.prototype.toByteArray = function() {};
 
 /**
- * @param {number} n
- * @return {void}
+ * @param {number=} radix
+ * @return {string}
  */
-BigInteger.prototype.dMultiply = function(n) {};
+BigInteger.prototype.toString = function(radix) {};
 
 /**
- * @param {number} x
- * @return {void}
+ * @param {!BigInteger} val
+ * @return {!BigInteger}
  */
-BigInteger.prototype.fromInt = function(x) {};
+BigInteger.prototype.xor = function(val) {};
 
-/** @return {number} */
-BigInteger.prototype.intValue = function() {};
-/** @return {number} */
-BigInteger.prototype.byteValue = function() {};
-/** @return {number} */
-BigInteger.prototype.signum = function() {};
-/** @return {number} */
-BigInteger.prototype.bitLength = function() {};
-/** @return {!BigInteger} */
-BigInteger.prototype.abs = function() {};
-/** @return {!BigInteger} */
-BigInteger.prototype.clone = function() {};
+// TODO: the following methods could possibly be added above
+//  equals
+//  isProbablePrime
+//  nextProbablePrime
+//  static BigInteger probablePrime(int bitLength, Random rnd);
+
+// The following methods from Java's java.math.BigInteger are not implemented in jsbn:
+//  doubleValue()
+//  floatValue()
+//  hashCode()
+//  longValue()
+//  static BigInteger valueOf(long val);
 
