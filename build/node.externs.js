@@ -2,6 +2,7 @@
 
 /**
  * @param {string} path
+ * @return {?}
  */
 function require(path) {}
 
