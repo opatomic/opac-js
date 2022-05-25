@@ -86,9 +86,10 @@ sock.connect(4567, "localhost", function() {
  - undefined
  - null
  - boolean (false/true)
- - numbers (integers and floats)
+ - numbers (integers, floats, Infinity, -Infinity; NaN and -0 not supported)
  - strings
  - arrays
  - binary buffer (Buffer for node; Uint8Array for browser)
  - BigInteger (node "jsbn" package)
+ - BigDec
 
