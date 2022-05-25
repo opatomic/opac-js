@@ -63,4 +63,5 @@ module.exports.cacheString = cacheString;
 module.exports.PartialParser = PartialParser;
 module.exports.Serializer = Serializer;
 module.exports.Queue = Queue;
+module.exports.ClientConfig = ClientConfig;
 

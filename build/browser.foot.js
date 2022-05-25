@@ -74,4 +74,5 @@ E['opaType'] = opaType;
 E['Serializer'] = Serializer;
 E['EventClient'] = EventClient;
 E['PartialParser'] = PartialParser;
+E['ClientConfig'] = ClientConfig;
 
