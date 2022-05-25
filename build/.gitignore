@@ -1,3 +1,4 @@
 /out/*
 /tmp/*
 closure-compiler*.jar
+tools/*

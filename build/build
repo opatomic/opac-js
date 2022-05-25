@@ -4,8 +4,7 @@
 # closure compiler, and set $CCJAR to the jar file's path.
 #  https://github.com/google/closure-compiler
 
-# to generate docs, must have jsdoc installed. install for node using the following command
-#  npm install -g jsdoc
+# to generate docs, must have node and npm installed
 
 SRCDIR=../src
 LIBDIR=../lib
@@ -95,8 +94,15 @@ rm -rf "${OTMPDIR:?}/"*
 echo "generating docs..."
 mkdir -p "$DOCSDIR"
 rm -rf "${DOCSDIR:?}/"*
-jsdoc "$SRCDIR/" -d "$DOCSDIR" -c "jsdoc.conf.json"
-rm -rf "$DOCSDIR/fonts"
+
+mkdir -p tools
+cd tools || exit 1
+if [ ! -d "node_modules" ]; then
+	npm install jsdoc docdash --save-dev
+fi
+node ./node_modules/jsdoc/jsdoc.js ../../src/ ../biginteger.externs.js -d "../$DOCSDIR" -c ../jsdoc.conf.json
+cd - > /dev/null
+
 
 cd "$DOCSDIR" || exit 1
 [ "$AUTHTS" = "" ] || find . -exec touch "--date=@$AUTHTS" {} +
