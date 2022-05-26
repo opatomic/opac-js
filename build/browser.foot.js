@@ -63,16 +63,17 @@ function newClient(s, cfg) {
 
 var E = window['Opatomic'] = {};
 
-E['version'] = VERSION;
-E['BigInteger'] = BigInteger;
 E['BigDec'] = BigDec;
-E['OpaDef'] = OpaDef;
-E['stringify'] = opaStringify;
+E['BigInteger'] = BigInteger;
 E['cacheString'] = cacheString;
-E['newClient'] = newClient;
-E['opaType'] = opaType;
-E['Serializer'] = Serializer;
-E['EventClient'] = EventClient;
-E['PartialParser'] = PartialParser;
 E['ClientConfig'] = ClientConfig;
+E['EventClient'] = EventClient;
+E['newClient'] = newClient;
+E['OpaDef'] = OpaDef;
+E['opaType'] = opaType;
+E['PartialParser'] = PartialParser;
+E['Queue'] = Queue;
+E['Serializer'] = Serializer;
+E['stringify'] = opaStringify;
+E['version'] = VERSION;
 

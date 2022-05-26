@@ -53,15 +53,17 @@ function newClient(s, cfg) {
 	return c;
 }
 
-module.exports.version = VERSION;
-module.exports.stringify = opaStringify;
-module.exports.opaType = opaType;
-module.exports.OpaDef = OpaDef;
 module.exports.BigDec = BigDec;
-module.exports.newClient = newClient;
+module.exports.BigInteger = BigInteger;
 module.exports.cacheString = cacheString;
-module.exports.PartialParser = PartialParser;
-module.exports.Serializer = Serializer;
-module.exports.Queue = Queue;
 module.exports.ClientConfig = ClientConfig;
+module.exports.EventClient = EventClient;
+module.exports.newClient = newClient;
+module.exports.OpaDef = OpaDef;
+module.exports.opaType = opaType;
+module.exports.PartialParser = PartialParser;
+module.exports.Queue = Queue;
+module.exports.Serializer = Serializer;
+module.exports.stringify = opaStringify;
+module.exports.version = VERSION;
 
