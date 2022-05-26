@@ -160,12 +160,29 @@ function EventClient(o, cfg) {
 /**
  * @param {!EventClient} c
  */
+function flushInternal(c) {
+	try {
+		if (c.mTimeout !== null) {
+			clearTimeout(c.mTimeout);
+			c.mFlushScheduled = false;
+			c.mTimeout = null;
+		}
+		c.s.flush();
+	} catch (e) {
+		invokeCallback(c.mConfig, c.mConfig.clientErrorHandler, [e]);
+		invokeCallback(c.o, c.o.close);
+	}
+}
+
+/**
+ * @param {!EventClient} c
+ */
 function schedTimeout(c) {
 	if (!c.mFlushScheduled) {
 		c.mTimeout = NEXTTICK(function() {
 			c.mFlushScheduled = false;
 			c.mTimeout = null;
-			c.s.flush();
+			flushInternal(c);
 		});
 		c.mFlushScheduled = true;
 	}
@@ -175,17 +192,7 @@ function schedTimeout(c) {
  * Send all buffered requests.
  */
 EventClient.prototype.flush = function() {
-	try {
-		if (this.mTimeout !== null) {
-			clearTimeout(this.mTimeout);
-			this.mFlushScheduled = false;
-			this.mTimeout = null;
-		}
-		this.s.flush();
-	} catch (e) {
-		invokeCallback(this.mConfig, this.mConfig.clientErrorHandler, [e]);
-		invokeCallback(this.o, this.o.close);
-	}
+	flushInternal(this);
 }
 
 function handleUncaughtException(e) {
