@@ -350,6 +350,9 @@ function onResponse(c, msg) {
 	if (cb != null) {
 		invokeResponseCallback(c, cb, msg.length > 2 ? msg[2] : null, msg[1]);
 	} else {
+		if (id === null || id === undefined) {
+			throw new Error("received extraneous null-async-id response");
+		}
 		invokeCallback(c.mConfig, c.mConfig.unknownIdHandler, msg);
 	}
 }
