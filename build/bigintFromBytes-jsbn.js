@@ -30,11 +30,11 @@ function bigIntFromNumber(n) {
 	val.s = 0;
 	val.t = 1;
 	val[0] = n & val.DM;
-	n = Math.floor(n/val.DV);
+	n = Math.floor(n / val.DV);
 	for (var i = 1; n > 0; ++i) {
 		val[i] = n & val.DM;
 		++val.t;
-		n = Math.floor(n/val.DV);
+		n = Math.floor(n / val.DV);
 	}
 	return val;
 }

@@ -24,7 +24,7 @@ var ResponseCallback;
  * @extends {Map<K,V>}
  * @ignore
  */
-var IdMap = function(){}
+var IdMap = function() {}
 if (typeof Map == "function") {
 	IdMap = Map;
 } else {
@@ -155,7 +155,7 @@ function EventClient(o, cfg) {
 	this.mConfig = cfg;
 }
 
-(function(){
+(function() {
 
 /**
  * @param {!EventClient} c

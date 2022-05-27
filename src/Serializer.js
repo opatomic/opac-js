@@ -32,9 +32,9 @@ IWriter.prototype.close = function() {};
  * @param {!IWriter} out - Where to write values
  * @param {number=} sz - Length of internal buffer
  */
-var Serializer = function(out, sz){};
+var Serializer = function(out, sz) {};
 
-(function(){
+(function() {
 
 /**
  * @constructor
@@ -184,7 +184,7 @@ function writeTypeAndVarint(s, t, v) {
 	while (v > 0x7FFFFFFF) {
 		// numbers greater than 31 bits need to use math ops. cannot use bit ops
 		s.b[s.i++] = 0x80 | (v % 128);
-		v = Math.floor(v/128);
+		v = Math.floor(v / 128);
 	}
 	while (v > 0x7F) {
 		s.b[s.i++] = 0x80 | (v & 0xFF);

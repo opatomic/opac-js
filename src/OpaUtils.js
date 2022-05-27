@@ -83,7 +83,7 @@ function opaStringify(obj, space) {
 	function getindent(space, depth) {
 		var indent = "";
 		if (typeof space === "number") {
-			for (var i = 0; i < space * depth ; ++i) {
+			for (var i = 0; i < space * depth; ++i) {
 				indent += " ";
 			}
 		} else if (typeof space === "string") {

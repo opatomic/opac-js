@@ -147,7 +147,9 @@ var CH_ARRAYEND     = "]".charCodeAt(0);
  * @ignore
  */
 function OpaSortMax() {
-	this.toString = function(){return "SORTMAX";}
+	this.toString = function() {
+		return "SORTMAX";
+	}
 }
 
 /**
@@ -156,7 +158,7 @@ function OpaSortMax() {
  */
 var OpaDef = {};
 
-(function(){
+(function() {
 
 /** @const {number} */
 OpaDef.UNDEFINED    = CH_UNDEFINED;

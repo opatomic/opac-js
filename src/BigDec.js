@@ -57,7 +57,7 @@ function BigDec(man, exp) {
 	}
 }
 
-(function(){
+(function() {
 
 /**
  * @return {!BigDec}

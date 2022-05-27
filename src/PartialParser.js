@@ -8,9 +8,9 @@
 /**
  * @constructor
  */
-var PartialParser = function(){};
+var PartialParser = function() {};
 
-(function(){
+(function() {
 
 var S_NEXTOBJ = 1;
 var S_VARINT1 = 2;
@@ -286,7 +286,7 @@ function parseNext(p, b) {
 				}
 				p.mBytesIdx = 0;
 				p.mState = S_BYTES2;
-				// fall-thru to next state
+				// fall through
 			case S_BYTES2:
 				var numToCopy = Math.min(stop - idx, p.mBytesLen - p.mBytesIdx);
 				p.mBytes.set(buff.subarray(idx, idx + numToCopy), p.mBytesIdx);
