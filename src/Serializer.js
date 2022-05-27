@@ -32,7 +32,16 @@ IWriter.prototype.close = function() {};
  * @param {!IWriter} out - Where to write values
  * @param {number=} sz - Length of internal buffer
  */
-function Serializer(out, sz) {
+var Serializer = function(out, sz){};
+
+(function(){
+
+/**
+ * @constructor
+ * @param {!IWriter} out - Where to write values
+ * @param {number=} sz - Length of internal buffer
+ */
+Serializer = function(out, sz) {
 	if (sz && sz <= 10) {
 		throw new Error("buffer len is too small");
 	}
@@ -45,8 +54,6 @@ function Serializer(out, sz) {
 	/** @type {boolean} */
 	this.c = true;
 }
-
-(function(){
 
 var SURROGATE_OFFSET = 0x010000 - (0xD800 << 10) - 0xDC00;
 var BIMAXVARINT = new BigInteger("9223372036854775807");
