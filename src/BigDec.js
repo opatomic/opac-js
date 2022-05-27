@@ -36,8 +36,10 @@ function BigDec(man, exp) {
 			v.m = new BigInteger(s);
 			v.e = 0;
 		} else {
+			// ignore "+" char immediately following e/E
+			var skipLen = s.charCodeAt(epos + 1) == 43 ? 2 : 1;
 			v.m = new BigInteger(s.substring(0, epos));
-			v.e = parseInt(s.substring(epos + 1), 10);
+			v.e = parseInt(s.substring(epos + skipLen), 10);
 			if (!isSafeInteger(v.e)) {
 				throw new Error('number string "' + s + '" cannot be parsed');
 			}
