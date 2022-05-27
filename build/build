@@ -54,14 +54,17 @@ cat "browser.foot.js" >> "$OUTFILE"
 printf "})();\n" >> "$OUTFILE"
 
 mkdir "$OUTDIR/node"
+echo "\"use strict\";" > "$OTMPDIR/usestrict.js"
 cat "node.head.js" > "$OTMPDIR/opac.node.noreqs.js"
 cat "bigintFromBytes-jsbn.js" >> "$OTMPDIR/opac.node.noreqs.js"
 catAllSrc "$OTMPDIR/opac.node.noreqs.js"
 cat "node.foot.js" >> "$OTMPDIR/opac.node.noreqs.js"
-cat "node.reqs.js" "$OTMPDIR/opac.node.noreqs.js" > "$OUTDIR/node/opac.node.js"
+cat "$OTMPDIR/usestrict.js" "node.reqs.js" "$OTMPDIR/opac.node.noreqs.js" > "$OUTDIR/node/opac.node.js"
 sed -e "s/\\\$VERSION/$VERSION/" "package.json" > "$OUTDIR/node/package.json"
 cp "../README.md" "$OUTDIR/node/README.md"
 cp "../LICENSE" "$OUTDIR/node/"
+cat "$OTMPDIR/usestrict.js" "$OTMPDIR/opac.node.noreqs.js" > "$OTMPDIR/tmp.js"
+mv "$OTMPDIR/tmp.js" "$OTMPDIR/opac.node.noreqs.js"
 
 
 if [ -f "$CCJAR" ]; then
