@@ -34,7 +34,7 @@ rm -rf "${OTMPDIR:?}/"*
 
 printf "var VERSION = \"%s\";\n\n" "$VERSION" >> "$OTMPDIR/version.js"
 
-printf "var BigInteger = (function(){\n" > "$OTMPDIR/jsbn.js"
+printf "var BigInteger = (function() {\n" > "$OTMPDIR/jsbn.js"
 cat "$LIBDIR/jsbn/jsbn.js" "$LIBDIR/jsbn/jsbn2.js" >> "$OTMPDIR/jsbn.js"
 printf "\nreturn BigInteger;\n}());\n" >> "$OTMPDIR/jsbn.js"
 
@@ -43,7 +43,7 @@ printf "\nreturn BigInteger;\n}());\n" >> "$OTMPDIR/jsbn.js"
 echo "assembling sources for full-size opac..."
 OUTFILE="$OUTDIR/opac.browser.js"
 printf "// Bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n" > "$OUTFILE"
-printf "(function(){\n" >> "$OUTFILE"
+printf "(function() {\n" >> "$OUTFILE"
 cat "browser.head.js" >> "$OUTFILE"
 cat "bigintFromBytes-jsbn.js" >> "$OUTFILE"
 printf "// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):\n" >> "$OUTFILE"
@@ -81,7 +81,7 @@ if [ -f "$CCJAR" ]; then
 	printf "// Minimized and bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info\n\n" >> "$OUTFILE"
 	printf "/* BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/) LICENSE file: */\n" >> "$OUTFILE"
 	cat "$LIBDIR/jsbn/LICENSE" >> "$OUTFILE"
-	printf "\n\n(function(){" >> "$OUTFILE"
+	printf "\n\n(function() {" >> "$OUTFILE"
 	cat "$OTMPDIR/jsbn.min.js" "$OTMPDIR/bundle.min.js" >> "$OUTFILE"
 	printf "}());\n" >> "$OUTFILE"
 else
