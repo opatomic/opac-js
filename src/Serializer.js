@@ -76,6 +76,7 @@ function getUtf8Len(s, offset, len) {
 	for (var i = offset; i < end; ++i) {
 		var ch = s.charCodeAt(i);
 		if (ch < 0x80) {
+			// ascii chars are 1 byte (already accounted for)
 		} else if (ch < 0x800) {
 			++numBytes;
 		} else if (ch < 0xD800 || ch > 0xDFFF) {
