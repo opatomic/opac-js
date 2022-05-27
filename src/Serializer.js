@@ -106,7 +106,6 @@ function getUtf8Len(s, offset, len) {
  */
 function writeUtf8(ser, str) {
 	var end = str.length;
-	//var blen = buff.length;
 	var bpos = ser.i;
 	var buff = ser.b;
 	for (var i = 0; i < end; ++i) {
@@ -148,7 +147,6 @@ function writeUtf8(ser, str) {
 			buff[bpos++] = 0xBD;
 		}
 	}
-	//return bpos;
 	ser.i = bpos;
 }
 
