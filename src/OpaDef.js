@@ -222,7 +222,7 @@ OpaDef.ARRAYEND     = CH_ARRAYEND;
 OpaDef.SORTMAX_OBJ = new OpaSortMax();
 
 /** @const {number} */
-OpaDef.ERR_CLOSED = -16394;
+OpaDef.ERR_CLOSED = -1;
 
 }());
 
