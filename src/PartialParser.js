@@ -308,9 +308,9 @@ function parseNext(p, b) {
 				initVarint(p, p.mObjType, S_VARDEC2);
 				continue;
 			case S_VARDEC2:
-				var m = getNum(p.mObjType == CH_POSNEGVARDEC || p.mObjType == CH_NEGNEGVARDEC, p.mVarintVal);
-				m = (typeof m == "number") ? bigIntFromNumber(m) : m;
-				hitNext(p, new BigDec(m, p.mDecExp));
+				var m1 = getNum(p.mObjType == CH_POSNEGVARDEC || p.mObjType == CH_NEGNEGVARDEC, p.mVarintVal);
+				m1 = (typeof m1 == "number") ? bigIntFromNumber(m1) : m1;
+				hitNext(p, new BigDec(m1, p.mDecExp));
 				p.mState = S_NEXTOBJ;
 				continue;
 
@@ -319,8 +319,8 @@ function parseNext(p, b) {
 				initBytes(p, p.mObjType, S_BIGDEC2);
 				continue;
 			case S_BIGDEC2:
-				var m = bigIntFromBytes(p.mObjType == CH_POSNEGBIGDEC || p.mObjType == CH_NEGNEGBIGDEC, p.mBytes, 0, p.mBytesLen);
-				hitNextAndReset(p, new BigDec(m, p.mDecExp));
+				var m2 = bigIntFromBytes(p.mObjType == CH_POSNEGBIGDEC || p.mObjType == CH_NEGNEGBIGDEC, p.mBytes, 0, p.mBytesLen);
+				hitNextAndReset(p, new BigDec(m2, p.mDecExp));
 				continue;
 
 			case S_BLOB:
