@@ -59,7 +59,8 @@ function newQChunk(size, prev) {
 Queue.prototype.push = function(item) {
 	var chunk = this.tail;
 	if (chunk.used + 1 >= chunk.length) {
-		this.tail = chunk = newQChunk(this.newChunkSize, chunk);
+		chunk = newQChunk(this.newChunkSize, chunk);
+		this.tail = chunk;
 	}
 	chunk[(chunk.head + chunk.used) & (chunk.length - 1)] = item;
 	chunk.used++;
