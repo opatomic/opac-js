@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * @param {number} l
  * @return {!Uint8Array}
