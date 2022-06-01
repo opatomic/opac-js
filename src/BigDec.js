@@ -168,12 +168,13 @@ function mul3(a, b, r) {
  * @param {BigDec} r
  */
 function div(a, b, q, r) {
+	var tmp;
 	if (a == r || b == r) {
-		var tmp = r.clone();
+		tmp = r.clone();
 		div(a, b, q, tmp);
 		tmp.copyTo(r);
 	} else if (a == q || b == q) {
-		var tmp = q.clone();
+		tmp = q.clone();
 		div(a, b, tmp, r);
 		tmp.copyTo(q);
 	} else if (b.signum() == 0) {
