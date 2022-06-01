@@ -234,7 +234,7 @@ function parseNext(p, b) {
 					case CH_NEGNEGBIGDEC: initVarint(p, CH_NEGNEGBIGDEC, S_BIGDEC1); continue;
 
 					case CH_BINLPVI: initBytes(p, CH_BINLPVI, S_BLOB); continue;
-					case CH_STRLPVI: initBytes(p, CH_STRLPVI, S_STR ); continue;
+					case CH_STRLPVI: initBytes(p, CH_STRLPVI, S_STR);  continue;
 
 					case CH_ARRAYSTART:
 						if (p.mCurrCont != null) {
