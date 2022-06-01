@@ -20,9 +20,9 @@ SocketAdapter.prototype.write = function(b) {
 	// is fully copied. however, this seems to be incorrect. therefore, a copy is allocated.
 	// TODO: consider a buffer pool to reuse buffers (write() will invoke a callback when done?)
 	return this.s.write(BUFFERFROM(b));
-}
+};
 
-SocketAdapter.prototype.flush = function() {}
+SocketAdapter.prototype.flush = function() {};
 
 SocketAdapter.prototype.close = function() {
 	this.closed = true;
@@ -30,7 +30,7 @@ SocketAdapter.prototype.close = function() {
 	if (this.c) {
 		this.c.onClose();
 	}
-}
+};
 
 /**
  * @param {!net.Socket} s

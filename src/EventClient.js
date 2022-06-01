@@ -24,7 +24,7 @@ var ResponseCallback;
  * @extends {Map<K,V>}
  * @ignore
  */
-var IdMap = function() {}
+var IdMap = function() {};
 if (typeof Map == "function") {
 	IdMap = Map;
 } else {
@@ -39,14 +39,14 @@ if (typeof Map == "function") {
 		//   it is not a proper polyfill for ES6 Map
 		/** @type {Object} */
 		this.vals = {};
-	}
+	};
 
 	/**
 	 * @param {*} key
 	 */
 	IdMap.prototype.get = function(key) {
 		return this.vals[key];
-	}
+	};
 
 	/**
 	 * @param {K} key
@@ -54,7 +54,7 @@ if (typeof Map == "function") {
 	 */
 	IdMap.prototype.set = function(key, val) {
 		this.vals[key] = val;
-	}
+	};
 
 	/**
 	 * @param {*} key
@@ -63,17 +63,17 @@ if (typeof Map == "function") {
 		var exists = key in this.vals;
 		delete this.vals[key];
 		return exists;
-	}
+	};
 
 	IdMap.prototype.forEach = function(cb) {
 		for (var p in this.vals) {
 			cb(this.vals[p], p, this);
 		}
-	}
+	};
 
 	IdMap.prototype.clear = function() {
 		this.vals = {};
-	}
+	};
 }
 
 function consoleLog(v) {
@@ -102,7 +102,7 @@ function ClientConfig() {
  */
 ClientConfig.prototype.unknownIdHandler = function(id, result, error) {
 	consoleLog("unknown async id: " + opaStringify(id));
-}
+};
 
 /**
  * Callback to invoke when an uncaught exception occurs.
@@ -112,7 +112,7 @@ ClientConfig.prototype.unknownIdHandler = function(id, result, error) {
 ClientConfig.prototype.uncaughtExceptionHandler = function(exception, context) {
 	exception = exception || "";
 	consoleLog("uncaught exception: " + exception);
-}
+};
 
 /**
  * Callback to invoke when an internal error occurs in the client. Examples could include parse
@@ -123,7 +123,7 @@ ClientConfig.prototype.uncaughtExceptionHandler = function(exception, context) {
 ClientConfig.prototype.clientErrorHandler = function(exception, context) {
 	exception = exception || "";
 	consoleLog("client error: " + exception);
-}
+};
 
 /**
  * Create new EventClient
@@ -193,7 +193,7 @@ function schedTimeout(c) {
  */
 EventClient.prototype.flush = function() {
 	flushInternal(this);
-}
+};
 
 function handleUncaughtException(e) {
 	// TODO: don't log? have another callback?
@@ -254,7 +254,7 @@ EventClient.prototype.call = function(cmd, args, cb) {
 		// no callback function: send false as asyncid so server does not send a response
 		writeRequest(this, false, cmd, args);
 	}
-}
+};
 
 /**
  * @param {!EventClient} c
@@ -280,7 +280,7 @@ EventClient.prototype.registerCB = function(id, cb) {
 		throw new Error("id must be a string");
 	}
 	regCB(this, id, cb);
-}
+};
 
 /**
  * Run specified command on the server with a specified async id. Any responses to the command
@@ -294,7 +294,7 @@ EventClient.prototype.callID = function(id, cmd, args) {
 		throw new Error("id must be a string");
 	}
 	writeRequest(this, id, cmd, args);
-}
+};
 
 /**
  * @param {!EventClient} c
@@ -326,7 +326,7 @@ EventClient.prototype.callA = function(cmd, args, cb) {
 		invokeResponseCallback(c, cb, err, result);
 	});
 	writeRequest(c, id, cmd, args);
-}
+};
 
 /**
  * @param {!EventClient} c
@@ -379,7 +379,7 @@ EventClient.prototype.onRecv = function(b) {
 		invokeCallback(c.mConfig, c.mConfig.clientErrorHandler, [e]);
 		invokeCallback(c.o, c.o.close);
 	}
-}
+};
 
 /**
  * Call this method when connection is closed. All request callbacks that have not received a response
@@ -397,7 +397,7 @@ EventClient.prototype.onClose = function() {
 		invokeResponseCallback(this, val, cbArgs);
 	});
 	tmp.clear();
-}
+};
 
 }());
 

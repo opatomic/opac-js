@@ -53,7 +53,7 @@ Serializer = function(out, sz) {
 	this.i = 0;
 	/** @type {boolean} */
 	this.c = true;
-}
+};
 
 var SURROGATE_OFFSET = 0x010000 - (0xD800 << 10) - 0xDC00;
 var BIMAXVARINT = new BigInteger("9223372036854775807");
@@ -312,7 +312,7 @@ Serializer.prototype.write1 = function(v) {
 		flushBuff(this);
 	}
 	this.b[this.i++] = v;
-}
+};
 
 /**
  * Write a raw byte array
@@ -328,7 +328,7 @@ Serializer.prototype.write = function(b) {
 	}
 	this.b.set(b, this.i);
 	this.i += b.length;
-}
+};
 
 /**
  * Force any buffered bytes to be written
@@ -338,7 +338,7 @@ Serializer.prototype.flush = function() {
 	if (typeof this.o.flush === "function") {
 		this.o.flush();
 	}
-}
+};
 
 /**
  * Serialize a number
@@ -366,7 +366,7 @@ Serializer.prototype.writeNumber = function(v) {
 		}
 		writeBigDec(this, new BigDec(v.toString()));
 	}
-}
+};
 
 /**
  * Serialize a string
@@ -395,7 +395,7 @@ Serializer.prototype.writeString = function(v) {
 		writeTypeAndVarint(this, CH_STRLPVI, b.length);
 		this.write(b);
 	}
-}
+};
 
 /**
  * Serialize an Array
@@ -411,7 +411,7 @@ Serializer.prototype.writeArray = function(v) {
 		}
 		this.write1(CH_ARRAYEND);
 	}
-}
+};
 
 /**
  * Serialize any supported value (undefined/null/boolean/number/string/Uint8Array/BigInteger/BigDec/OpaDef.SORTMAX_OBJ)
@@ -469,7 +469,7 @@ Serializer.prototype.writeObject = function(v) {
 		default:
 			throw new Error("unsupported type " + typeof v);
 	}
-}
+};
 
 /**
  * maps {strings -> utf-8 bytes} to avoid conversion (speed up)

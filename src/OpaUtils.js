@@ -182,7 +182,7 @@ var opaStringify = function(obj, space) {};
 	 */
 	opaStringify = function(obj, space) {
 		return opaStringifyInternal(obj, space, 0);
-	}
+	};
 
 }());
 

@@ -2,7 +2,7 @@
  * @param {number} l
  * @return {!Uint8Array}
  */
-var NEWBUF = function(l) {
+function NEWBUF(l) {
 	return new Uint8Array(l);
 }
 
@@ -12,7 +12,7 @@ var ENCODER = new TextEncoder("utf-8");
  * @param {!string} s
  * @return {!Uint8Array}
  */
-var STRENC = function(s) {
+function STRENC(s) {
 	return ENCODER.encode(s);
 }
 
@@ -22,11 +22,11 @@ var DECODER = new TextDecoder("utf-8");
  * @param {!Uint8Array} b
  * @return {!string}
  */
-var STRDEC = function(b) {
+function STRDEC(b) {
 	return DECODER.decode(b);
 }
 
-var NEXTTICK = function(cb) {
+function NEXTTICK(cb) {
 	return setTimeout(cb, 0);
 }
 

@@ -6,14 +6,14 @@ var BUFFERFROM = (typeof Buffer.allocUnsafe == 'function') ? Buffer.from : funct
 // TODO: ok to use allocUnsafe here?
 var NEWBUF = (typeof Buffer.allocUnsafe == 'function') ? Buffer.allocUnsafe : function(len) {return new Buffer(len);};
 
-var STRENC = function(s) {
+function STRENC(s) {
 	return BUFFERFROM(s, "utf8");
 }
-var STRDEC = function(b) {
+function STRDEC(b) {
 	return b.toString("utf8");
 }
 
-var NEXTTICK = function(cb) {
+function NEXTTICK(cb) {
 	process.nextTick(cb);
 	return null;
 }

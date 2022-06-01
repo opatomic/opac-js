@@ -4,7 +4,7 @@
  */
 function copyByteArray(b) {
 	if (ArrayBuffer.prototype.slice) {
-		return b.buffer.slice(b.byteOffset, b.byteLength + b.byteOffset)
+		return b.buffer.slice(b.byteOffset, b.byteLength + b.byteOffset);
 	}
 	var cpy = new ArrayBuffer(b.byteLength);
 	new Uint8Array(cpy).set(b);
@@ -28,9 +28,9 @@ function WebSocketWriter(s) {
 WebSocketWriter.prototype.write = function(b) {
 	this.s.send(copyByteArray(b));
 	return true;
-}
+};
 
-WebSocketWriter.prototype.flush = function() { }
+WebSocketWriter.prototype.flush = function() { };
 
 WebSocketWriter.prototype.close = function() {
 	this.closed = true;
@@ -38,7 +38,7 @@ WebSocketWriter.prototype.close = function() {
 	if (this.c) {
 		this.c.onClose();
 	}
-}
+};
 
 /**
  * @param {!WebSocket} s

@@ -62,7 +62,7 @@ PartialParser = function() {
 	this.mBytesLen = 0;
 	/** @type {!Uint8Array} */
 	this.mBytes = EMPTYBUF;
-}
+};
 
 /**
  * @param {!PartialParser} p
@@ -349,7 +349,7 @@ function parseNext(p, b) {
  */
 PartialParser.prototype.parseNext = function(b) {
 	return parseNext(this, b);
-}
+};
 
 /**
  * maps {utf-8 bytes -> strings} to avoid conversion (speed up) and improve

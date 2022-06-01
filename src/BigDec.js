@@ -211,7 +211,7 @@ function div(a, b, q, r) {
  */
 BigDec.prototype.abs = function() {
 	return this.m.signum() < 0 ? new BigDec(this.m.abs(), this.e) : this;
-}
+};
 
 /**
  * @param {!BigDec} b
@@ -221,14 +221,14 @@ BigDec.prototype.add = function(b) {
 	var r = nbd();
 	add3(this, b, r);
 	return r;
-}
+};
 
 /**
  * @return {!BigDec}
  */
 BigDec.prototype.clone = function() {
 	return new BigDec(this.m.clone(), this.e);
-}
+};
 
 /**
  * @param {!BigDec} b
@@ -253,7 +253,7 @@ BigDec.prototype.compareTo = function(b) {
 	} else {
 		return this.compareTo(extend(b, b.e - this.e));
 	}
-}
+};
 
 /**
  * @param {!BigDec} r
@@ -261,7 +261,7 @@ BigDec.prototype.compareTo = function(b) {
 BigDec.prototype.copyTo = function(r) {
 	this.m.copyTo(r.m);
 	r.e = this.e;
-}
+};
 
 /*
 BigDec.prototype.divideAndRemainder = function(b) {
@@ -269,19 +269,19 @@ BigDec.prototype.divideAndRemainder = function(b) {
 	var r = nbd();
 	div(this, b, q, r);
 	return [q, r];
-}
+};
 
 BigDec.prototype.equals = function(b) {
 	return this.compareTo(b) == 0;
-}
+};
 
 BigDec.prototype.max = function(b) {
 	return this.compareTo(b) > 0 ? this : b;
-}
+};
 
 BigDec.prototype.min = function(b) {
 	return this.compareTo(b) < 0 ? this : b;
-}
+};
 */
 
 /**
@@ -292,7 +292,7 @@ BigDec.prototype.multiply = function(b) {
 	var r = nbd();
 	mul3(this, b, r);
 	return r;
-}
+};
 
 /**
  * Returns -1 if this value is negative, 1 if positive, else 0 (if this is equal to zero).
@@ -300,7 +300,7 @@ BigDec.prototype.multiply = function(b) {
  */
 BigDec.prototype.signum = function() {
 	return this.m.signum();
-}
+};
 
 /**
  * @param {!BigDec} b
@@ -310,7 +310,7 @@ BigDec.prototype.subtract = function(b) {
 	var r = nbd();
 	sub3(this, b, r);
 	return r;
-}
+};
 
 /**
  * @return {!string}
@@ -354,7 +354,7 @@ BigDec.prototype.toString = function() {
 		}
 	}
 	return s;
-}
+};
 
 }());
 

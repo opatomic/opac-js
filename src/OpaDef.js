@@ -149,7 +149,7 @@ var CH_ARRAYEND     = "]".charCodeAt(0);
 function OpaSortMax() {
 	this.toString = function() {
 		return "SORTMAX";
-	}
+	};
 }
 
 /**
