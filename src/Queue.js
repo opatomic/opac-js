@@ -17,6 +17,23 @@ QChunk.prototype.head;
 QChunk.prototype.used;
 
 /**
+ * @ignore
+ * @param {number} size - size of chunk's array
+ * @param {QChunk} prev - link to previous chunk
+ * @return {!QChunk}
+ */
+function newQChunk(size, prev) {
+	var c = /** @type {!QChunk} */ (new Array(size));
+	c.next = null;
+	c.head = 0;
+	c.used = 0;
+	if (prev) {
+		prev.next = c;
+	}
+	return c;
+}
+
+/**
  * Queue that allocates arrays in small chunks as needed. Chunks are stored as linked list.
  * This design is efficient because it does not require growing arrays and copying data when
  * capacity is exceeded. Also, large contiguous chunks of memory are not required.
@@ -32,23 +49,6 @@ function Queue() {
 	this.head = newQChunk(this.newChunkSize, null);
 	/** @type {!QChunk} */
 	this.tail = this.head;
-}
-
-/**
- * @ignore
- * @param {number} size - size of chunk's array
- * @param {QChunk} prev - link to previous chunk
- * @return {!QChunk}
- */
-function newQChunk(size, prev) {
-	var c = /** @type {!QChunk} */ (new Array(size));
-	c.next = null;
-	c.head = 0;
-	c.used = 0;
-	if (prev) {
-		prev.next = c;
-	}
-	return c;
 }
 
 /**

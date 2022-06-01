@@ -157,6 +157,25 @@ function EventClient(o, cfg) {
 
 (function() {
 
+function handleUncaughtException(e) {
+	// TODO: don't log? have another callback?
+	consoleLog(e);
+}
+
+/**
+ * @param {!Function} cb
+ * @param {Array=} args
+ */
+function invokeCallback(obj, cb, args) {
+	try {
+		if (cb != null) {
+			cb.apply(obj, args);
+		}
+	} catch (e) {
+		handleUncaughtException(e);
+	}
+}
+
 /**
  * @param {!EventClient} c
  */
@@ -194,25 +213,6 @@ function schedTimeout(c) {
 EventClient.prototype.flush = function() {
 	flushInternal(this);
 };
-
-function handleUncaughtException(e) {
-	// TODO: don't log? have another callback?
-	consoleLog(e);
-}
-
-/**
- * @param {!Function} cb
- * @param {Array=} args
- */
-function invokeCallback(obj, cb, args) {
-	try {
-		if (cb != null) {
-			cb.apply(obj, args);
-		}
-	} catch (e) {
-		handleUncaughtException(e);
-	}
-}
 
 /**
  * @param {!EventClient} c

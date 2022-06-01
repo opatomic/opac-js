@@ -65,6 +65,18 @@ var BIGINT31 = new BigInteger("7FFFFFFF", 16);
 var TMPBI2 = new BigInteger(null);
 
 /**
+ * @param {!Serializer} s
+ * @return {boolean} false indicates caller should stop writing data; otherwise true
+ */
+function flushBuff(s) {
+	if (s.i > 0) {
+		s.c = s.o.write(s.i == s.b.length ? s.b : s.b.subarray(0, s.i));
+		s.i = 0;
+	}
+	return s.c;
+}
+
+/**
  * @param {!string} s
  * @param {number} offset
  * @param {number} len
@@ -148,16 +160,6 @@ function writeUtf8(ser, str) {
 		}
 	}
 	ser.i = bpos;
-}
-
-/**
- * @param {!Serializer} s
- */
-function flushBuff(s) {
-	if (s.i > 0) {
-		s.c = s.o.write(s.i == s.b.length ? s.b : s.b.subarray(0, s.i));
-		s.i = 0;
-	}
 }
 
 /**
