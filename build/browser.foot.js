@@ -61,7 +61,7 @@ function newClient(s, cfg) {
 	return c;
 }
 
-var E = window["Opatomic"] = {};
+var E = {};
 
 E["BigDec"] = BigDec;
 E["BigInteger"] = BigInteger;
@@ -76,4 +76,6 @@ E["Queue"] = Queue;
 E["Serializer"] = Serializer;
 E["stringify"] = opaStringify;
 E["version"] = VERSION;
+
+window["Opatomic"] = E;
 
