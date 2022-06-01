@@ -73,8 +73,9 @@ function opaType(o) {
  * @param {(number|string)=} space
  * @return {!string}
  */
-function opaStringify(obj, space) {
+var opaStringify = function(obj, space) {};
 
+(function() {
 	/**
 	 * @param {number|string|undefined} space
 	 * @param {number} depth
@@ -173,8 +174,16 @@ function opaStringify(obj, space) {
 		throw new Error("unhandled case in switch");
 	}
 
-	return opaStringifyInternal(obj, space, 0);
-}
+	/**
+	 * @param {*} obj
+	 * @param {(number|string)=} space
+	 * @return {!string}
+	 */
+	opaStringify = function(obj, space) {
+		return opaStringifyInternal(obj, space, 0);
+	}
+
+}());
 
 /**
  * Cache the utf-8 bytes for a string in memory. Improves performance slightly by
