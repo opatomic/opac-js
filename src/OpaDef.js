@@ -160,7 +160,7 @@ function OpaSortMax() {
  * @constructor
  * @hideconstructor
  */
-var OpaDef = {};
+var OpaDef = function() { };
 
 (function() {
 
