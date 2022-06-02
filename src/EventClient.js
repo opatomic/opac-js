@@ -90,6 +90,7 @@ if (typeof Map == "function") {
 
 /**
  * @param {*} v
+ * @ignore
  */
 function consoleLog(v) {
 	if (console && console.log) {
