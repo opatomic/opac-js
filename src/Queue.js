@@ -5,7 +5,7 @@
 
 /**
  * @constructor
- * @extends Array
+ * @extends {Array}
  * @ignore
  */
 function QChunk() {}
