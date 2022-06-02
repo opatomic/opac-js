@@ -263,7 +263,6 @@ BigDec.prototype.copyTo = function(r) {
 	r.e = this.e;
 };
 
-/*
 /**
  * @param {!BigDec} b
  * @return {!Array<!BigDec>}
@@ -275,6 +274,7 @@ BigDec.prototype.divideAndRemainder = function(b) {
 	return [q, r];
 };
 
+/*
 BigDec.prototype.equals = function(b) {
 	return this.compareTo(b) == 0;
 };
