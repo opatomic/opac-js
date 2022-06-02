@@ -9,18 +9,17 @@ function require(path) {}
 /**
  * @extends {Uint8Array}
  * @constructor
- * @param {number} size The desired length of the new Buffer
- * @param {!(string|number|Uint8Array|Buffer)=} fill A value to pre-fill the new Buffer with. Default: 0
- * @param {string=} encoding If fill is a string, this is its encoding. Default: 'utf8'.
+ * @param {number|string|!Uint8Array} p1
+ * @param {string=} encoding - If p1 is a string, this is its encoding. Default: 'utf8'.
  */
-function Buffer(size, fill, encoding) {}
+function Buffer(p1, encoding) {}
 
 /**
- * @param {string} str
- * @param {string=} encoding
+ * @param {string|!Uint8Array} fill
+ * @param {string=} encoding - If fill is a string, this is its encoding. Default: 'utf8'.
  * @return {!Buffer}
  */
-Buffer.from = function(str, encoding) {}
+Buffer.from = function(fill, encoding) {}
 
 /**
  * @param {number} size The desired length of the new Buffer
@@ -28,15 +27,28 @@ Buffer.from = function(str, encoding) {}
  */
 Buffer.allocUnsafe = function(size) {}
 
-var process;
+/**
+ * @param {string=} encoding
+ * @return {string}
+ * @override
+ */
+Buffer.prototype.toString = function(encoding) {};
+
+/**
+ * @const
+ */
+var process = {};
 
 /**
  * @param {!Function} cb
  * @param {...?} args
  * @return {void}
  */
-process.prototype.nextTick = function(cb, args) {}
+process.nextTick = function(cb, args) {}
 
+/**
+ * @const
+ */
 var net = {};
 
 /**
