@@ -37,7 +37,7 @@ if (typeof Map == "function") {
 	IdMap = function() {
 		// note: this Map implementation is designed to work with keys that are strings or integers
 		//   it is not a proper polyfill for ES6 Map
-		/** @type {Object} */
+		/** @type {!Object} */
 		this.vals = {};
 	};
 
@@ -139,13 +139,13 @@ function EventClient(o, cfg) {
 	this.s = new Serializer(o, cfg.sendBuffLen);
 	/** @type {number} */
 	this.id = 0;
-	/** @type {Queue<ResponseCallback>} */
+	/** @type {!Queue<!ResponseCallback>} */
 	this.mMainCallbacks = new Queue();
 	/** @type {!Map<*,!ResponseCallback>} */
 	this.mAsyncCallbacks = new IdMap();
 	/** @type {!PartialParser} */
 	this.mParser = new PartialParser();
-	/** @type {PartialParser.Buff} */
+	/** @type {!PartialParser.Buff} */
 	this.mBuff = new PartialParser.Buff();
 	/** @type {number|null} */
 	this.mTimeout = null;
