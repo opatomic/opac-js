@@ -10,6 +10,8 @@ BigInteger.prototype.DM;
 BigInteger.prototype.DV;
 /** @type {number} */
 BigInteger.prototype.s;
+/** @type {number} */
+BigInteger.prototype.t;
 
 /**
  * @param {!BigInteger} a
