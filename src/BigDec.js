@@ -164,8 +164,8 @@ function mul3(a, b, r) {
  * q or r may be null
  * @param {!BigDec} a
  * @param {!BigDec} b
- * @param {BigDec} q
- * @param {BigDec} r
+ * @param {?BigDec} q
+ * @param {?BigDec} r
  */
 function div(a, b, q, r) {
 	var tmp;

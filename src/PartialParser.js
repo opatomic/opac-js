@@ -344,7 +344,7 @@ function parseNext(p, b) {
 
 /**
  * @param {!PartialParser.Buff} b
- * @return {Array}
+ * @return {?Array}
  * @memberof PartialParser
  */
 PartialParser.prototype.parseNext = function(b) {
@@ -354,7 +354,7 @@ PartialParser.prototype.parseNext = function(b) {
 /**
  * maps {utf-8 bytes -> strings} to avoid conversion (speed up) and improve
  * memory usage (prevent duplicate copies of same string)
- * @type {Map<!Uint8Array, string>}
+ * @type {?Map<!Uint8Array, string>}
  * @const
  * @memberof PartialParser
  */
@@ -367,7 +367,7 @@ PartialParser.BUF2STR = (typeof Map == "function") ? new Map() : null;
  * @memberof PartialParser
  */
 PartialParser.Buff = function() {
-	/** @type {Uint8Array} */
+	/** @type {?Uint8Array} */
 	this.data = null;
 	/** @type {number} */
 	this.idx = 0;

@@ -6,7 +6,7 @@
 function SocketAdapter(s) {
 	/** @type {!net.Socket} */
 	this.s = s;
-	/** @type {EventClient} */
+	/** @type {?EventClient} */
 	this.c = null;
 	/** @type {boolean} */
 	this.closed = false;

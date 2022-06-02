@@ -9,7 +9,7 @@
  * @ignore
  */
 function QChunk() {}
-/** @type {QChunk} */
+/** @type {?QChunk} */
 QChunk.prototype.next;
 /** @type {number} */
 QChunk.prototype.head;
@@ -19,7 +19,7 @@ QChunk.prototype.used;
 /**
  * @ignore
  * @param {number} size - size of chunk's array
- * @param {QChunk} prev - link to previous chunk
+ * @param {?QChunk} prev - link to previous chunk
  * @return {!QChunk}
  */
 function newQChunk(size, prev) {

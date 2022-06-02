@@ -42,7 +42,7 @@ var isSafeInteger = Number.isSafeInteger || function(v) {
 function opaType(o) {
 	var t = typeof o;
 	if (t == "object") {
-		o = /** @type {Object} */ (o);
+		o = /** @type {?Object} */ (o);
 		if (o === null) {
 			return "null";
 		} else if (Array.isArray(o)) {

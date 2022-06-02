@@ -443,7 +443,7 @@ Serializer.prototype.writeObject = function(v) {
 			this.write1(CH_UNDEFINED);
 			break;
 		case "object":
-			v = /** @type {Object} */ (v);
+			v = /** @type {?Object} */ (v);
 			if (v === null) {
 				this.write1(CH_NULL);
 			} else if (v.hasOwnProperty("toOpaSO") && typeof v.toOpaSO == "function") {
@@ -475,7 +475,7 @@ Serializer.prototype.writeObject = function(v) {
 
 /**
  * maps {strings -> utf-8 bytes} to avoid conversion (speed up)
- * @type {Map<string, !Uint8Array>}
+ * @type {?Map<string, !Uint8Array>}
  * @const
  * @memberof Serializer
  */
