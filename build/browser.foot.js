@@ -19,7 +19,7 @@ function copyByteArray(b) {
 function WebSocketWriter(s) {
 	/** @type {!WebSocket} */
 	this.s = s;
-	/** @type {EventClient} */
+	/** @type {?EventClient} */
 	this.c = null;
 	/** @type {boolean} */
 	this.closed = false;
@@ -42,7 +42,7 @@ WebSocketWriter.prototype.close = function() {
 
 /**
  * @param {!WebSocket} s
- * @param {ClientConfig=} cfg - Client options. See ClientConfig for details.
+ * @param {?ClientConfig=} cfg - Client options. See ClientConfig for details.
  * @return {!EventClient}
  */
 function newClient(s, cfg) {

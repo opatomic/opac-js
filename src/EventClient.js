@@ -144,7 +144,7 @@ ClientConfig.prototype.clientErrorHandler = function(exception, context) {
  * Create new EventClient
  * @constructor
  * @param {!IWriter} o - Object that has a write(), flush(), and close() method.
- * @param {ClientConfig=} cfg - Client options. See ClientConfig for details.
+ * @param {?ClientConfig=} cfg - Client options. See ClientConfig for details.
  */
 function EventClient(o, cfg) {
 	cfg = cfg || new ClientConfig();
@@ -183,7 +183,7 @@ function handleUncaughtException(e) {
 /**
  * @param {!Object} obj
  * @param {!Function} cb
- * @param {Array=} args
+ * @param {?Array=} args
  */
 function invokeCallback(obj, cb, args) {
 	try {

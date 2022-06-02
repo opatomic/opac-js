@@ -9,7 +9,7 @@ function NEWBUF(l) {
 var ENCODER = new TextEncoder("utf-8");
 
 /**
- * @param {!string} s
+ * @param {string} s
  * @return {!Uint8Array}
  */
 function STRENC(s) {
@@ -20,7 +20,7 @@ var DECODER = new TextDecoder("utf-8");
 
 /**
  * @param {!Uint8Array} b
- * @return {!string}
+ * @return {string}
  */
 function STRDEC(b) {
 	return DECODER.decode(b);

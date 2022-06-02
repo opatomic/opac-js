@@ -34,7 +34,7 @@ SocketAdapter.prototype.close = function() {
 
 /**
  * @param {!net.Socket} s
- * @param {ClientConfig=} cfg - Client options. See ClientConfig for details.
+ * @param {?ClientConfig=} cfg - Client options. See ClientConfig for details.
  * @return {!EventClient}
  */
 function newClient(s, cfg) {
