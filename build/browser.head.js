@@ -1,4 +1,9 @@
 /**
+ * @typedef {?Uint8Array}
+ */
+var OpaBuff;
+
+/**
  * @param {number} l
  * @return {!Uint8Array}
  */

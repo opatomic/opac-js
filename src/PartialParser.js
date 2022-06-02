@@ -29,7 +29,7 @@ var S_ERR     = 13;
 // note: this temp variable is only used to read varints so it will never store more than a 64 bit integer (low memory)
 var TMPBI1 = new BigInteger(null);
 
-/** @const {!Uint8Array} */
+/** @const {!OpaBuff} */
 var EMPTYBUF = NEWBUF(0);
 
 /**
@@ -60,7 +60,7 @@ PartialParser = function() {
 	this.mBytesIdx = 0;
 	/** @type {number} */
 	this.mBytesLen = 0;
-	/** @type {!Uint8Array} */
+	/** @type {!OpaBuff} */
 	this.mBytes = EMPTYBUF;
 };
 
@@ -178,7 +178,7 @@ function varintNextByte(p, bval) {
 
 /**
  * @param {!PartialParser} p
- * @param {!Uint8Array} b
+ * @param {!OpaBuff} b
  * @return {string}
  */
 function getstr(p, b) {
