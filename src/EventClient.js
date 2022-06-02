@@ -237,7 +237,7 @@ EventClient.prototype.flush = function() {
  * @param {!EventClient} c
  * @param {*} asyncid
  * @param {string} cmd
- * @param {Array=} args
+ * @param {?Array=} args
  */
 function writeRequest(c, asyncid, cmd, args) {
 	try {
@@ -262,8 +262,8 @@ function writeRequest(c, asyncid, cmd, args) {
 /**
  * Sends the specified command and args to the server. Invokes the specified callback when a response is received.
  * @param {string} cmd - The command to run
- * @param {Array=} args - The parameters for the command
- * @param {ResponseCallback=} cb - A callback function to invoke when the response is received
+ * @param {?Array=} args - The parameters for the command
+ * @param {?ResponseCallback=} cb - A callback function to invoke when the response is received
  */
 EventClient.prototype.call = function(cmd, args, cb) {
 	if (cb) {
