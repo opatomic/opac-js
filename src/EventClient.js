@@ -386,15 +386,16 @@ EventClient.prototype.onRecv = function(b) {
  * will be notified of failure. Every persistent async callback will also be notified of failure.
  */
 EventClient.prototype.onClose = function() {
-	var tmp = this.mMainCallbacks;
+	var c = this;
+	var tmp = c.mMainCallbacks;
 	var cbArgs = [OpaDef.ERR_CLOSED];
 	while (tmp.size() > 0) {
-		invokeResponseCallback(this, tmp.shift(), cbArgs);
+		invokeResponseCallback(c, tmp.shift(), cbArgs);
 	}
 
-	tmp = this.mAsyncCallbacks;
+	tmp = c.mAsyncCallbacks;
 	tmp.forEach(function(val, key, map) {
-		invokeResponseCallback(this, val, cbArgs);
+		invokeResponseCallback(c, val, cbArgs);
 	});
 	tmp.clear();
 };
