@@ -12,6 +12,11 @@ function SocketAdapter(s) {
 	this.closed = false;
 }
 
+/**
+ * @param {!Uint8Array} b
+ * @return {boolean} false indicates caller should stop writing data; otherwise true
+ * @override
+ */
 SocketAdapter.prototype.write = function(b) {
 	if (this.closed) {
 		return false;
@@ -22,8 +27,14 @@ SocketAdapter.prototype.write = function(b) {
 	return this.s.write(BUFFERFROM(b));
 };
 
+/**
+ * @override
+ */
 SocketAdapter.prototype.flush = function() {};
 
+/**
+ * @override
+ */
 SocketAdapter.prototype.close = function() {
 	this.closed = true;
 	this.s.destroy();

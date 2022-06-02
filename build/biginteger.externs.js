@@ -209,6 +209,7 @@ BigInteger.prototype.toByteArray = function() {};
 /**
  * @param {number=} radix
  * @return {string}
+ * @override
  */
 BigInteger.prototype.toString = function(radix) {};
 

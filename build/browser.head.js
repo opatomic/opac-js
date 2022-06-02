@@ -26,6 +26,10 @@ function STRDEC(b) {
 	return DECODER.decode(b);
 }
 
+/**
+ * @param {!Function} cb
+ * @return {number}
+ */
 function NEXTTICK(cb) {
 	return setTimeout(cb, 0);
 }

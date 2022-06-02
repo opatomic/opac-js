@@ -264,6 +264,10 @@ BigDec.prototype.copyTo = function(r) {
 };
 
 /*
+/**
+ * @param {!BigDec} b
+ * @return {!Array<!BigDec>}
+ */
 BigDec.prototype.divideAndRemainder = function(b) {
 	var q = nbd();
 	var r = nbd();
@@ -314,6 +318,7 @@ BigDec.prototype.subtract = function(b) {
 
 /**
  * @return {string}
+ * @override
  */
 BigDec.prototype.toString = function() {
 	// this function should return a result similar to Java's BigDecimal.toString()

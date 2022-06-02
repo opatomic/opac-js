@@ -25,13 +25,24 @@ function WebSocketWriter(s) {
 	this.closed = false;
 }
 
+/**
+ * @param {!Uint8Array} b
+ * @return {boolean} false indicates caller should stop writing data; otherwise true
+ * @override
+ */
 WebSocketWriter.prototype.write = function(b) {
 	this.s.send(copyByteArray(b));
 	return true;
 };
 
+/**
+ * @override
+ */
 WebSocketWriter.prototype.flush = function() { };
 
+/**
+ * @override
+ */
 WebSocketWriter.prototype.close = function() {
 	this.closed = true;
 	this.s.close();

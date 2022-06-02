@@ -6,13 +6,26 @@ var BUFFERFROM = (typeof Buffer.allocUnsafe == 'function') ? Buffer.from : funct
 // TODO: ok to use allocUnsafe here?
 var NEWBUF = (typeof Buffer.allocUnsafe == 'function') ? Buffer.allocUnsafe : function(len) {return new Buffer(len);};
 
+/**
+ * @param {string} s
+ * @return {!Uint8Array}
+ */
 function STRENC(s) {
 	return BUFFERFROM(s, "utf8");
 }
+
+/**
+ * @param {!Uint8Array} b
+ * @return {string}
+ */
 function STRDEC(b) {
 	return b.toString("utf8");
 }
 
+/**
+ * @param {!Function} cb
+ * @return {null}
+ */
 function NEXTTICK(cb) {
 	process.nextTick(cb);
 	return null;

@@ -147,6 +147,10 @@ var CH_ARRAYEND     = "]".charCodeAt(0);
  * @ignore
  */
 function OpaSortMax() {
+	/**
+	 * @return {string}
+	 * @override
+	 */
 	this.toString = function() {
 		return "SORTMAX";
 	};
