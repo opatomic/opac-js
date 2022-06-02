@@ -57,6 +57,7 @@ WebSocketWriter.prototype.close = function() {
  * @return {!EventClient}
  */
 function newClient(s, cfg) {
+	s.binaryType = "arraybuffer";
 	var wrapper = new WebSocketWriter(s);
 	var c = new EventClient(wrapper, cfg);
 	wrapper.c = c;
