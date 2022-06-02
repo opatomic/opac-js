@@ -88,6 +88,9 @@ if (typeof Map == "function") {
 	};
 }
 
+/**
+ * @param {*} v
+ */
 function consoleLog(v) {
 	if (console && console.log) {
 		console.log(v);
@@ -169,12 +172,16 @@ function EventClient(o, cfg) {
 
 (function() {
 
+/**
+ * @param {*} e - The error that was caught
+ */
 function handleUncaughtException(e) {
 	// TODO: don't log? have another callback?
 	consoleLog(e);
 }
 
 /**
+ * @param {!Object} obj
  * @param {!Function} cb
  * @param {Array=} args
  */
