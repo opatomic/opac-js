@@ -38,7 +38,7 @@ var EMPTYBUF = NEWBUF(0);
 PartialParser = function() {
 	/** @type {!Array<*>} */
 	this.mContainers = [];
-	/** @type {Array} */
+	/** @type {?Array} */
 	this.mCurrCont = null;
 	/** @type {number} */
 	this.mState = S_NEXTOBJ;
@@ -189,7 +189,7 @@ function getstr(p, b) {
 /**
  * @param {!PartialParser} p
  * @param {!PartialParser.Buff} b
- * @return {Array}
+ * @return {?Array}
  */
 function parseNext(p, b) {
 	var buff = b.data;
