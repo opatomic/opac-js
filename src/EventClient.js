@@ -43,6 +43,8 @@ if (typeof Map == "function") {
 
 	/**
 	 * @param {*} key
+	 * @return {V}
+	 * @override
 	 */
 	IdMap.prototype.get = function(key) {
 		return this.vals[key];
@@ -51,6 +53,7 @@ if (typeof Map == "function") {
 	/**
 	 * @param {K} key
 	 * @param {V} val
+	 * @override
 	 */
 	IdMap.prototype.set = function(key, val) {
 		this.vals[key] = val;
@@ -58,6 +61,8 @@ if (typeof Map == "function") {
 
 	/**
 	 * @param {*} key
+	 * @return {boolean}
+	 * @override
 	 */
 	IdMap.prototype.delete = function(key) {
 		var exists = key in this.vals;
@@ -65,12 +70,19 @@ if (typeof Map == "function") {
 		return exists;
 	};
 
+	/**
+	 * @param {function(V, K, !IdMap)} cb
+	 * @override
+	 */
 	IdMap.prototype.forEach = function(cb) {
 		for (var p in this.vals) {
 			cb(this.vals[p], p, this);
 		}
 	};
 
+	/**
+	 * @override
+	 */
 	IdMap.prototype.clear = function() {
 		this.vals = {};
 	};
