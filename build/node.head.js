@@ -3,13 +3,39 @@
  */
 var OpaBuff;
 
+/**
+ * @param {string|!Uint8Array} str
+ * @param {string=} encoding
+ * @return {!Buffer}
+ */
+function nodeBufferFrom(str, encoding) {
+	// eslint-disable-next-line n/no-deprecated-api
+	return new Buffer(str, encoding);
+}
+
 // note: check for Buffer.allocUnsafe because Buffer.from is defined in earlier versions of node but not fully implemented
-var BUFFERFROM = (typeof Buffer.allocUnsafe == 'function') ? Buffer.from : function(a, b, c) {
-	return new Buffer(a, b, c);
+/**
+ * @param {string|!Uint8Array} str
+ * @param {string=} encoding
+ * @return {!Buffer}
+ */
+var BUFFERFROM = (typeof Buffer.allocUnsafe == "function") ? Buffer.from : nodeBufferFrom;
+
+/**
+ * @param {number} len
+ * @return {!Buffer}
+ */
+function nodeNewBuffer(len) {
+	// eslint-disable-next-line n/no-deprecated-api
+	return new Buffer(len);
 }
 
 // TODO: ok to use allocUnsafe here?
-var NEWBUF = (typeof Buffer.allocUnsafe == 'function') ? Buffer.allocUnsafe : function(len) {return new Buffer(len);};
+/**
+ * @param {number} len
+ * @return {!Buffer}
+ */
+var NEWBUF = (typeof Buffer.allocUnsafe == "function") ? Buffer.allocUnsafe : nodeNewBuffer;
 
 /**
  * @param {string} s
