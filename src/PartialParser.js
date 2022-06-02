@@ -66,7 +66,7 @@ PartialParser = function() {
 
 /**
  * @param {!PartialParser} p
- * @param {!string} msg
+ * @param {string} msg
  */
 function throwErr(p, msg) {
 	p.mState = S_ERR;
@@ -179,7 +179,7 @@ function varintNextByte(p, bval) {
 /**
  * @param {!PartialParser} p
  * @param {!Uint8Array} b
- * @return {!string}
+ * @return {string}
  */
 function getstr(p, b) {
 	var str = PartialParser.BUF2STR ? PartialParser.BUF2STR.get(b) : null;
@@ -354,7 +354,7 @@ PartialParser.prototype.parseNext = function(b) {
 /**
  * maps {utf-8 bytes -> strings} to avoid conversion (speed up) and improve
  * memory usage (prevent duplicate copies of same string)
- * @type {Map<!Uint8Array, !string>}
+ * @type {Map<!Uint8Array, string>}
  * @const
  * @memberof PartialParser
  */

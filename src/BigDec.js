@@ -24,7 +24,7 @@ function BigDec(man, exp) {
 	/**
 	 * @ignore
 	 * @param {!BigDec} v
-	 * @param {!string} s
+	 * @param {string} s
 	 */
 	function bdFromString(v, s) {
 		var decPos = s.indexOf(".");
@@ -313,7 +313,7 @@ BigDec.prototype.subtract = function(b) {
 };
 
 /**
- * @return {!string}
+ * @return {string}
  */
 BigDec.prototype.toString = function() {
 	// this function should return a result similar to Java's BigDecimal.toString()

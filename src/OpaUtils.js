@@ -37,7 +37,7 @@ var isSafeInteger = Number.isSafeInteger || function(v) {
 
 /**
  * @param {*} o
- * @return {!string}
+ * @return {string}
  */
 function opaType(o) {
 	var t = typeof o;
@@ -71,7 +71,7 @@ function opaType(o) {
  * @alias stringify
  * @param {*} obj
  * @param {(number|string)=} space
- * @return {!string}
+ * @return {string}
  */
 var opaStringify = function(obj, space) {};
 
@@ -79,7 +79,7 @@ var opaStringify = function(obj, space) {};
 	/**
 	 * @param {number|string|undefined} space
 	 * @param {number} depth
-	 * @return {!string}
+	 * @return {string}
 	 */
 	function getindent(space, depth) {
 		var indent = "";
@@ -98,7 +98,7 @@ var opaStringify = function(obj, space) {};
 
 	/**
 	 * @param {!Uint8Array} b
-	 * @return {!string}
+	 * @return {string}
 	 */
 	function stringifyBlob(b) {
 		var res = "'";
@@ -132,7 +132,7 @@ var opaStringify = function(obj, space) {};
 	 * @param {*} obj
 	 * @param {number|string|undefined} space
 	 * @param {number} depth
-	 * @return {!string}
+	 * @return {string}
 	 */
 	function opaStringifyInternal(obj, space, depth) {
 		var t = opaType(obj);
@@ -151,7 +151,7 @@ var opaStringify = function(obj, space) {};
 			case "Buffer":
 				return stringifyBlob(/** @type {!Uint8Array} */ (obj));
 			case "string":
-				return JSON.stringify(/** @type {!string} */ (obj));
+				return JSON.stringify(/** @type {string} */ (obj));
 			case "Array":
 				obj = /** @type {!Array} */ (obj);
 				if (obj.length == 0) {
@@ -178,7 +178,7 @@ var opaStringify = function(obj, space) {};
 	/**
 	 * @param {*} obj
 	 * @param {(number|string)=} space
-	 * @return {!string}
+	 * @return {string}
 	 */
 	opaStringify = function(obj, space) {
 		return opaStringifyInternal(obj, space, 0);

@@ -77,7 +77,7 @@ function flushBuff(s) {
 }
 
 /**
- * @param {!string} s
+ * @param {string} s
  * @param {number} offset
  * @param {number} len
  * @return {number}
@@ -114,7 +114,7 @@ function getUtf8Len(s, offset, len) {
 
 /**
  * @param {!Serializer} ser
- * @param {!string} str
+ * @param {string} str
  */
 function writeUtf8(ser, str) {
 	var end = str.length;
@@ -307,7 +307,7 @@ function writeBigDec(s, v) {
 
 /**
  * Write a single byte
- * @param {!number} v
+ * @param {number} v
  */
 Serializer.prototype.write1 = function(v) {
 	if (this.i >= this.b.length) {
@@ -344,7 +344,7 @@ Serializer.prototype.flush = function() {
 
 /**
  * Serialize a number
- * @param {!number} v
+ * @param {number} v
  */
 Serializer.prototype.writeNumber = function(v) {
 	if (isSafeInteger(v)) {
@@ -372,7 +372,7 @@ Serializer.prototype.writeNumber = function(v) {
 
 /**
  * Serialize a string
- * @param {!string} v
+ * @param {string} v
  */
 Serializer.prototype.writeString = function(v) {
 	if (v.length == 0) {
@@ -475,7 +475,7 @@ Serializer.prototype.writeObject = function(v) {
 
 /**
  * maps {strings -> utf-8 bytes} to avoid conversion (speed up)
- * @type {Map<!string, !Uint8Array>}
+ * @type {Map<string, !Uint8Array>}
  * @const
  * @memberof Serializer
  */
