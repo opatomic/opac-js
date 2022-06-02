@@ -308,6 +308,7 @@ function writeBigDec(s, v) {
 /**
  * Write a single byte
  * @param {number} v
+ * @memberof Serializer
  */
 Serializer.prototype.write1 = function(v) {
 	if (this.i >= this.b.length) {
@@ -319,6 +320,7 @@ Serializer.prototype.write1 = function(v) {
 /**
  * Write a raw byte array
  * @param {!Uint8Array} b
+ * @memberof Serializer
  */
 Serializer.prototype.write = function(b) {
 	if (b.length > this.b.length - this.i) {
@@ -334,6 +336,7 @@ Serializer.prototype.write = function(b) {
 
 /**
  * Force any buffered bytes to be written
+ * @memberof Serializer
  */
 Serializer.prototype.flush = function() {
 	flushBuff(this);
@@ -345,6 +348,7 @@ Serializer.prototype.flush = function() {
 /**
  * Serialize a number
  * @param {number} v
+ * @memberof Serializer
  */
 Serializer.prototype.writeNumber = function(v) {
 	if (isSafeInteger(v)) {
@@ -373,6 +377,7 @@ Serializer.prototype.writeNumber = function(v) {
 /**
  * Serialize a string
  * @param {string} v
+ * @memberof Serializer
  */
 Serializer.prototype.writeString = function(v) {
 	if (v.length == 0) {
@@ -402,6 +407,7 @@ Serializer.prototype.writeString = function(v) {
 /**
  * Serialize an Array
  * @param {!Array} v
+ * @memberof Serializer
  */
 Serializer.prototype.writeArray = function(v) {
 	if (v.length == 0) {
@@ -416,9 +422,10 @@ Serializer.prototype.writeArray = function(v) {
 };
 
 /**
- * Serialize any supported value (undefined/null/boolean/number/string/Uint8Array/BigInteger/BigDec/OpaDef.SORTMAX_OBJ)
+ * Serialize any supported value (undefined/null/boolean/number/bigint/string/Uint8Array/BigInteger/BigDec/OpaDef.SORTMAX_OBJ)
  * or an Object with toOpaSO() property, or an Array containing any of the previously listed types.
  * @param {*} v
+ * @memberof Serializer
  */
 Serializer.prototype.writeObject = function(v) {
 	// TODO: handle iterable objects?
