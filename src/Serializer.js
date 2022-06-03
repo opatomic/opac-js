@@ -453,7 +453,7 @@ Serializer.prototype.writeObject = function(v) {
 			v = /** @type {?Object} */ (v);
 			if (v === null) {
 				this.write1(CH_NULL);
-			} else if (v.hasOwnProperty("toOpaSO") && typeof v.toOpaSO == "function") {
+			} else if (Object.prototype.hasOwnProperty.call(v, "toOpaSO") && typeof v.toOpaSO == "function") {
 				v.toOpaSO(this);
 			} else if (Array.isArray(v)) {
 				this.writeArray(v);
