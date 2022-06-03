@@ -99,6 +99,33 @@ function consoleLog(v) {
 }
 
 /**
+ * @param {!Object} obj
+ * @param {!Function} cb
+ * @param {?Array=} args
+ * @ignore
+ */
+function invokeCallback(obj, cb, args) {
+	try {
+		if (cb != null) {
+			cb.apply(obj, args);
+		}
+	} catch (e) {
+		// TODO: don't log? have another callback?
+		consoleLog(e);
+	}
+}
+
+/**
+ * @param {!EventClient} c
+ * @param {*} err
+ * @ignore
+ */
+function clientError(c, err) {
+	invokeCallback(c.mConfig, c.mConfig.clientErrorHandler, [err]);
+	invokeCallback(c.o, c.o.close);
+}
+
+/**
  * Configurable client options
  * @constructor
  */
@@ -174,29 +201,6 @@ function EventClient(o, cfg) {
 (function() {
 
 /**
- * @param {*} e - The error that was caught
- */
-function handleUncaughtException(e) {
-	// TODO: don't log? have another callback?
-	consoleLog(e);
-}
-
-/**
- * @param {!Object} obj
- * @param {!Function} cb
- * @param {?Array=} args
- */
-function invokeCallback(obj, cb, args) {
-	try {
-		if (cb != null) {
-			cb.apply(obj, args);
-		}
-	} catch (e) {
-		handleUncaughtException(e);
-	}
-}
-
-/**
  * @param {!EventClient} c
  */
 function flushInternal(c) {
@@ -208,8 +212,7 @@ function flushInternal(c) {
 		}
 		c.s.flush();
 	} catch (e) {
-		invokeCallback(c.mConfig, c.mConfig.clientErrorHandler, [e]);
-		invokeCallback(c.o, c.o.close);
+		clientError(c, e);
 	}
 }
 
@@ -255,8 +258,7 @@ function writeRequest(c, asyncid, cmd, args) {
 		c.s.write1(CH_ARRAYEND);
 		schedTimeout(c);
 	} catch (e) {
-		invokeCallback(c.mConfig, c.mConfig.clientErrorHandler, [e]);
-		invokeCallback(c.o, c.o.close);
+		clientError(c, e);
 	}
 }
 
@@ -396,8 +398,7 @@ EventClient.prototype.onRecv = function(b) {
 			onResponse(c, obj);
 		}
 	} catch (e) {
-		invokeCallback(c.mConfig, c.mConfig.clientErrorHandler, [e]);
-		invokeCallback(c.o, c.o.close);
+		clientError(c, e);
 	}
 };
 
