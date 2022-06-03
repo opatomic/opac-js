@@ -177,11 +177,10 @@ function varintNextByte(p, bval) {
 }
 
 /**
- * @param {!PartialParser} p
  * @param {!OpaBuff} b
  * @return {string}
  */
-function getstr(p, b) {
+function getstr(b) {
 	var str = PartialParser.BUF2STR ? PartialParser.BUF2STR.get(b) : null;
 	return str ? str : STRDEC(b);
 }
@@ -333,7 +332,7 @@ function parseNext(p, b) {
 				p.mState = S_NEXTOBJ;
 				continue;
 			case S_STR:
-				hitNextAndReset(p, getstr(p, p.mBytes.subarray(0, p.mBytesLen)));
+				hitNextAndReset(p, getstr(p.mBytes.subarray(0, p.mBytesLen)));
 				continue;
 
 			default:
