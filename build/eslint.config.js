@@ -51,7 +51,7 @@ module.exports = {
 		"no-trailing-spaces": "error",
 		"no-unmodified-loop-condition": "error",
 		"no-unused-private-class-members": "error",
-		"no-use-before-define": "error",
+		"no-use-before-define": ["error", { "functions": true, "classes": true, "variables": true }],
 		"no-whitespace-before-property": "error",
 		"one-var": ["error", "never"],
 		"quote-props": "error",
@@ -64,7 +64,7 @@ module.exports = {
 		"no-multiple-empty-lines": ["warn", { "max": 2 }],
 		"no-self-assign": "warn",
 		"no-unneeded-ternary": ["warn", { "defaultAssignment": true }],
-		"no-unused-vars": "warn",
+		"no-unused-vars": ["warn", { "vars": "all", "args": "all" }],
 		"quotes": ["warn", "double"],
 
 	}
