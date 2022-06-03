@@ -73,6 +73,13 @@ mv "$OTMPDIR/tmp.js" "$OTMPDIR/opac.node.noreqs.js"
 if [ -f "$CCJAR" ]; then
 	CC_ARGS="--extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE"
 
+	# uncomment any of the following lines to help locate untyped code and other issues. However, they may spit out a lot of warnings so they are disabled by default.
+	#CC_ARGS="$CC_ARGS --jscomp_warning=reportUnknownTypes"
+	#CC_ARGS="$CC_ARGS --jscomp_warning \"*\" --jscomp_off=lintChecks"
+	#CC_ARGS="$CC_ARGS --jscomp_warning \"*\""
+	# use the following command to filter out some linter warnings:
+	#   ./build 2>&1 | grep JSC_ | grep -vE "JSC_VAR|JSC_MISSING_SEMICOLON"
+
 	echo "validating node source with closure compiler..."
 	java -jar "$CCJAR" --js "$OTMPDIR/opac.node.noreqs.js" --process_common_js_modules --externs "biginteger.externs.js" --externs "jsbn.externs.protected.js" --externs "node.externs.js" --checks_only --module_resolution NODE $CC_ARGS
 
