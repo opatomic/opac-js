@@ -41,7 +41,7 @@ function BigDec(man, exp) {
 			v.m = new BigInteger(s.substring(0, epos));
 			v.e = parseInt(s.substring(epos + skipLen), 10);
 			if (!isSafeInteger(v.e)) {
-				throw new Error('number string "' + s + '" cannot be parsed');
+				throw new Error("number string \"" + s + "\" cannot be parsed");
 			}
 		}
 		if (decPos >= 0) {
