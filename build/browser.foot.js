@@ -63,7 +63,16 @@ function newClient(s, cfg) {
 	wrapper.c = c;
 
 	s.addEventListener("message", function(event) {
-		c.onRecv(new Uint8Array(event.data));
+		// event.data could be a string if the WebSocket is connected to a server using text frames
+		try {
+			event = /** @type {!MessageEvent<!ArrayBuffer|!Blob|string>} */ (event);
+			if (!(event.data instanceof ArrayBuffer)) {
+				throw new Error("event.data is not instanceof ArrayBuffer; server is using text frames?");
+			}
+			c.onRecv(new Uint8Array(event.data));
+		} catch (e) {
+			clientError(c, e);
+		}
 	});
 
 	s.addEventListener("close", function() {

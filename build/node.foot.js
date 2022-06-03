@@ -54,7 +54,14 @@ function newClient(s, cfg) {
 	wrapper.c = c;
 
 	s.on("data", function(b) {
-		c.onRecv(b);
+		try {
+			if (!(b instanceof Buffer)) {
+				throw new Error("socket event data is not instanceof Buffer");
+			}
+			c.onRecv(b);
+		} catch (e) {
+			clientError(c, e);
+		}
 	});
 
 	s.on("close", function(hadError) {
