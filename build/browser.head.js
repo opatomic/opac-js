@@ -1,7 +1,7 @@
 /**
  * @typedef {?Uint8Array}
  */
-var OpaBuff;
+var OpaBuff; // eslint-disable-line no-unused-vars
 
 /**
  * @param {number} l

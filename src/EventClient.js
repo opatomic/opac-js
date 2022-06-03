@@ -9,7 +9,7 @@
  * @ignore
  * @typedef {function(*, *=):undefined}
  */
-var ResponseCallback;
+var ResponseCallback; // eslint-disable-line no-unused-vars
 
 /**
  * @callback ResponseCallback
