@@ -104,7 +104,9 @@ rm -rf "${DOCSDIR:?}/"*
 mkdir -p tools
 cd tools || exit 1
 if [ ! -d "node_modules" ]; then
+	npm init -y
 	npm install jsdoc docdash --save-dev
+	npm install eslint eslint-config-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-n --save-dev
 fi
 node ./node_modules/jsdoc/jsdoc.js ../../src/ ../biginteger.externs.js -d "../$DOCSDIR" -c ../jsdoc.conf.json
 cd - > /dev/null
