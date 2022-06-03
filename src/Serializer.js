@@ -283,7 +283,7 @@ function writeBigDec(s, v) {
 	if (v.e == 0) {
 		writeBigInt(s, v.m);
 	} else {
-		var negExp = v.e < 0 ? true : false;
+		var negExp = v.e < 0;
 		var scale = v.e < 0 ? 0 - v.e : v.e;
 		if (v.signum() > 0) {
 			if (v.m.compareTo(BIMAXVARINT) <= 0) {
