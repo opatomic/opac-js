@@ -450,7 +450,7 @@ Serializer.prototype.writeObject = function(v) {
 			this.write1(CH_UNDEFINED);
 			break;
 		case "object":
-			v = /** @type {?Object} */ (v);
+			v = /** @type {?Object} */ (v); // eslint-disable-line no-self-assign
 			if (v === null) {
 				this.write1(CH_NULL);
 			} else if (Object.prototype.hasOwnProperty.call(v, "toOpaSO") && typeof v.toOpaSO == "function") {
@@ -464,7 +464,7 @@ Serializer.prototype.writeObject = function(v) {
 			} else if (v instanceof BigDec) {
 				writeBigDec(this, v);
 			} else if (v.constructor.name == "Uint8Array" || v.constructor.name == "Buffer") {
-				v = /** @type {!Uint8Array} */ (v);
+				v = /** @type {!Uint8Array} */ (v); // eslint-disable-line no-self-assign
 				if (v.length == 0) {
 					this.write1(CH_EMPTYBIN);
 				} else {

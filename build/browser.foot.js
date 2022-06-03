@@ -67,7 +67,7 @@ function newClient(s, cfg) {
 	s.addEventListener("message", function(event) {
 		// event.data could be a string if the WebSocket is connected to a server using text frames
 		try {
-			event = /** @type {!MessageEvent<!ArrayBuffer|!Blob|string>} */ (event);
+			event = /** @type {!MessageEvent<!ArrayBuffer|!Blob|string>} */ (event); // eslint-disable-line no-self-assign
 			if (!(event.data instanceof ArrayBuffer)) {
 				throw new Error("event.data is not instanceof ArrayBuffer; server is using text frames?");
 			}

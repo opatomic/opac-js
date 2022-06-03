@@ -42,7 +42,7 @@ var isSafeInteger = Number.isSafeInteger || function(v) {
 function opaType(o) {
 	var t = typeof o;
 	if (t == "object") {
-		o = /** @type {?Object} */ (o);
+		o = /** @type {?Object} */ (o); // eslint-disable-line no-self-assign
 		if (o === null) {
 			return "null";
 		} else if (Array.isArray(o)) {
@@ -153,7 +153,7 @@ var opaStringify = function(obj, space) {};
 			case "string":
 				return JSON.stringify(/** @type {string} */ (obj));
 			case "Array":
-				obj = /** @type {!Array} */ (obj);
+				obj = /** @type {!Array} */ (obj); // eslint-disable-line no-self-assign
 				if (obj.length == 0) {
 					return "[]";
 				}
