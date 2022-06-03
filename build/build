@@ -19,7 +19,7 @@ if [ ! -f "$CCJAR" ]; then
 fi
 
 catAllSrc() {
-	cat "$OTMPDIR/version.js" "$SRCDIR/Queue.js" "$SRCDIR/BigDec.js" "$SRCDIR/OpaDef.js" "$SRCDIR/PartialParser.js" "$SRCDIR/Serializer.js" "$SRCDIR/OpaUtils.js" "$SRCDIR/EventClient.js" >> "$1"
+	cat "$OTMPDIR/version.js" "$SRCDIR/Queue.js" "$SRCDIR/BigDec.js" "$SRCDIR/PartialParser.js" "$SRCDIR/Serializer.js" "$SRCDIR/OpaUtils.js" "$SRCDIR/EventClient.js" >> "$1"
 }
 
 
@@ -43,12 +43,13 @@ printf "\nreturn BigInteger;\n}());\n" >> "$OTMPDIR/jsbn.js"
 echo "assembling sources for full-size opac..."
 OUTFILE="$OUTDIR/opac.browser.js"
 echo "\"use strict\";" > "$OUTFILE"
-echo "// Bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info" >> "$OUTFILE"
-echo "(function() {" >> "$OUTFILE"
-cat "browser.head.js" >> "$OUTFILE"
 echo "// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):" >> "$OUTFILE"
 cat "$LIBDIR/jsbn/LICENSE" "$OTMPDIR/jsbn.js" >> "$OUTFILE"
 printf "\n\n" >> "$OUTFILE"
+echo "// Bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info" >> "$OUTFILE"
+echo "(function() {" >> "$OUTFILE"
+cat "browser.head.js" >> "$OUTFILE"
+cat "$SRCDIR/OpaDef.js" >> "$OUTFILE"
 cat "bigintFromBytes-jsbn.js" >> "$OUTFILE"
 catAllSrc "$OUTFILE"
 cat "browser.foot.js" >> "$OUTFILE"
@@ -57,6 +58,7 @@ echo "})();" >> "$OUTFILE"
 mkdir "$OUTDIR/node"
 echo "\"use strict\";" > "$OTMPDIR/usestrict.js"
 cat "node.head.js" > "$OTMPDIR/opac.node.noreqs.js"
+cat "$SRCDIR/OpaDef.js" >> "$OTMPDIR/opac.node.noreqs.js"
 cat "bigintFromBytes-jsbn.js" >> "$OTMPDIR/opac.node.noreqs.js"
 catAllSrc "$OTMPDIR/opac.node.noreqs.js"
 cat "node.foot.js" >> "$OTMPDIR/opac.node.noreqs.js"
@@ -78,7 +80,7 @@ if [ -f "$CCJAR" ]; then
 	echo "minimizing jsbn with closure compiler..."
 	java -jar "$CCJAR" --js "$OTMPDIR/jsbn.js" --js_output_file "$OTMPDIR/jsbn.min.js"
 	echo "minimizing opac with closure compiler..."
-	java -jar "$CCJAR" --js "browser.head.js" "bigintFromBytes-jsbn.js" "$OTMPDIR/version.js" "$SRCDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --externs "jsbn.externs.protected.js" --js_output_file "$OTMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper $CC_ARGS
+	java -jar "$CCJAR" --js "browser.head.js" "$SRCDIR/OpaDef.js" "bigintFromBytes-jsbn.js" "$OTMPDIR/version.js" "$SRCDIR/Queue.js" "$SRCDIR/BigDec.js" "$SRCDIR/PartialParser.js" "$SRCDIR/Serializer.js" "$SRCDIR/OpaUtils.js" "$SRCDIR/EventClient.js" "browser.foot.js" --externs "biginteger.externs.js" --externs "jsbn.externs.protected.js" --js_output_file "$OTMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper $CC_ARGS
 
 	OUTFILE="$OUTDIR/opac.browser.min.js"
 	echo "// Minimized and bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info" >> "$OUTFILE"
