@@ -265,4 +265,3 @@ OpaDef.ERR_CLOSED = -1;
 
 }());
 
-
