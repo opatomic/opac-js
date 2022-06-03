@@ -4,38 +4,6 @@
  */
 
 /**
- * @const
- * @ignore
- * @type {number}
- */
-var MAX_SAFE_INTEGER =  9007199254740991;
-/**
- * @const
- * @ignore
- * @type {number}
- */
-var MIN_SAFE_INTEGER = 0 - MAX_SAFE_INTEGER;
-/**
- * @const
- * @ignore
- * @type {function(*):boolean}
- */
- // note: must cast type of Number.isInteger due to bug (in closure compiler?). They have the
- //  function type declared as function(number):boolean when it should be function(*):boolean.
- // TODO: remove this type cast in future if bug gets fixed?
-var isInteger = (/** @type {function(*):boolean} */ (Number.isInteger)) || function(v) {
-	return typeof v === "number" && isFinite(v) && Math.floor(v) === v;
-};
-/**
- * @const
- * @ignore
- * @type {function(number):boolean}
- */
-var isSafeInteger = Number.isSafeInteger || function(v) {
-	return isInteger(v) && v >= MIN_SAFE_INTEGER && v <= MAX_SAFE_INTEGER;
-};
-
-/**
  * @param {*} o
  * @return {string}
  */
