@@ -1,3 +1,5 @@
+(function() {
+
 /**
  * @param {!Uint8Array} b
  * @return {!ArrayBuffer}
@@ -99,4 +101,6 @@ E["stringify"] = opaStringify;
 E["version"] = VERSION;
 
 window["Opatomic"] = E;
+
+}());
 
