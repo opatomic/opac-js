@@ -5,9 +5,9 @@ if [ ! -f "out/node/opac.node.js" ]; then
 	exit 1
 fi
 
-cp eslint.config.js tools/.eslintrc.js
+cp eslint.config.js tools/eslint.config.js
 
 cp out/node/opac.node.js tools
 cd tools || exit 1
-./node_modules/.bin/eslint opac.node.js
+./node_modules/.bin/eslint --no-eslintrc -c eslint.config.js opac.node.js
 cd - > /dev/null
