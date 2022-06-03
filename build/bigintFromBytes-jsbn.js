@@ -9,6 +9,14 @@ function bigIntNegateTo(a, b) {
 }
 
 /**
+ * @param {bigint} v
+ * @return {!BigInteger}
+ */
+function bigIntFromNativeBigInt(v) {
+	return new BigInteger(v.toString(16), 16);
+}
+
+/**
  * @param {number} n
  * @return {!BigInteger}
  */

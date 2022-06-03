@@ -441,7 +441,7 @@ Serializer.prototype.writeObject = function(v) {
 			// note: this is here to attempt initial support for native bigint. It has not been tested.
 			// TODO: test this! Chrome v67 and later should support bigints. Eventually more browsers will add support
 			// TODO: this will be slow. add code to avoid conversion
-			writeBigInt(this, new BigInteger(v.toString()));
+			writeBigInt(this, bigIntFromNativeBigInt(/** @type {bigint} */(v)));
 			break;
 		case "boolean":
 			this.write1(v ? CH_TRUE : CH_FALSE);
