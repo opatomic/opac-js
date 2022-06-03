@@ -69,14 +69,16 @@ mv "$OTMPDIR/tmp.js" "$OTMPDIR/opac.node.noreqs.js"
 
 
 if [ -f "$CCJAR" ]; then
+	CC_ARGS="--extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE"
+
 	echo "validating node source with closure compiler..."
-	java -jar "$CCJAR" --js "$OTMPDIR/opac.node.noreqs.js" --process_common_js_modules --externs "biginteger.externs.js" --externs "jsbn.externs.protected.js" --externs "node.externs.js" --checks_only --module_resolution NODE --extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE
+	java -jar "$CCJAR" --js "$OTMPDIR/opac.node.noreqs.js" --process_common_js_modules --externs "biginteger.externs.js" --externs "jsbn.externs.protected.js" --externs "node.externs.js" --checks_only --module_resolution NODE $CC_ARGS
 
 	# TODO: store closure compiler version in source somewhere?
 	echo "minimizing jsbn with closure compiler..."
 	java -jar "$CCJAR" --js "$OTMPDIR/jsbn.js" --js_output_file "$OTMPDIR/jsbn.min.js"
 	echo "minimizing opac with closure compiler..."
-	java -jar "$CCJAR" --js "browser.head.js" "bigintFromBytes-jsbn.js" "$OTMPDIR/version.js" "$SRCDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --externs "jsbn.externs.protected.js" --js_output_file "$OTMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper --extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE
+	java -jar "$CCJAR" --js "browser.head.js" "bigintFromBytes-jsbn.js" "$OTMPDIR/version.js" "$SRCDIR/*.js" "browser.foot.js" --externs "biginteger.externs.js" --externs "jsbn.externs.protected.js" --js_output_file "$OTMPDIR/bundle.min.js" --rewrite_polyfills=false --assume_function_wrapper $CC_ARGS
 
 	OUTFILE="$OUTDIR/opac.browser.min.js"
 	echo "// Minimized and bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info" >> "$OUTFILE"
