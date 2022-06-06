@@ -257,7 +257,7 @@ function parseNext(p, b) {
 						continue;
 					default:
 						throwErr(p, "unknown char");
-				}
+				} // eslint-disable-line no-fallthrough
 
 			case S_VARINT1:
 				while (true) {
