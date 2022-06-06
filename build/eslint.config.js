@@ -33,7 +33,7 @@ module.exports = {
 
 		"consistent-return": "error",
 		"curly": "error",
-		"new-cap": "error",
+		"new-cap": ["error", { "newIsCap": true, "capIsNew": true }],
 		"no-array-constructor": "error",
 		"no-constant-binary-expression": "error",
 		"no-constant-condition": ["error", { "checkLoops": false }],
@@ -67,7 +67,8 @@ module.exports = {
 		"no-unused-vars": ["warn", { "vars": "all", "args": "all" }],
 		"quotes": ["warn", "double"],
 
-		// TODO: cleanup warnings and re-enable these lint checks
+		// TODO: remove the following lines when the warnings/errors they generate are cleaned up
+		"new-cap": ["error", { "newIsCap": true, "capIsNew": false }],
 		"no-unused-vars": 0,
 
 	}
