@@ -67,5 +67,8 @@ module.exports = {
 		"no-unused-vars": ["warn", { "vars": "all", "args": "all" }],
 		"quotes": ["warn", "double"],
 
+		// TODO: cleanup warnings and re-enable these lint checks
+		"no-unused-vars": 0,
+
 	}
 }
