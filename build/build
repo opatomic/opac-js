@@ -69,6 +69,8 @@ cp "../LICENSE" "$OUTDIR/node/"
 cat "$OTMPDIR/usestrict.js" "$OTMPDIR/opac.node.noreqs.js" > "$OTMPDIR/tmp.js"
 mv "$OTMPDIR/tmp.js" "$OTMPDIR/opac.node.noreqs.js"
 
+echo "linting full size sources..."
+./lint
 
 if [ -f "$CCJAR" ]; then
 	CC_ARGS="--extra_annotation_name callback --extra_annotation_name hideconstructor -W VERBOSE"
