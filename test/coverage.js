@@ -426,11 +426,8 @@ function echoResult(err, result) {
 }
 
 function runTest(c) {
-	//var c = libopac.newClient(s);
 	var binobj = BufferFrom("hello", "utf-8");
 
-	//console.log("s.writableHighWaterMark: " + s.writableHighWaterMark);
-	//console.log("s.writableLength: " + s.writableLength);
 	var binobj2 = Buffer.alloc(128);
 	for (var i = 0; i < 128; ++i) {
 		binobj2[i] = i;
@@ -509,12 +506,6 @@ function connectClient(cb, cfg) {
 }
 
 libopac.Queue.prototype.newChunkSize = 4;
-//var sock = new libnet.Socket();
-//sock.setNoDelay(true);
-//sock.connect(4567, "localhost", function onConnect() {
-//	console.log("connected");
-//	runTest(sock);
-//});
 connectClient(runTest);
 
 connectClient(function(c) {
