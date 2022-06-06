@@ -17,7 +17,7 @@ TODO:
 
 /**
  * @constructor
- * @param {BigInteger|string} man
+ * @param {?BigInteger|string} man
  * @param {number=} exp
  */
 function BigDec(man, exp) {
