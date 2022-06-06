@@ -88,7 +88,6 @@ var E = {};
 
 E["BigDec"] = BigDec;
 E["BigInteger"] = BigInteger;
-E["cacheString"] = cacheString;
 E["ClientConfig"] = ClientConfig;
 E["EventClient"] = EventClient;
 E["newClient"] = newClient;

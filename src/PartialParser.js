@@ -181,8 +181,7 @@ function varintNextByte(p, bval) {
  * @return {string}
  */
 function getstr(b) {
-	var str = PartialParser.BUF2STR ? PartialParser.BUF2STR.get(b) : null;
-	return str ? str : STRDEC(b);
+	return STRDEC(b);
 }
 
 /**
@@ -349,15 +348,6 @@ function parseNext(p, b) {
 PartialParser.prototype.parseNext = function(b) {
 	return parseNext(this, b);
 };
-
-/**
- * maps {utf-8 bytes -> strings} to avoid conversion (speed up) and improve
- * memory usage (prevent duplicate copies of same string)
- * @type {?Map<!Uint8Array, string>}
- * @const
- * @memberof PartialParser
- */
-PartialParser.BUF2STR = (typeof Map == "function") ? new Map() : null;
 
 }());
 

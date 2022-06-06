@@ -79,7 +79,6 @@ sock.connect(4567, "localhost", function() {
  - client.callA(opname, args, callback)
  - client.registerCB(asyncID, callback)
  - client.callID(asyncID, opname, args)
- - cacheString(str)
 
 
 ## Serializer supported types

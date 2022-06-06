@@ -138,8 +138,6 @@ function benchEnc() {
 
 	var its = 1000000;
 
-	libopac.cacheString("hello");
-
 	//bench(c, its, "ECHO", [new BigDec("2147483647")]);
 	//bench(c, its, "ECHO", [new BigDec("0")]);
 	//bench(c, its, "ECHO", [new BigDec("12345")]);

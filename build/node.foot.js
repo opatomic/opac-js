@@ -73,7 +73,6 @@ function newClient(s, cfg) {
 
 module.exports.BigDec = BigDec;
 module.exports.BigInteger = BigInteger;
-module.exports.cacheString = cacheString;
 module.exports.ClientConfig = ClientConfig;
 module.exports.EventClient = EventClient;
 module.exports.newClient = newClient;

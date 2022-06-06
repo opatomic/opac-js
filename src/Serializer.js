@@ -384,21 +384,12 @@ Serializer.prototype.writeString = function(v) {
 		this.write1(CH_EMPTYSTR);
 		return;
 	}
-	var b;
-	if (Serializer.STR2BUF) {
-		b = Serializer.STR2BUF.get(v);
-		if (b) {
-			writeTypeAndVarint(this, CH_STRLPVI, b.length);
-			this.write(b);
-			return;
-		}
-	}
 	if (v.length < 1024) {
 		// TODO: what is the proper cutoff string length to use the built-in encoder vs iterating over each char?
 		writeTypeAndVarint(this, CH_STRLPVI, getUtf8Len(v, 0, v.length));
 		writeUtf8(this, v);
 	} else {
-		b = STRENC(v);
+		var b = STRENC(v);
 		writeTypeAndVarint(this, CH_STRLPVI, b.length);
 		this.write(b);
 	}
@@ -479,14 +470,6 @@ Serializer.prototype.writeObject = function(v) {
 			throw new Error("unsupported type " + typeof v);
 	}
 };
-
-/**
- * maps {strings -> utf-8 bytes} to avoid conversion (speed up)
- * @type {?Map<string, !Uint8Array>}
- * @const
- * @memberof Serializer
- */
-Serializer.STR2BUF = (typeof Map == "function") ? new Map() : null;
 
 }());
 
