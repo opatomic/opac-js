@@ -154,7 +154,7 @@ function getNum(neg, v) {
  */
 function varintNextByte(p, bval) {
 	if (p.mVarintBitshift < 28) {
-		p.mVarintVal |= (bval & 0x7F) << p.mVarintBitshift;
+		/** @type {number} */ (p.mVarintVal) |= (bval & 0x7F) << p.mVarintBitshift;
 		p.mVarintMul <<= 7;
 	} else if (p.mVarintBitshift < 49) {
 		// can read 7 bytes before having to switch to BigInteger
