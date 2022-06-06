@@ -10,11 +10,11 @@
  */
 function QChunk() {}
 /** @type {?QChunk} */
-QChunk.prototype.next;
+QChunk.prototype.next = null;
 /** @type {number} */
-QChunk.prototype.head;
+QChunk.prototype.head = 0;
 /** @type {number} */
-QChunk.prototype.used;
+QChunk.prototype.used = 0;
 
 /**
  * @ignore
