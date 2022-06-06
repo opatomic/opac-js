@@ -64,12 +64,12 @@ module.exports = {
 		"no-multiple-empty-lines": ["warn", { "max": 2 }],
 		"no-self-assign": "warn",
 		"no-unneeded-ternary": ["warn", { "defaultAssignment": true }],
-		"no-unused-vars": ["warn", { "vars": "all", "args": "all" }],
+		"no-unused-vars": ["warn", { "vars": "all", "args": "all", "caughtErrors": "all" }],
 		"quotes": ["warn", "double"],
 
 		// TODO: remove the following lines when the warnings/errors they generate are cleaned up
 		"new-cap": ["error", { "newIsCap": true, "capIsNew": false }],
-		"no-unused-vars": 0,
+		"no-unused-vars": ["warn", { "vars": "all", "args": "none", "caughtErrors": "all" }],
 
 	}
 }
