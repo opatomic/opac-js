@@ -77,7 +77,7 @@ if [ -f "$CCJAR" ]; then
 
 	# uncomment any of the following lines to help locate untyped code and other issues. However, they may spit out a lot of warnings so they are disabled by default.
 	#CC_ARGS="$CC_ARGS --jscomp_warning=reportUnknownTypes"
-	#CC_ARGS="$CC_ARGS --jscomp_warning \"*\" --jscomp_off=lintChecks"
+	CC_ARGS="$CC_ARGS --jscomp_warning \"*\" --jscomp_off=lintChecks"
 	#CC_ARGS="$CC_ARGS --jscomp_warning \"*\""
 	# use the following command to filter out some linter warnings:
 	#   ./build 2>&1 | grep JSC_ | grep -vE "JSC_VAR|JSC_MISSING_SEMICOLON"
