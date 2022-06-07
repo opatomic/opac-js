@@ -86,6 +86,15 @@ function extend(a, amount) {
 }
 
 /**
+ * @param {!BigDec} src
+ * @param {!BigDec} dst
+ */
+function copyTo(src, dst) {
+	src.m.copyTo(dst.m);
+	dst.e = src.e;
+}
+
+/**
  * r = a + b
  * @param {!BigDec} a
  * @param {!BigDec} b
@@ -93,9 +102,9 @@ function extend(a, amount) {
  */
 function add3(a, b, r) {
 	if (b.signum() == 0) {
-		a.copyTo(r);
+		copyTo(a, r);
 	} else if (a.signum() == 0) {
-		b.copyTo(r);
+		copyTo(b, r);
 	} else {
 		if (a.e > b.e) {
 			a = extend(a, a.e - b.e);
@@ -115,7 +124,7 @@ function add3(a, b, r) {
  */
 function sub3(a, b, r) {
 	if (b.signum() == 0) {
-		a.copyTo(r);
+		copyTo(a, r);
 	} else if (a.signum() == 0) {
 		BigInteger.ZERO.subTo(b.m, r.m);
 		r.e = b.e;
@@ -141,11 +150,11 @@ function mul3(a, b, r) {
 		// multiplyTo() docs say that result cannot be same object as a or b
 		var tmp = r.clone();
 		mul3(a, b, tmp);
-		tmp.copyTo(r);
+		copyTo(tmp, r);
 	} else if (a.signum() == 0) {
-		a.copyTo(r);
+		copyTo(a, r);
 	} else if (b.signum() == 0) {
-		b.copyTo(r);
+		copyTo(b, r);
 	} else {
 		if (a.e > b.e) {
 			a = extend(a, a.e - b.e);
@@ -172,21 +181,21 @@ function div(a, b, q, r) {
 	if (a == r || b == r) {
 		tmp = r.clone();
 		div(a, b, q, tmp);
-		tmp.copyTo(r);
+		copyTo(tmp, r);
 	} else if (a == q || b == q) {
 		tmp = q.clone();
 		div(a, b, tmp, r);
-		tmp.copyTo(q);
+		copyTo(tmp, q);
 	} else if (b.signum() == 0) {
 		// TODO: use NaN?
 		// actually, can probably define x/0 to be 0. see https://www.hillelwayne.com/post/divide-by-zero/
 		throw new Error("cannot divide by 0");
 	} else if (a.signum() == 0) {
 		if (q) {
-			a.copyTo(q);
+			copyTo(a, q);
 		}
 		if (r) {
-			a.copyTo(r);
+			copyTo(a, r);
 		}
 	} else {
 		if (a.e > b.e) {
@@ -253,14 +262,6 @@ BigDec.prototype.compareTo = function(b) {
 	} else {
 		return this.compareTo(extend(b, b.e - this.e));
 	}
-};
-
-/**
- * @param {!BigDec} r
- */
-BigDec.prototype.copyTo = function(r) {
-	this.m.copyTo(r.m);
-	r.e = this.e;
 };
 
 /**
