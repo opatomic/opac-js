@@ -264,13 +264,13 @@ BigDec.prototype.copyTo = function(r) {
 };
 
 /**
- * @param {!BigDec} b
+ * @param {!BigDec} divisor
  * @return {!Array<!BigDec>}
  */
-BigDec.prototype.divideAndRemainder = function(b) {
+BigDec.prototype.divideAndRemainder = function(divisor) {
 	var q = nbd();
 	var r = nbd();
-	div(this, b, q, r);
+	div(this, divisor, q, r);
 	return [q, r];
 };
 
