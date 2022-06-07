@@ -64,7 +64,9 @@ function BigDec(man, exp) {
 /**
  * @return {!BigDec}
  */
-function nbd() { return new BigDec(new BigInteger(null), 0); }
+function nbd() {
+	return new BigDec(new BigInteger(null), 0);
+}
 
 /**
  * @param {!BigDec} a
