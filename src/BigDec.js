@@ -53,7 +53,7 @@ function BigDec(man, exp) {
 		bdFromString(this, man);
 	} else {
 		/** @type {!BigInteger} */
-		this.m = man ? man : new BigInteger(null);
+		this.m = man ? /** @type {!BigInteger} */ (man) : new BigInteger(null);
 		/** @type {number} */
 		this.e = exp ? exp : 0;
 	}
