@@ -302,6 +302,13 @@ BigDec.prototype.multiply = function(b) {
 };
 
 /**
+ * @return {number}
+ */
+BigDec.prototype.scale = function() {
+	return 0 - this.e;
+};
+
+/**
  * Returns -1 if this value is negative, 1 if positive, else 0 (if this is equal to zero).
  * @return {number}
  */
@@ -362,6 +369,13 @@ BigDec.prototype.toString = function() {
 		}
 	}
 	return s;
+};
+
+/**
+ * @return {!BigInteger}
+ */
+BigDec.prototype.unscaledValue = function() {
+	return this.m;
 };
 
 }());
