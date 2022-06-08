@@ -55,7 +55,7 @@ function BigDec(a, b) {
 		/** @type {!BigInteger} */
 		this.m = a ? /** @type {!BigInteger} */ (a) : new BigInteger(null);
 		/** @type {number} */
-		this.e = b ? b : 0;
+		this.e = b ? 0 - b : 0;
 	}
 }
 
@@ -84,7 +84,7 @@ function extend(a, amount) {
 	for (var i = amount; i > 0; --i) {
 		m.dMultiply(10);
 	}
-	return new BigDec(a.m.signum() < 0 ? m.negate() : m, a.e - amount);
+	return new BigDec(a.m.signum() < 0 ? m.negate() : m, amount - a.e);
 }
 
 /**
@@ -221,7 +221,7 @@ function div(a, b, q, r) {
  * @return {!BigDec}
  */
 BigDec.prototype.abs = function() {
-	return this.m.signum() < 0 ? new BigDec(this.m.abs(), this.e) : this;
+	return this.m.signum() < 0 ? new BigDec(this.m.abs(), 0 - this.e) : this;
 };
 
 /**
@@ -238,7 +238,7 @@ BigDec.prototype.add = function(b) {
  * @return {!BigDec}
  */
 BigDec.prototype.clone = function() {
-	return new BigDec(this.m.clone(), this.e);
+	return new BigDec(this.m.clone(), 0 - this.e);
 };
 
 /**
