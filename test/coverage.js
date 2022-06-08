@@ -7,6 +7,9 @@ var libopac = require("./opac.node.js");
 var BigInteger = require("jsbn").BigInteger;
 //var BigInteger = libopac.BigInteger;
 var BigDec = libopac.BigDec;
+var libbig = require("big.js");
+var libfs = require("fs");
+var libnet = require("net");
 
 
 
@@ -338,7 +341,6 @@ function testFlushErr() {
 testFlushErr();
 
 
-var libbig = require("big.js");
 var numStrs = [
 	"0", "1", "123e45", "9223372036854775807", "2147483647", MAX_SAFE_INTEGER.toString()
 ];
@@ -401,7 +403,6 @@ for (var i = 0; i < nums1.length; ++i) {
 
 
 // TODO: embed an array of strings rather than loading from file
-var libfs = require("fs");
 var lines = libfs.readFileSync("UTF-8-test.txt").toString().split("\n");
 for (var i = 0; i < lines.length; ++i) {
 	opaTestParseObj(lines[i]);
@@ -414,7 +415,6 @@ for (var i = 0; i < lines.length; ++i) {
 
 
 
-var libnet = require("net");
 
 function echoResult(err, result) {
 	if (err) {
