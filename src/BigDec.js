@@ -17,10 +17,10 @@ TODO:
 
 /**
  * @constructor
- * @param {?BigInteger|string} man
- * @param {number=} exp
+ * @param {?BigInteger|string} a
+ * @param {number=} b
  */
-function BigDec(man, exp) {
+function BigDec(a, b) {
 	/**
 	 * @ignore
 	 * @param {!BigDec} v
@@ -49,13 +49,13 @@ function BigDec(man, exp) {
 		}
 	}
 
-	if (typeof man == "string") {
-		bdFromString(this, man);
+	if (typeof a == "string") {
+		bdFromString(this, a);
 	} else {
 		/** @type {!BigInteger} */
-		this.m = man ? /** @type {!BigInteger} */ (man) : new BigInteger(null);
+		this.m = a ? /** @type {!BigInteger} */ (a) : new BigInteger(null);
 		/** @type {number} */
-		this.e = exp ? exp : 0;
+		this.e = b ? b : 0;
 	}
 }
 
