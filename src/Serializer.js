@@ -280,26 +280,28 @@ function writeBigInt(s, v) {
  * @param {!BigDec} v
  */
 function writeBigDec(s, v) {
-	if (v.e == 0) {
-		writeBigInt(s, v.m);
+	var e = 0 - v.scale();
+	var m = v.unscaledValue();
+	if (e == 0) {
+		writeBigInt(s, m);
 	} else {
-		var negExp = v.e < 0;
-		var scale = v.e < 0 ? 0 - v.e : v.e;
+		var negExp = e < 0;
+		e = negExp ? 0 - e : e;
 		if (v.signum() > 0) {
-			if (v.m.compareTo(BIMAXVARINT) <= 0) {
-				writeTypeAndVarint(s, negExp ? CH_NEGPOSVARDEC : CH_POSPOSVARDEC, scale);
-				writeBIAsVI(s, 0, v.m);
+			if (m.compareTo(BIMAXVARINT) <= 0) {
+				writeTypeAndVarint(s, negExp ? CH_NEGPOSVARDEC : CH_POSPOSVARDEC, e);
+				writeBIAsVI(s, 0, m);
 			} else {
-				writeTypeAndVarint(s, negExp ? CH_NEGPOSBIGDEC : CH_POSPOSBIGDEC, scale);
-				writeTypeAndBigBytes(s, 0, v.m);
+				writeTypeAndVarint(s, negExp ? CH_NEGPOSBIGDEC : CH_POSPOSBIGDEC, e);
+				writeTypeAndBigBytes(s, 0, m);
 			}
 		} else {
-			if (v.m.compareTo(BIMINVARINT) >= 0) {
-				writeTypeAndVarint(s, negExp ? CH_NEGNEGVARDEC : CH_POSNEGVARDEC, scale);
-				writeBIAsVI(s, 0, v.m);
+			if (m.compareTo(BIMINVARINT) >= 0) {
+				writeTypeAndVarint(s, negExp ? CH_NEGNEGVARDEC : CH_POSNEGVARDEC, e);
+				writeBIAsVI(s, 0, m);
 			} else {
-				writeTypeAndVarint(s, negExp ? CH_NEGNEGBIGDEC : CH_POSNEGBIGDEC, scale);
-				writeTypeAndBigBytes(s, 0, v.m);
+				writeTypeAndVarint(s, negExp ? CH_NEGNEGBIGDEC : CH_POSNEGBIGDEC, e);
+				writeTypeAndBigBytes(s, 0, m);
 			}
 		}
 	}

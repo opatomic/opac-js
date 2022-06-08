@@ -357,9 +357,8 @@ for (var i = 0; i < numStrs.length; ++i) {
 		nums1.push(zero1.subtract(tmp1));
 		nums2.push(zero2.minus(tmp2));
 	}
-	if (tmp1.e != 0) {
-		tmp1 = tmp1.clone();
-		tmp1.e = 0 - tmp1.e;
+	if (tmp1.scale() != 0) {
+		tmp1 = new BigDec(tmp1.unscaledValue(), 0 - tmp1.scale());
 		tmp2 = new libbig(tmp1.toString());
 		nums1.push(tmp1);
 		nums2.push(tmp2);
