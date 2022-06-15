@@ -21,11 +21,6 @@ BigInteger.prototype.t;
 BigInteger.prototype.addTo = function(a,r) {};
 
 /**
- * @return {number}
- */
-BigInteger.prototype.byteValue = function() {};
-
-/**
  * @return {void}
  */
 BigInteger.prototype.clamp = function() {};

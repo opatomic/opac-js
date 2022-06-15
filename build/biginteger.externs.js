@@ -56,6 +56,11 @@ BigInteger.prototype.bitCount = function() {};
 BigInteger.prototype.bitLength = function() {};
 
 /**
+ * @return {number}
+ */
+BigInteger.prototype.byteValue = function() {};
+
+/**
  * @param {number} n
  * @return {!BigInteger}
  */
@@ -183,6 +188,11 @@ BigInteger.prototype.shiftLeft = function(n) {};
  * @return {!BigInteger}
  */
 BigInteger.prototype.shiftRight = function(n) {};
+
+/**
+ * @return {number}
+ */
+BigInteger.prototype.shortValue = function() {};
 
 /**
  * @return {number}
