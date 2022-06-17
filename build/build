@@ -13,7 +13,7 @@ OUTDIR=out
 DOCSDIR="$OUTDIR/docs"
 
 
-if [ ! -f "$CCJAR" ]; then
+if [ ! -f "$CCJAR" ] && [ "$CCJAR" != "0" ]; then
 	# if $CCJAR file does not exist, search current directory for CC
 	CCJAR=$(find ./*closure*compiler*.jar 2> /dev/null | tail -1)
 fi
@@ -98,7 +98,7 @@ if [ -f "$CCJAR" ]; then
 	cat "$OTMPDIR/jsbn.min.js" "$OTMPDIR/bundle.min.js" >> "$OUTFILE"
 	echo "}());" >> "$OUTFILE"
 else
-	echo "CCJAR not found. browser build will not minimize"
+	[ "$CCJAR" = "0" ] || echo "CCJAR not found. browser build will not minimize"
 fi
 
 
