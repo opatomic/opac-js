@@ -72,6 +72,7 @@ function newClient(s, cfg) {
 }
 
 module.exports.BigDec = BigDec;
+module.exports.BigDecimal = BigDec;
 module.exports.BigInteger = BigInteger;
 module.exports.ClientConfig = ClientConfig;
 module.exports.EventClient = EventClient;
@@ -80,6 +81,7 @@ module.exports.OpaDef = OpaDef;
 module.exports.opaType = opaType;
 module.exports.PartialParser = PartialParser;
 module.exports.Queue = Queue;
+module.exports.RoundingMode = RoundingMode;
 module.exports.Serializer = Serializer;
 module.exports.stringify = opaStringify;
 module.exports.version = VERSION;

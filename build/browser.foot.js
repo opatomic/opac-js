@@ -87,6 +87,7 @@ function newClient(s, cfg) {
 var E = {};
 
 E["BigDec"] = BigDec;
+E["BigDecimal"] = BigDec;
 E["BigInteger"] = BigInteger;
 E["ClientConfig"] = ClientConfig;
 E["EventClient"] = EventClient;
@@ -95,6 +96,7 @@ E["OpaDef"] = OpaDef;
 E["opaType"] = opaType;
 E["PartialParser"] = PartialParser;
 E["Queue"] = Queue;
+E["RoundingMode"] = RoundingMode;
 E["Serializer"] = Serializer;
 E["stringify"] = opaStringify;
 E["version"] = VERSION;
