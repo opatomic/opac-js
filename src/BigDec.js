@@ -123,7 +123,7 @@ var BD_0 = new BigDec(BI_0);
 var BD_1 = new BigDec(BI_1);
 
 /**
- * @type {!Array<BigInteger>}
+ * @type {!Array<!BigInteger>}
  */
 var POW10S = new Array(16);
 POW10S[0] = BI_1;
@@ -177,7 +177,7 @@ function isZero(bi) {
 }
 
 /**
- * @param {!Array<BigInteger>} a
+ * @param {!Array<!BigInteger>} a
  * @return {boolean}
  */
 function hasRemainder(a) {
