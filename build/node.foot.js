@@ -53,6 +53,10 @@ function newClient(s, cfg) {
 	var c = new EventClient(wrapper, cfg);
 	wrapper.c = c;
 
+	s.on("error", function(e) {
+		clientError(c, e);
+	});
+
 	s.on("data", function(b) {
 		try {
 			if (!(b instanceof Buffer)) {
