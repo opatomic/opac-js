@@ -4,7 +4,7 @@
 # closure compiler, and set $CCJAR to the jar file's path.
 #  https://github.com/google/closure-compiler
 
-# to generate docs, must have node and npm installed
+# to generate docs and run lint, must have node and npm installed
 
 SRCDIR=../src
 LIBDIR=../lib
