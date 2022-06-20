@@ -53,11 +53,19 @@ function newClient(s, cfg) {
 	var c = new EventClient(wrapper, cfg);
 	wrapper.c = c;
 
-	s.on("error", function(e) {
+	/**
+	 * @param {*} e
+	 */
+	var errorEventCB = function(e) {
 		clientError(c, e);
-	});
+	};
 
-	s.on("data", function(b) {
+	s.on("error", errorEventCB);
+
+	/**
+	 * @param {*} b
+	 */
+	var dataEventCB = function(b) {
 		try {
 			if (!(b instanceof Buffer)) {
 				throw new Error("socket event data is not instanceof Buffer");
@@ -66,7 +74,9 @@ function newClient(s, cfg) {
 		} catch (e) {
 			clientError(c, e);
 		}
-	});
+	};
+
+	s.on("data", dataEventCB);
 
 	s.on("close", function(hadError) {
 		wrapper.close();
