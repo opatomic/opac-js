@@ -9,5 +9,5 @@ cp eslint.config.js tools/eslint.config.js
 
 cp out/node/opac.node.js tools
 cd tools || exit 1
-./node_modules/.bin/eslint --no-eslintrc -c eslint.config.js opac.node.js
+npx eslint --no-eslintrc -c eslint.config.js opac.node.js
 cd - > /dev/null
