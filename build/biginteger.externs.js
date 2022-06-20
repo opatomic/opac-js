@@ -230,10 +230,8 @@ BigInteger.prototype.toString = function(radix) {};
 BigInteger.prototype.xor = function(val) {};
 
 // TODO: the following methods could possibly be added above
-//  equals
+//  equals - note: jsbn requires the argument to be a BigInteger object which differs from the Java api (allows any Object); should check instanceof first
 //  isProbablePrime
-//  nextProbablePrime
-//  static BigInteger probablePrime(int bitLength, Random rnd);
 
 // The following methods from Java's java.math.BigInteger are not implemented in jsbn:
 //  doubleValue()
@@ -241,4 +239,18 @@ BigInteger.prototype.xor = function(val) {};
 //  hashCode()
 //  longValue()
 //  static BigInteger valueOf(long val);
+
+// The following have been added to the Java API and are not present in JSBN:
+//  constructor BigInteger(byte[] val, int off, int len)
+//  constructor BigInteger(int signum, byte[] magnitude, int off, int len)
+//  byteValueExact()
+//  intValueExact()
+//  longValueExact()
+//  nextProbablePrime()
+//  probablePrime()
+//  shortValueExact()
+//  sqrt()
+//  sqrtAndRemainder()
+//  TEN
+//  TWO
 
