@@ -294,7 +294,9 @@ BigDec.prototype.compareTo = function(val) {
 	} else if (sdiff < 0) {
 		m2 = mulPow10(m2, 0 - sdiff);
 	}
-	return m1.compareTo(m2);
+	// note: JSBN does not return -1/0/1; adjust the return value to be consistent with java API
+	var res = m1.compareTo(m2);
+	return res > 0 ? 1 : (res < 0 ? -1 : 0);
 };
 
 /**
