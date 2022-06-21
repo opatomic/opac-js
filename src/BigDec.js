@@ -276,23 +276,36 @@ BigDec.prototype.clone = function() {
 BigDec.prototype.compareTo = function(val) {
 	var m1 = unscaledValue(this);
 	var m2 = unscaledValue(val);
-	if (m1.signum() < 0) {
-		if (m2.signum() >= 0) {
-			return -1;
-		}
-	} else if (m2.signum() < 0) {
-		return 1;
+	var sn1 = m1.signum();
+	var sn2 = m2.signum();
+	if (sn1 != sn2) {
+		return sn1 < sn2 ? -1 : 1;
+	}
+	if (sn1 == 0) {
+		return 0;
 	}
 
-	// TODO: if exp's are not equal, can estimate comparison based on number of bits
-	//  each power of ten is worth which could prevent having to multiply and extend
-	//  a value until exponents are equal
-
 	var sdiff = getScale(val) - getScale(this);
-	if (sdiff > 0) {
-		m1 = mulPow10(m1, sdiff);
-	} else if (sdiff < 0) {
-		m2 = mulPow10(m2, 0 - sdiff);
+	if (sdiff != 0) {
+		var bits1 = m1.bitLength();
+		var bits2 = m2.bitLength();
+
+		// TODO: if exp's are not equal, can estimate comparison based on number of bits
+		//  each power of ten is worth which could prevent having to call mulPow10()
+
+		if (sdiff > 0) {
+			if (bits1 > bits2) {
+				// magnitude/bits and exponent of 'this' are larger
+				return sn1;
+			}
+			m1 = mulPow10(m1, sdiff);
+		} else {
+			if (bits1 < bits2) {
+				// magnitude/bits and exponent of 'this' are smaller
+				return 0 - sn1;
+			}
+			m2 = mulPow10(m2, 0 - sdiff);
+		}
 	}
 	// note: JSBN does not return -1/0/1; adjust the return value to be consistent with java API
 	var res = m1.compareTo(m2);
