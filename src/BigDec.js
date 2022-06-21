@@ -393,7 +393,7 @@ function divRM(a, b, scale, rm) {
 				break;
 		}
 		if (extra) {
-			q = q.add(extra == 1 ? BI_1 : BI_N1);
+			q = q.add(extra > 0 ? BI_1 : BI_N1);
 		}
 	}
 	return new BigDec(q, scale);
