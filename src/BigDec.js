@@ -181,7 +181,13 @@ function isZero(bi) {
  * @return {boolean}
  */
 function hasRemainder(a) {
-	return !isZero(/** @type {!BigInteger} */ (a[1]));
+	// note: the following annotation needs @ignore: for whatever reason, jsdoc documents this variable (a[1]) as a global variable
+	/**
+	 * @type {!BigInteger}
+	 * @ignore
+	 */
+	var r = a[1];
+	return !isZero(r);
 }
 
 /**
