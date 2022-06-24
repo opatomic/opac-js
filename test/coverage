@@ -2,6 +2,10 @@
 
 # requires node and npm installed
 
+cd ../build || exit 1
+CCJAR="0" ./build
+cd - > /dev/null
+
 mkdir -p tools
 cp ../build/out/node/opac.node.js tools
 cp coverage.js tools
@@ -10,6 +14,7 @@ cd tools || exit 1
 if [ ! -d "node_modules" ]; then
 	npm install --save-dev c8 jsbn big.js
 fi
+echo "running coverage tests..."
 # coverage report will be in "coverage" directory
 npx c8 -r html node coverage.js
 cd - > /dev/null
