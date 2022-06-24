@@ -15,7 +15,7 @@ DOCSDIR="$OUTDIR/docs"
 
 if [ ! -f "$CCJAR" ] && [ "$CCJAR" != "0" ]; then
 	# if $CCJAR file does not exist, search current directory for CC
-	CCJAR=$(find ./*closure*compiler*.jar 2> /dev/null | tail -1)
+	CCJAR=$(find -name "*closure*compiler*.jar" 2> /dev/null | LC_ALL=C sort | tail -1)
 fi
 
 catAllSrc() {
