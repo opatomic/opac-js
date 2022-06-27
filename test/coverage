@@ -16,5 +16,5 @@ if [ ! -d "node_modules" ]; then
 fi
 echo "running coverage tests..."
 # coverage report will be in "coverage" directory
-npx c8 -r html node coverage.js
+node node_modules/c8/bin/c8.js -r html node coverage.js
 cd - > /dev/null
