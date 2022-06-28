@@ -1,0 +1,9 @@
+#!/bin/sh
+
+mkdir -p tools
+
+cd tools || exit 1
+if [ ! -d "node_modules" ]; then
+	npm install --save-dev c8 jsbn big.js
+fi
+cd - > /dev/null
