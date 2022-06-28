@@ -75,7 +75,7 @@ if [ ! -d "node_modules" ]; then
 	npm install jsdoc docdash --save-dev
 	npm install eslint eslint-config-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-n --save-dev
 fi
-cd - > /dev/null
+cd - > /dev/null || exit 1
 
 echo "linting full size sources..."
 ./lint
@@ -122,6 +122,6 @@ rm -rf "${DOCSDIR:?}/"*
 
 cd tools || exit 1
 node ./node_modules/jsdoc/jsdoc.js ../../src/ ../biginteger.externs.js -d "../$DOCSDIR" -c ../jsdoc.conf.json
-cd - > /dev/null
+cd - > /dev/null || exit 1
 
 
