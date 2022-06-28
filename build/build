@@ -125,9 +125,3 @@ node ./node_modules/jsdoc/jsdoc.js ../../src/ ../biginteger.externs.js -d "../$D
 cd - > /dev/null
 
 
-cd "$DOCSDIR" || exit 1
-[ "$AUTHTS" = "" ] || find . -exec touch "--date=@$AUTHTS" {} +
-find . -type f -printf '%P\n' | LC_ALL=C sort | zip -rqX "../opac-js-$VERSION-docs.zip" -@
-cd - > /dev/null
-
-

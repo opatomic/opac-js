@@ -57,12 +57,20 @@ if [ "$GHRELID" = "null" ]; then
 	GHRELID=$(curl -s -S -u "$GHUSER:$GHTOKEN" -X POST "https://api.github.com/repos/$GHUSER/$GHREPO/releases" -d "{\"tag_name\":\"$GHTAG\"}" | jq ".id")
 fi
 
-AUTHTS="$(git log -1 --format=%at)" ./build
+./build
+
+
+AUTHTS="$(git log -1 --format=%at)"
+cd "out/docs" || exit 1
+find . -exec touch "--date=@$AUTHTS" {} +
+find . -type f -printf '%P\n' | LC_ALL=C sort | zip -rqX "../opac-js-$VERSION-docs.zip" -@
+cd - > /dev/null || exit 1
 
 
 # upload files
 uploadAsset "$GHUSER" "$GHTOKEN" "$GHREPO" "$GHRELID" "out/opac.browser.js"
 uploadAsset "$GHUSER" "$GHTOKEN" "$GHREPO" "$GHRELID" "out/opac.browser.min.js"
+uploadAsset "$GHUSER" "$GHTOKEN" "$GHREPO" "$GHRELID" "out/opac-js-$VERSION-docs.zip"
 
 
 npm publish out/node
