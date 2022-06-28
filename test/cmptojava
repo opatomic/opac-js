@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# requires node and jdk (javac & java) installed
+
+cd ../build || exit 1
+CCJAR="0" ./build
+cd - > /dev/null
+
+./init-tools
+
+cp ../build/out/node/opac.node.js tools
+cp TestBigDecimal.js tools
+cp BigDecCLW.java tools
+cp cmptojava.js tools
+
+cd tools || exit 1
+
+rm -f java.bigdec.out.txt java.bigint.out.txt node.bigdec.out.txt node.bigint.out.txt
+# The following will run a sequence of commands in the background
+{ javac BigDecCLW.java; java BigDecCLW > java.bigdec.out.txt; java BigDecCLW --BigInteger > java.bigint.out.txt; } &
+echo "running tests..."
+node cmptojava.js
+wait
+
+# note: there is a Java bug filed for movePointLeft(0) and movePointRight(0). The bug
+#   ID is JDK-8289260. Depending on the version of Java, you may see errors for these functions.
+
+java BigDecCLW --compare "node.bigdec.out.txt" "java.bigdec.out.txt"
+java BigDecCLW --compare "node.bigint.out.txt" "java.bigint.out.txt"
+
+cd - > /dev/null
