@@ -19,7 +19,7 @@ if [ ! -f "$CCJAR" ] && [ "$CCJAR" != "0" ]; then
 fi
 
 catAllSrc() {
-	cat "$OTMPDIR/version.js" "$SRCDIR/Queue.js" "$SRCDIR/BigDec.js" "$SRCDIR/PartialParser.js" "$SRCDIR/Serializer.js" "$SRCDIR/OpaUtils.js" "$SRCDIR/EventClient.js" >> "$1"
+	cat "$OTMPDIR/version.js" "$SRCDIR/Queue.js" "$SRCDIR/BigDec.js" "$SRCDIR/PartialParser.js" "$SRCDIR/Serializer.js" "$SRCDIR/OpaUtils.js" "$SRCDIR/EventClient.js"
 }
 
 
@@ -41,23 +41,26 @@ printf "\nreturn BigInteger;\n}());\n" >> "$OTMPDIR/jsbn.js"
 # TODO: figure out how to do source mapping for minimized files? (helps with debugging)
 
 echo "assembling sources for full-size opac..."
-OUTFILE="$OUTDIR/opac.browser.js"
-echo "\"use strict\";" > "$OUTFILE"
-echo "// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):" >> "$OUTFILE"
-cat "$LIBDIR/jsbn/LICENSE" "$OTMPDIR/jsbn.js" >> "$OUTFILE"
-printf "\n\n" >> "$OUTFILE"
-echo "// Bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info" >> "$OUTFILE"
-echo "(function() {" >> "$OUTFILE"
-cat "browser.head.js" "$SRCDIR/OpaDef.js" "bigintFromBytes-jsbn.js" >> "$OUTFILE"
-catAllSrc "$OUTFILE"
-cat "browser.foot.js" >> "$OUTFILE"
-echo "})();" >> "$OUTFILE"
+{
+	echo "\"use strict\";"
+	echo "// BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/):"
+	cat "$LIBDIR/jsbn/LICENSE" "$OTMPDIR/jsbn.js"
+	printf "\n\n"
+	echo "// Bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info"
+	echo "(function() {"
+	cat "browser.head.js" "$SRCDIR/OpaDef.js" "bigintFromBytes-jsbn.js"
+	catAllSrc
+	cat "browser.foot.js"
+	echo "})();"
+} > "$OUTDIR/opac.browser.js"
 
 mkdir "$OUTDIR/node"
 echo "\"use strict\";" > "$OTMPDIR/usestrict.js"
-cat "node.head.js" "$SRCDIR/OpaDef.js" "bigintFromBytes-jsbn.js" > "$OTMPDIR/opac.node.noreqs.js"
-catAllSrc "$OTMPDIR/opac.node.noreqs.js"
-cat "node.foot.js" >> "$OTMPDIR/opac.node.noreqs.js"
+{
+	cat "node.head.js" "$SRCDIR/OpaDef.js" "bigintFromBytes-jsbn.js"
+	catAllSrc
+	cat "node.foot.js"
+} > "$OTMPDIR/opac.node.noreqs.js"
 cat "$OTMPDIR/usestrict.js" "node.reqs.js" "$OTMPDIR/opac.node.noreqs.js" > "$OUTDIR/node/opac.node.js"
 sed -e "s/\\\$VERSION/$VERSION/" "package.json" > "$OUTDIR/node/package.json"
 cp "../README.md" "$OUTDIR/node/README.md"
@@ -95,13 +98,14 @@ if [ -f "$CCJAR" ]; then
 	echo "minimizing jsbn with closure compiler..."
 	java -jar "$CCJAR" --js "$OTMPDIR/jsbn.js" --js_output_file "$OTMPDIR/jsbn.min.js"
 
-	OUTFILE="$OUTDIR/opac.browser.min.js"
-	echo "// Minimized and bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info" >> "$OUTFILE"
-	echo "/* BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/) LICENSE file: */" >> "$OUTFILE"
-	cat "$LIBDIR/jsbn/LICENSE" >> "$OUTFILE"
-	echo "(function() {" >> "$OUTFILE"
-	cat "$OTMPDIR/jsbn.min.js" "$OTMPDIR/bundle.min.js" >> "$OUTFILE"
-	echo "}());" >> "$OUTFILE"
+	{
+		echo "// Minimized and bundled source code for opatomic client. see https://github.com/opatomic/opac-js for more info"
+		echo "/* BigInteger (http://www-cs-students.stanford.edu/~tjw/jsbn/) LICENSE file: */"
+		cat "$LIBDIR/jsbn/LICENSE"
+		echo "(function() {"
+		cat "$OTMPDIR/jsbn.min.js" "$OTMPDIR/bundle.min.js"
+		echo "}());"
+	} > "$OUTDIR/opac.browser.min.js"
 else
 	[ "$CCJAR" = "0" ] || echo "CCJAR not found. browser build will not minimize"
 fi
