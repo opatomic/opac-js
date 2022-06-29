@@ -26,8 +26,8 @@ var S_BLOB    = 11;
 var S_STR     = 12;
 var S_ERR     = 13;
 
-// note: this temp variable is only used to read varints so it will never store more than a 64 bit integer (low memory)
-var TMPBI1 = new BigInteger(null);
+/** @const {!OpaBuff} */
+var TMPBUF = NEWBUF(8);
 
 /** @const {!OpaBuff} */
 var EMPTYBUF = NEWBUF(0);
@@ -46,12 +46,12 @@ PartialParser = function() {
 	this.mNextState = 0;
 	/** @type {number} */
 	this.mNextState2 = 0;
-	/** @type {!BigInteger|number} */
-	this.mVarintVal = 0;
 	/** @type {number} */
-	this.mVarintMul = 0;
+	this.mVarintVal1 = 0;
 	/** @type {number} */
-	this.mVarintBitshift = 0;
+	this.mVarintVal2 = 0;
+	/** @type {number} */
+	this.mVarintLen = 0;
 	/** @type {number} */
 	this.mDecExp = 0;
 	/** @type {number} */
@@ -105,9 +105,9 @@ function initVarint(p, objType, nextState) {
 	p.mState = S_VARINT1;
 	p.mNextState = nextState;
 	p.mObjType = objType;
-	p.mVarintVal = 0;
-	p.mVarintMul = 1;
-	p.mVarintBitshift = 0;
+	p.mVarintVal1 = 0;
+	p.mVarintVal2 = 0;
+	p.mVarintLen = 0;
 }
 
 /**
@@ -126,26 +126,47 @@ function initBytes(p, objType, nextState) {
  * @return {number}
  */
 function getVarint32(p, neg) {
-	if (typeof p.mVarintVal != "number" || p.mVarintVal > 2147483647) {
+	if (neg) {
+		return 0 - getVarint32(p, false);
+	}
+	if (p.mVarintLen < 5) {
+		return p.mVarintVal1;
+	}
+	var t = (p.mVarintVal2 * 4294967296) + p.mVarintVal1;
+	if (!isSafeInteger(t) || t > 2147483647) {
 		throwErr(p, "varint out of range");
 	}
-	return neg ? 0 - /** @type {number} */ (p.mVarintVal) : /** @type {number} */ (p.mVarintVal);
+	return t;
 }
 
 /**
+ * @param {number} num
+ * @param {!Uint8Array} b
+ * @param {number} idx
+ */
+function num32ToBuff(num, b, idx) {
+	for (var i = 3; i >= 0; --i) {
+		b[idx + i] = num & 0xFF;
+		num >>>= 8;
+	}
+}
+
+/**
+ * @param {!PartialParser} p
  * @param {boolean} neg
- * @param {number|!BigInteger} v
  * @return {number|!BigInteger}
  */
-function getNum(neg, v) {
-	if (neg) {
-		if (typeof v == "number") {
-			return 0 - v;
-		} else {
-			bigIntNegateTo(v, v);
-		}
+function getVarIntVal(p, neg) {
+	if (p.mVarintLen < 5) {
+		return neg ? 0 - p.mVarintVal1 : p.mVarintVal1;
 	}
-	return v;
+	var t = (p.mVarintVal2 * 4294967296) + p.mVarintVal1;
+	if (isSafeInteger(t)) {
+		return neg ? 0 - t : t;
+	}
+	num32ToBuff(p.mVarintVal2, TMPBUF, 0);
+	num32ToBuff(p.mVarintVal1, TMPBUF, 4);
+	return bigIntFromBytes(neg, TMPBUF, 0, 8);
 }
 
 /**
@@ -153,27 +174,19 @@ function getNum(neg, v) {
  * @param {number} bval
  */
 function varintNextByte(p, bval) {
-	if (p.mVarintBitshift < 28) {
-		/** @type {number} */ (p.mVarintVal) |= (bval & 0x7F) << p.mVarintBitshift;
-		p.mVarintMul <<= 7;
-	} else if (p.mVarintBitshift < 49) {
-		// can read 7 bytes before having to switch to BigInteger
-		// must use addition/multiplication (cannot use bit ops on big numbers)
-		// see https://stackoverflow.com/questions/307179/what-is-javascripts-highest-integer-value-that-a-number-can-go-to-without-losin
-		p.mVarintVal += (bval & 0x7F) * p.mVarintMul;
-		p.mVarintMul *= 128;
-	} else if (p.mVarintBitshift > 56) {
-		throwErr(p, "varint too big");
+	if (p.mVarintLen < 4) {
+		p.mVarintVal1 |= (bval & 0x7F) << (p.mVarintLen * 7);
+	} else if (p.mVarintLen == 4) {
+		// 4 bits go into mVarintVal1; cannot use bit-wise operations
+		p.mVarintVal1 += (bval & 0x0F) * 268435456;
+		// 3 bits go into mVarintVal2
+		p.mVarintVal2 = (bval & 0x70) >> 4;
+	} else if (p.mVarintLen < 9) {
+		p.mVarintVal2 |= (bval & 0x7F) << (3 + ((p.mVarintLen - 5) * 7));
 	} else {
-		if (p.mVarintBitshift == 49) {
-			// mVarintVal is a number; must convert to a BigInteger
-			p.mVarintVal = bigIntFromNumber(/** @type {number} */ (p.mVarintVal));
-		}
-		TMPBI1.fromInt(bval & 0x7F);
-		TMPBI1.lShiftTo(p.mVarintBitshift, TMPBI1);
-		p.mVarintVal.addTo(TMPBI1, /** @type {!BigInteger} */ (p.mVarintVal));
+		throwErr(p, "varint too big");
 	}
-	p.mVarintBitshift += 7;
+	p.mVarintLen++;
 }
 
 /**
@@ -274,7 +287,7 @@ function parseNext(p, b) {
 					}
 				}
 			case S_VARINT2:
-				hitNext(p, getNum(p.mObjType == CH_NEGVARINT, p.mVarintVal));
+				hitNext(p, getVarIntVal(p, p.mObjType == CH_NEGVARINT));
 				p.mState = S_NEXTOBJ;
 				continue;
 			case S_BYTES1:
@@ -306,7 +319,7 @@ function parseNext(p, b) {
 				initVarint(p, p.mObjType, S_VARDEC2);
 				continue;
 			case S_VARDEC2:
-				var m1 = getNum(p.mObjType == CH_POSNEGVARDEC || p.mObjType == CH_NEGNEGVARDEC, p.mVarintVal);
+				var m1 = getVarIntVal(p, p.mObjType == CH_POSNEGVARDEC || p.mObjType == CH_NEGNEGVARDEC);
 				m1 = (typeof m1 == "number") ? bigIntFromNumber(m1) : m1;
 				hitNext(p, new BigDec(m1, 0 - p.mDecExp));
 				p.mState = S_NEXTOBJ;
