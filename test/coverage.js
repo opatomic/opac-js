@@ -446,6 +446,8 @@ function runTest(c) {
 	c.call("ECHO", [new BigDec("28374987238497327498273487238424")], echoResult);
 	c.call("ECHO", [new BigDec("28374987238497327498273487238424e-34")], echoResult);
 	c.call("ECHO", [new BigDec("1234e5")], echoResult);
+	c.call("ECHO", [new BigDec("0e-3")], echoResult);
+	c.call("ECHO", [new BigDec("0e3")], echoResult);
 	//c.call("ECHO", [Big("1.23e-3")], echoResult);
 	c.call("ECHO", [[undefined,null,false,true,-1,0,87687,new BigDec("-1.234e-450"),1.23,"str",[],[8762487264], binobj]], echoResult);
 	c.call("ECHO", [["", BufferFrom("", "utf-8")]], echoResult);
