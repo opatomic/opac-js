@@ -115,6 +115,10 @@ var opaStringify = function(obj, space) {};
 			//case "BigInteger":
 			//case "BigDec":
 			//	return obj.toString();
+			case "number":
+				// special code because (-0).toString() is "0" rather than "-0"
+				obj = /** @type {number} */ (obj); // eslint-disable-line no-self-assign
+				return (obj == 0 && 1 / obj == -Infinity) ? "-0" : obj.toString();
 			case "Uint8Array":
 			case "Buffer":
 				return stringifyBlob(/** @type {!Uint8Array} */ (obj));

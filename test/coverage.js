@@ -249,6 +249,7 @@ function testStringify(obj, indent, expect) {
 testStringify(["str", 0], 2, "[\n  \"str\",\n  0\n]");
 testStringify(["str", 0, [1, 2]], "\t", "[\n\t\"str\",\n\t0,\n\t[\n\t\t1,\n\t\t2\n\t]\n]");
 testStringify(libopac.OpaDef.SORTMAX_OBJ, null, "SORTMAX");
+testStringify(-0, null, "-0");
 
 
 
