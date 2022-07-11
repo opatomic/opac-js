@@ -282,7 +282,7 @@ function writeBigInt(s, v) {
 function writeBigDec(s, v) {
 	var e = 0 - v.scale();
 	var m = v.unscaledValue();
-	if (e == 0 || m.signum() == 0) {
+	if (e == 0) {
 		writeBigInt(s, m);
 	} else {
 		var negExp = e < 0;
