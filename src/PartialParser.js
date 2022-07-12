@@ -158,7 +158,7 @@ function num32ToBuff(num, b, idx) {
  */
 function getVarIntVal(p, neg) {
 	if (p.mVarintLen < 5) {
-		return neg ? 0 - p.mVarintVal1 : p.mVarintVal1;
+		return neg ? (p.mVarintVal1 == 0 ? -0 : 0 - p.mVarintVal1) : p.mVarintVal1;
 	}
 	var t = (p.mVarintVal2 * 4294967296) + p.mVarintVal1;
 	if (isSafeInteger(t)) {

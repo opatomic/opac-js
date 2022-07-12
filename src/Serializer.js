@@ -356,7 +356,7 @@ Serializer.prototype.writeNumber = function(v) {
 	if (isSafeInteger(v)) {
 		if (v > 0) {
 			writeTypeAndVarint(this, CH_POSVARINT, v);
-		} else if (v == 0) {
+		} else if (v == 0 && (1 / v == Infinity)) {
 			this.write1(CH_ZERO);
 		} else {
 			writeTypeAndVarint(this, CH_NEGVARINT, 0 - v);
