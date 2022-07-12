@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>BigDec - Documentation</title>
+    <title>BigInteger - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">BigDec</h1>
+    <h1 class="page-title">BigInteger</h1>
     
 
     
@@ -47,7 +47,7 @@
 <header>
     
         <h2>
-        BigDec
+        BigInteger
         </h2>
         
     
@@ -61,7 +61,7 @@
 
     
 
-    <h4 class="name" id="BigDec"><span class="type-signature"></span>new BigDec<span class="signature">(a, b<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="BigInteger"><span class="type-signature"></span>new BigInteger<span class="signature">(a, b<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -73,7 +73,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line48">line 48</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line11">line 11</a>
     </li></ul></dd>
     
 
@@ -111,6 +111,10 @@
 
 
 
+
+<div class="description usertext">
+    note: this does not match the actual implementation which also supports RNG params
+</div>
 
 
 
@@ -155,13 +159,13 @@
             <td class="type">
             
                 
-<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+<span class="param-type">number</span>
 |
 
 <span class="param-type">string</span>
 |
 
-<span class="param-type">number</span>
+<span class="param-type">Array</span>
 
 
             
@@ -258,7 +262,7 @@
 
         
             
-<h4 class="name" id=".ONE"><span class="type-signature">(static, non-null) </span>ONE<span class="type-signature"> :<a href="BigDec.html">BigDec</a></span></h4>
+<h4 class="name" id=".ONE"><span class="type-signature">(static, constant, non-null) </span>ONE<span class="type-signature"> :<a href="BigInteger.html">BigInteger</a></span></h4>
 
 
 
@@ -269,7 +273,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line149">line 149</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line23">line 23</a>
     </li></ul></dd>
     
 
@@ -314,7 +318,7 @@
     <ul>
         <li>
             
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
         </li>
@@ -327,7 +331,7 @@
 
         
             
-<h4 class="name" id=".ROUND_CEILING"><span class="type-signature">(static, non-null) </span>ROUND_CEILING<span class="type-signature"> :<a href="global.html#RoundingMode">RoundingMode</a></span></h4>
+<h4 class="name" id=".ZERO"><span class="type-signature">(static, constant, non-null) </span>ZERO<span class="type-signature"> :<a href="BigInteger.html">BigInteger</a></span></h4>
 
 
 
@@ -338,7 +342,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line132">line 132</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line17">line 17</a>
     </li></ul></dd>
     
 
@@ -383,628 +387,7 @@
     <ul>
         <li>
             
-<span class="param-type"><a href="global.html#RoundingMode">RoundingMode</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".ROUND_DOWN"><span class="type-signature">(static, non-null) </span>ROUND_DOWN<span class="type-signature"> :<a href="global.html#RoundingMode">RoundingMode</a></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line134">line 134</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="global.html#RoundingMode">RoundingMode</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".ROUND_FLOOR"><span class="type-signature">(static, non-null) </span>ROUND_FLOOR<span class="type-signature"> :<a href="global.html#RoundingMode">RoundingMode</a></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line136">line 136</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="global.html#RoundingMode">RoundingMode</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".ROUND_HALF_DOWN"><span class="type-signature">(static, non-null) </span>ROUND_HALF_DOWN<span class="type-signature"> :<a href="global.html#RoundingMode">RoundingMode</a></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line138">line 138</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="global.html#RoundingMode">RoundingMode</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".ROUND_HALF_EVEN"><span class="type-signature">(static, non-null) </span>ROUND_HALF_EVEN<span class="type-signature"> :<a href="global.html#RoundingMode">RoundingMode</a></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line140">line 140</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="global.html#RoundingMode">RoundingMode</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".ROUND_HALF_UP"><span class="type-signature">(static, non-null) </span>ROUND_HALF_UP<span class="type-signature"> :<a href="global.html#RoundingMode">RoundingMode</a></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line142">line 142</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="global.html#RoundingMode">RoundingMode</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".ROUND_UNNECESSARY"><span class="type-signature">(static, non-null) </span>ROUND_UNNECESSARY<span class="type-signature"> :<a href="global.html#RoundingMode">RoundingMode</a></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line144">line 144</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="global.html#RoundingMode">RoundingMode</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".ROUND_UP"><span class="type-signature">(static, non-null) </span>ROUND_UP<span class="type-signature"> :<a href="global.html#RoundingMode">RoundingMode</a></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line146">line 146</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="global.html#RoundingMode">RoundingMode</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".TEN"><span class="type-signature">(static, non-null) </span>TEN<span class="type-signature"> :<a href="BigDec.html">BigDec</a></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line151">line 151</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".ZERO"><span class="type-signature">(static, non-null) </span>ZERO<span class="type-signature"> :<a href="BigDec.html">BigDec</a></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line153">line 153</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
         </li>
@@ -1026,7 +409,7 @@
 
     
 
-    <h4 class="name" id="abs"><span class="type-signature"></span>abs<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
+    <h4 class="name" id="abs"><span class="type-signature"></span>abs<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
 
     
 
@@ -1038,7 +421,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line221">line 221</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line28">line 28</a>
     </li></ul></dd>
     
 
@@ -1112,7 +495,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
     </dd>
@@ -1127,7 +510,7 @@
 
     
 
-    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(augend<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
+    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(val<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
 
     
 
@@ -1139,7 +522,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line230">line 230</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line34">line 34</a>
     </li></ul></dd>
     
 
@@ -1213,13 +596,13 @@
 
         <tr>
             
-                <td class="name"><code>augend</code></td>
+                <td class="name"><code>val</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
             
@@ -1262,7 +645,509 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="and"><span class="type-signature"></span>and<span class="signature">(val<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line40">line 40</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>val</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="andNot"><span class="type-signature"></span>andNot<span class="signature">(val<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line46">line 46</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>val</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="bitCount"><span class="type-signature"></span>bitCount<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line51">line 51</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="bitLength"><span class="type-signature"></span>bitLength<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line56">line 56</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
 
 
     </dd>
@@ -1289,7 +1174,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line246">line 246</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line61">line 61</a>
     </li></ul></dd>
     
 
@@ -1378,7 +1263,7 @@
 
     
 
-    <h4 class="name" id="byteValueExact"><span class="type-signature"></span>byteValueExact<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="clearBit"><span class="type-signature"></span>clearBit<span class="signature">(n)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
 
     
 
@@ -1390,7 +1275,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line267">line 267</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line67">line 67</a>
     </li></ul></dd>
     
 
@@ -1439,105 +1324,53 @@
 
 
 
+    <h5>Parameters:</h5>
+    
 
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
+        <th>Type</th>
 
         
 
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>n</code></td>
+            
+
+            <td class="type">
+            
+                
 <span class="param-type">number</span>
 
 
-    </dd>
-</dl>
+            
+            </td>
 
-    
-
-
-
-        
             
 
-    
+            
 
-    <h4 class="name" id="clone"><span class="type-signature"></span>clone<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
+            <td class="description last"></td>
+        </tr>
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line274">line 274</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </tbody>
+</table>
 
 
 
@@ -1565,7 +1398,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
     </dd>
@@ -1592,7 +1425,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line282">line 282</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line73">line 73</a>
     </li></ul></dd>
     
 
@@ -1672,7 +1505,7 @@
             <td class="type">
             
                 
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
             
@@ -1730,7 +1563,7 @@
 
     
 
-    <h4 class="name" id="divide"><span class="type-signature"></span>divide<span class="signature">(divisor<span class="signature-attributes">non-null</span>, b<span class="signature-attributes">opt</span>, c<span class="signature-attributes">opt, non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
+    <h4 class="name" id="divide"><span class="type-signature"></span>divide<span class="signature">(val<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
 
     
 
@@ -1742,7 +1575,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line429">line 429</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line79">line 79</a>
     </li></ul></dd>
     
 
@@ -1804,7 +1637,155 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>val</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="divideAndRemainder"><span class="type-signature"></span>divideAndRemainder<span class="signature">(val<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;<a href="BigInteger.html">BigInteger</a>>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line85">line 85</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
         
 
         
@@ -1818,26 +1799,18 @@
 
         <tr>
             
-                <td class="name"><code>divisor</code></td>
+                <td class="name"><code>val</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
             
             </td>
 
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
             
 
             
@@ -1846,18 +1819,142 @@
         </tr>
 
     
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;<a href="BigInteger.html">BigInteger</a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="flipBit"><span class="type-signature"></span>flipBit<span class="signature">(n)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line91">line 91</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
 
         <tr>
             
-                <td class="name"><code>b</code></td>
+                <td class="name"><code>n</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#RoundingMode">RoundingMode</a></span>
-|
-
 <span class="param-type">number</span>
 
 
@@ -1865,49 +1962,6 @@
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>c</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#RoundingMode">RoundingMode</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
@@ -1944,7 +1998,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
     </dd>
@@ -1959,7 +2013,7 @@
 
     
 
-    <h4 class="name" id="divideAndRemainder"><span class="type-signature"></span>divideAndRemainder<span class="signature">(divisor<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;!<a href="BigDec.html">BigDec</a>>}</span></h4>
+    <h4 class="name" id="gcd"><span class="type-signature"></span>gcd<span class="signature">(val<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
 
     
 
@@ -1971,7 +2025,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line457">line 457</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line97">line 97</a>
     </li></ul></dd>
     
 
@@ -2045,13 +2099,13 @@
 
         <tr>
             
-                <td class="name"><code>divisor</code></td>
+                <td class="name"><code>val</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
             
@@ -2094,7 +2148,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Array.&lt;!<a href="BigDec.html">BigDec</a>></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
     </dd>
@@ -2109,7 +2163,7 @@
 
     
 
-    <h4 class="name" id="divideToIntegralValue"><span class="type-signature"></span>divideToIntegralValue<span class="signature">(divisor<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
+    <h4 class="name" id="getLowestSetBit"><span class="type-signature"></span>getLowestSetBit<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {number}</span></h4>
 
     
 
@@ -2121,7 +2175,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line466">line 466</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line102">line 102</a>
     </li></ul></dd>
     
 
@@ -2170,55 +2224,6 @@
 
 
 
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>divisor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
 
 
 
@@ -2244,157 +2249,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="equals"><span class="type-signature"></span>equals<span class="signature">(x)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line500">line 500</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">boolean</span>
+<span class="param-type">number</span>
 
 
     </dd>
@@ -2421,7 +2276,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line512">line 512</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line107">line 107</a>
     </li></ul></dd>
     
 
@@ -2510,7 +2365,7 @@
 
     
 
-    <h4 class="name" id="intValueExact"><span class="type-signature"></span>intValueExact<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="max"><span class="type-signature"></span>max<span class="signature">(val<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
 
     
 
@@ -2522,108 +2377,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line519">line 519</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="max"><span class="type-signature"></span>max<span class="signature">(val<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line527">line 527</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line113">line 113</a>
     </li></ul></dd>
     
 
@@ -2703,7 +2457,7 @@
             <td class="type">
             
                 
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
             
@@ -2746,7 +2500,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
     </dd>
@@ -2761,7 +2515,7 @@
 
     
 
-    <h4 class="name" id="min"><span class="type-signature"></span>min<span class="signature">(val<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
+    <h4 class="name" id="min"><span class="type-signature"></span>min<span class="signature">(val<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
 
     
 
@@ -2773,7 +2527,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line535">line 535</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line119">line 119</a>
     </li></ul></dd>
     
 
@@ -2853,7 +2607,7 @@
             <td class="type">
             
                 
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
             
@@ -2896,7 +2650,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
     </dd>
@@ -2911,7 +2665,7 @@
 
     
 
-    <h4 class="name" id="movePointLeft"><span class="type-signature"></span>movePointLeft<span class="signature">(n)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
+    <h4 class="name" id="mod"><span class="type-signature"></span>mod<span class="signature">(m<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
 
     
 
@@ -2923,7 +2677,1282 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line556">line 556</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line125">line 125</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>m</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="modInverse"><span class="type-signature"></span>modInverse<span class="signature">(m<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line131">line 131</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>m</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="modPow"><span class="type-signature"></span>modPow<span class="signature">(exponent<span class="signature-attributes">non-null</span>, m<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line138">line 138</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>exponent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>m</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="multiply"><span class="type-signature"></span>multiply<span class="signature">(val<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line144">line 144</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>val</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="negate"><span class="type-signature"></span>negate<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line149">line 149</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="not"><span class="type-signature"></span>not<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line154">line 154</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="or"><span class="type-signature"></span>or<span class="signature">(val<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line160">line 160</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>val</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="pow"><span class="type-signature"></span>pow<span class="signature">(exponent)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line166">line 166</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>exponent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="remainder"><span class="type-signature"></span>remainder<span class="signature">(val<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line172">line 172</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>val</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="setBit"><span class="type-signature"></span>setBit<span class="signature">(n)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line178">line 178</a>
     </li></ul></dd>
     
 
@@ -3046,7 +4075,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
     </dd>
@@ -3061,7 +4090,7 @@
 
     
 
-    <h4 class="name" id="movePointRight"><span class="type-signature"></span>movePointRight<span class="signature">(n)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
+    <h4 class="name" id="shiftLeft"><span class="type-signature"></span>shiftLeft<span class="signature">(n)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
 
     
 
@@ -3073,7 +4102,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line564">line 564</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line184">line 184</a>
     </li></ul></dd>
     
 
@@ -3196,7 +4225,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
     </dd>
@@ -3211,7 +4240,7 @@
 
     
 
-    <h4 class="name" id="multiply"><span class="type-signature"></span>multiply<span class="signature">(multiplicand<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
+    <h4 class="name" id="shiftRight"><span class="type-signature"></span>shiftRight<span class="signature">(n)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
 
     
 
@@ -3223,258 +4252,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line572">line 572</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>multiplicand</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="negate"><span class="type-signature"></span>negate<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line579">line 579</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="pow"><span class="type-signature"></span>pow<span class="signature">(n)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line587">line 587</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line190">line 190</a>
     </li></ul></dd>
     
 
@@ -3597,702 +4375,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="precision"><span class="type-signature"></span>precision<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line600">line 600</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="remainder"><span class="type-signature"></span>remainder<span class="signature">(divisor<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line610">line 610</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>divisor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="scale"><span class="type-signature"></span>scale<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line617">line 617</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="scaleByPowerOfTen"><span class="type-signature"></span>scaleByPowerOfTen<span class="signature">(n)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line625">line 625</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>n</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="setScale"><span class="type-signature"></span>setScale<span class="signature">(newScale, rm<span class="signature-attributes">opt, non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line634">line 634</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>newScale</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>rm</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="global.html#RoundingMode">RoundingMode</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
     </dd>
@@ -4319,108 +4402,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line650">line 650</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="shortValueExact"><span class="type-signature"></span>shortValueExact<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line657">line 657</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line195">line 195</a>
     </li></ul></dd>
     
 
@@ -4521,7 +4503,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line665">line 665</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line200">line 200</a>
     </li></ul></dd>
     
 
@@ -4559,10 +4541,6 @@
 
 
 
-
-<div class="description usertext">
-    Returns -1 if this value is negative, 1 if positive, else 0 (if this is equal to zero).
-</div>
 
 
 
@@ -4614,7 +4592,7 @@
 
     
 
-    <h4 class="name" id="stripTrailingZeros"><span class="type-signature"></span>stripTrailingZeros<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
+    <h4 class="name" id="subtract"><span class="type-signature"></span>subtract<span class="signature">(val<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
 
     
 
@@ -4626,108 +4604,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line672">line 672</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="subtract"><span class="type-signature"></span>subtract<span class="signature">(subtrahend<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line693">line 693</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line206">line 206</a>
     </li></ul></dd>
     
 
@@ -4801,13 +4678,13 @@
 
         <tr>
             
-                <td class="name"><code>subtrahend</code></td>
+                <td class="name"><code>val</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
+<span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
             
@@ -4850,107 +4727,6 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="toBigInteger"><span class="type-signature"></span>toBigInteger<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line733">line 733</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
@@ -4966,7 +4742,7 @@
 
     
 
-    <h4 class="name" id="toBigIntegerExact"><span class="type-signature"></span>toBigIntegerExact<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
+    <h4 class="name" id="testBit"><span class="type-signature"></span>testBit<span class="signature">(n)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
 
     
 
@@ -4978,7 +4754,157 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line740">line 740</a>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line212">line 212</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>n</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toByteArray"><span class="type-signature"></span>toByteArray<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {Array.&lt;number>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line217">line 217</a>
     </li></ul></dd>
     
 
@@ -5052,484 +4978,291 @@
     </dt>
     <dd>
         
+<span class="param-type">Array.&lt;number></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="toString"><span class="type-signature"></span>toString<span class="signature">(radix<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line224">line 224</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>radix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="xor"><span class="type-signature"></span>xor<span class="signature">(val<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="build_biginteger.externs.js.html">build/biginteger.externs.js</a>, <a href="build_biginteger.externs.js.html#line230">line 230</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>val</code></td>
+            
+
+            <td class="type">
+            
+                
 <span class="param-type"><a href="BigInteger.html">BigInteger</a></span>
 
 
-    </dd>
-</dl>
+            
+            </td>
 
-    
-
-
-
-        
             
 
-    
-
-    <h4 class="name" id="toEngineeringString"><span class="type-signature"></span>toEngineeringString<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line832">line 832</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
             
 
-    
-
-    <h4 class="name" id="toPlainString"><span class="type-signature"></span>toPlainString<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line839">line 839</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="toString"><span class="type-signature"></span>toString<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line868">line 868</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            <td class="description last"></td>
+        </tr>
 
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="ulp"><span class="type-signature"></span>ulp<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {<a href="BigDec.html">BigDec</a>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line875">line 875</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="BigDec.html">BigDec</a></span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="unscaledValue"><span class="type-signature"></span>unscaledValue<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {<a href="BigInteger.html">BigInteger</a>}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_BigDec.js.html">src/BigDec.js</a>, <a href="src_BigDec.js.html#line882">line 882</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
     
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </tbody>
+</table>
 
 
 

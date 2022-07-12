@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>PartialParser - Documentation</title>
+    <title>ClientConfig - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -34,7 +34,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">PartialParser</h1>
+    <h1 class="page-title">ClientConfig</h1>
     
 
     
@@ -47,7 +47,7 @@
 <header>
     
         <h2>
-        PartialParser
+        ClientConfig
         </h2>
         
     
@@ -61,7 +61,7 @@
 
     
 
-    <h4 class="name" id="PartialParser"><span class="type-signature"></span>new PartialParser<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ClientConfig"><span class="type-signature"></span>new ClientConfig<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
@@ -73,7 +73,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_PartialParser.js.html">src/PartialParser.js</a>, <a href="src_PartialParser.js.html#line11">line 11</a>
+        <a href="src_EventClient.js.html">src/EventClient.js</a>, <a href="src_EventClient.js.html#line132">line 132</a>
     </li></ul></dd>
     
 
@@ -111,6 +111,10 @@
 
 
 
+
+<div class="description usertext">
+    Configurable client options
+</div>
 
 
 
@@ -148,13 +152,6 @@
     
 
     
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="PartialParser.Buff.html">Buff</a></dt>
-            <dd></dd>
-        </dl>
-    
     
     
 
@@ -163,18 +160,12 @@
     
 
     
-
-    
-        <h3 class="subsection-title">Methods</h3>
+        <h3 class="subsection-title">Members</h3>
 
         
             
+<h4 class="name" id="sendBuffLen"><span class="type-signature"></span>sendBuffLen<span class="type-signature"> :number</span></h4>
 
-    
-
-    <h4 class="name" id="parseNext"><span class="type-signature"></span>parseNext<span class="signature">(b<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (nullable) {Array}</span></h4>
-
-    
 
 
 
@@ -184,7 +175,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_PartialParser.js.html">src/PartialParser.js</a>, <a href="src_PartialParser.js.html#line361">line 361</a>
+        <a href="src_EventClient.js.html">src/EventClient.js</a>, <a href="src_EventClient.js.html#line137">line 137</a>
     </li></ul></dd>
     
 
@@ -223,6 +214,94 @@
 
 
 
+<div class="description usertext">
+    Size of the serializer buffer in bytes
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">number</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="clientErrorHandler"><span class="type-signature"></span>clientErrorHandler<span class="signature">(exception, context<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_EventClient.js.html">src/EventClient.js</a>, <a href="src_EventClient.js.html#line166">line 166</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Callback to invoke when an internal error occurs in the client. Examples could include parse
+errors or serialization errors.
+</div>
+
 
 
 
@@ -246,6 +325,8 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -258,23 +339,64 @@
 
         <tr>
             
-                <td class="name"><code>b</code></td>
+                <td class="name"><code>exception</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="PartialParser.Buff.html">PartialParser.Buff</a></span>
+<span class="param-type">*</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Exception that was caught</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">An object representing the context of the exception</td>
         </tr>
 
     
@@ -296,24 +418,395 @@
 
 
 
-<h5>Returns:</h5>
+
+
 
         
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array</span>
-
-
-    </dd>
-</dl>
+            
 
     
+
+    <h4 class="name" id="uncaughtExceptionHandler"><span class="type-signature"></span>uncaughtExceptionHandler<span class="signature">(exception, context<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_EventClient.js.html">src/EventClient.js</a>, <a href="src_EventClient.js.html#line155">line 155</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Callback to invoke when an uncaught exception occurs.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>exception</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Exception that was caught</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">An object representing the context of the exception</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="unknownIdHandler"><span class="type-signature"></span>unknownIdHandler<span class="signature">(id, result, error<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_EventClient.js.html">src/EventClient.js</a>, <a href="src_EventClient.js.html#line146">line 146</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Callback to invoke when a response is received without a registered callback.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Response's async ID</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>result</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">The result of the operation if error didn't occur (error is null).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>error</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Error or null if no error occurred.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

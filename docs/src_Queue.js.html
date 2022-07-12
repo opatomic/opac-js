@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>PartialParser - Documentation</title>
+    <title>src/Queue.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -34,298 +34,123 @@
 
 <div id="main">
     
-    <h1 class="page-title">PartialParser</h1>
+    <h1 class="page-title">src/Queue.js</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2>
-        PartialParser
-        </h2>
-        
-    
-</header>
-
-<article>
-    
-        <div class="container-overview">
-        
-            
-
-    
-
-    <h4 class="name" id="PartialParser"><span class="type-signature"></span>new PartialParser<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_PartialParser.js.html">src/PartialParser.js</a>, <a href="src_PartialParser.js.html#line11">line 11</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        </div>
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="PartialParser.Buff.html">Buff</a></dt>
-            <dd></dd>
-        </dl>
-    
-    
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="parseNext"><span class="type-signature"></span>parseNext<span class="signature">(b<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (nullable) {Array}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_PartialParser.js.html">src/PartialParser.js</a>, <a href="src_PartialParser.js.html#line361">line 361</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>b</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="PartialParser.Buff.html">PartialParser.Buff</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * Copyright 2018-2019 Opatomic
+ * Open sourced with ISC license. Refer to LICENSE for details.
+ */
+
+/**
+ * @constructor
+ * @extends {Array}
+ * @ignore
+ */
+function QChunk() {}
+/** @type {?QChunk} */
+QChunk.prototype.next = null;
+/** @type {number} */
+QChunk.prototype.head = 0;
+/** @type {number} */
+QChunk.prototype.used = 0;
+
+/**
+ * @ignore
+ * @param {number} size - size of chunk's array
+ * @param {?QChunk} prev - link to previous chunk
+ * @return {!QChunk}
+ */
+function newQChunk(size, prev) {
+	var c = /** @type {!QChunk} */ (new Array(size));
+	c.next = null;
+	c.head = 0;
+	c.used = 0;
+	if (prev) {
+		prev.next = c;
+	}
+	return c;
+}
+
+/**
+ * Queue that allocates arrays in small chunks as needed. Chunks are stored as linked list.
+ * This design is efficient because it does not require growing arrays and copying data when
+ * capacity is exceeded. Also, large contiguous chunks of memory are not required.
+ * If only 1 chunk is needed, then it is utilized as a circular array to avoid constantly
+ * reallocating a new chunk.
+ * @constructor
+ * @template T
+ */
+function Queue() {
+	/** @type {number} */
+	this.totlen = 0;
+	/** @type {!QChunk} */
+	this.head = newQChunk(this.newChunkSize, null);
+	/** @type {!QChunk} */
+	this.tail = this.head;
+}
+
+/**
+ * Add the specified element to the tail of the queue
+ * @param {T} item
+ * @return {number} new length after adding item
+ */
+Queue.prototype.push = function(item) {
+	var chunk = this.tail;
+	if (chunk.used + 1 >= chunk.length) {
+		chunk = newQChunk(this.newChunkSize, chunk);
+		this.tail = chunk;
+	}
+	chunk[(chunk.head + chunk.used) &amp; (chunk.length - 1)] = item;
+	chunk.used++;
+	return ++this.totlen;
+};
+
+/**
+ * Remove an item from the head of the queue
+ * @return {T} The first item in the queue or undefined if queue is empty
+ */
+Queue.prototype.shift = function() {
+	var chunk = this.head;
+	if (chunk.used == 0) {
+		return undefined;
+	}
+	var idx = chunk.head;
+	var item = chunk[idx];
+	chunk[idx] = undefined;
+	chunk.used--;
+	if (chunk.used == 0 &amp;&amp; chunk.next) {
+		this.head = chunk.next;
+	} else {
+		chunk.head = (idx + 1) &amp; (chunk.length - 1);
+	}
+	this.totlen--;
+	return item;
+};
+
+/**
+ * @return {number}
+ */
+Queue.prototype.size = function() {
+	return this.totlen;
+};
+
+/**
+ * size of each new array chunk. must be greater than 0 and a power of 2!
+ * @type {number}
+ */
+Queue.prototype.newChunkSize = 64;
+
+</code></pre>
+        </article>
+    </section>
 
 
 
