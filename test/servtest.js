@@ -47,6 +47,12 @@ function expectErr(err, result) {
 	}
 }
 
+function expectResult(err, result) {
+	if (err) {
+		console.log("ERR: expected result; got err " + libopac.stringify(err));
+	}
+}
+
 function runTest2(c) {
 	c.call("PING");
 	c.call("PING");
@@ -106,26 +112,14 @@ TODO:
  math op that overflows bigdec exponent
 */
 const BADVALS = [
-	[OpaDef.BINLPVI, 0], // binary with 0 len
-	[OpaDef.STRLPVI, 0], // string with 0 len
-	[OpaDef.POSVARINT, 0], // 0 encoded as pos varint
-	[OpaDef.NEGVARINT, 0], // 0 encoded as neg varint
 	[OpaDef.POSVARINT, 0x80 | 0, 0], // pos varint with MSB of 0
 	[OpaDef.NEGVARINT, 0x80 | 0, 0], // neg varint with MSB of 0
 	[OpaDef.POSVARINT,0x80|1,0x80|1,0x80|1,0x80|1,0x80|1,0x80|1,0x80|1,0x80|1,0x80|1,1], // 10 byte varint
-	[OpaDef.POSPOSVARDEC, 0, 0],
-	[OpaDef.POSPOSVARDEC, 0, 1],
-	[OpaDef.POSPOSVARDEC, 1, 0],
 	[OpaDef.POSPOSBIGINT, 0],       // bigint len is 0
-	[OpaDef.POSPOSBIGINT, 1, 0],    // mantissa is 0
 	[OpaDef.POSPOSBIGINT, 2, 0, 1], // MSB is 0
 	[OpaDef.POSPOSBIGDEC, 0, 0],    // exp is 0, bigint len is 0
-	[OpaDef.POSPOSBIGDEC, 0, 1, 0], // exp is 0, mantissa is 0
-	[OpaDef.POSPOSBIGDEC, 0, 1, 1], // exp is 0
-	[OpaDef.POSPOSBIGDEC, 0, 2, 0, 1], // exp is 0
-	[OpaDef.POSPOSBIGDEC, 0, 2, 1, 1], // exp is 0
+	[OpaDef.POSPOSBIGDEC, 0, 2, 0, 1], // exp is 0, MSB is 0
 	[OpaDef.POSPOSBIGDEC, 1, 0],       // bigint length is 0
-	[OpaDef.POSPOSBIGDEC, 1, 1, 0],    // mantissa is 0
 	[OpaDef.POSPOSBIGDEC, 1, 2, 0, 1], // MSB is 0
 
 	// invalid utf8:
@@ -153,7 +147,26 @@ const BADVALS = [
 	[OpaDef.STRLPVI, 3, 0xf4,0x80,0xff],
 ];
 
-function testBadValue(v) {
+const GOODVALS = [
+	[OpaDef.BINLPVI, 0], // binary with 0 len
+	[OpaDef.STRLPVI, 0], // string with 0 len
+
+	[OpaDef.POSVARINT, 0], // 0 encoded as pos varint
+	[OpaDef.NEGVARINT, 0], // 0 encoded as neg varint
+
+	[OpaDef.POSPOSVARDEC, 0, 0],
+	[OpaDef.POSPOSVARDEC, 0, 1],
+	[OpaDef.POSPOSVARDEC, 1, 0],
+
+	[OpaDef.POSBIGINT, 1, 0],    // mantissa is 0
+
+	[OpaDef.POSPOSBIGDEC, 0, 1, 0], // exp is 0, mantissa is 0
+	[OpaDef.POSPOSBIGDEC, 0, 1, 1], // exp is 0
+	[OpaDef.POSPOSBIGDEC, 0, 2, 1, 1], // exp is 0
+	[OpaDef.POSPOSBIGDEC, 1, 1, 0],    // mantissa is 0
+];
+
+function testBadValue(v, cbFunc) {
 	var s = connect(4567, "localhost", function() {
 		var c = libopac.newClient(s);
 		c.s.write1(OpaDef.ARRAYSTART);
@@ -163,7 +176,7 @@ function testBadValue(v) {
 		c.s.write(v);
 		c.s.write1(OpaDef.ARRAYEND);
 		c.s.write1(OpaDef.ARRAYEND);
-		c.mMainCallbacks.push(expectErr);
+		c.mMainCallbacks.push(cbFunc);
 		c.call("QUIT");
 		c.flush();
 	}, 1000);
@@ -179,7 +192,13 @@ Uint8Array.of = function(v) {
 
 function testBadValues() {
 	for (var i = 0; i < BADVALS.length; ++i) {
-		testBadValue(Uint8Array.of(BADVALS[i]));
+		testBadValue(Uint8Array.of(BADVALS[i]), expectErr);
+	}
+}
+
+function testGoodValues() {
+	for (var i = 0; i < GOODVALS.length; ++i) {
+		testBadValue(Uint8Array.of(GOODVALS[i]), expectResult);
 	}
 }
 
@@ -196,6 +215,7 @@ function testBigExp(v) {
 
 
 testBadValues();
+testGoodValues();
 testBigExp(new BigDec(new BigInteger("1"), -0x7FFFFFFF - 1));
 testBigExp(new BigDec(new BigInteger("1"), 0x7FFFFFFF + 1));
 testBigExp(new BigDec(new BigInteger("123456789012345678901234567890"), -0x7FFFFFFF - 1));
