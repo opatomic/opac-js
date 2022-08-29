@@ -85,7 +85,7 @@ sock.connect(4567, "localhost", function() {
  - undefined
  - null
  - boolean (false/true)
- - numbers (integers, floats, Infinity, -Infinity; NaN and -0 not supported)
+ - numbers (integers, floats, +Infinity, -Infinity, -0 ; however, NaN is not supported)
  - strings
  - arrays
  - binary buffer (Buffer for node; Uint8Array for browser)
