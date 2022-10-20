@@ -122,6 +122,13 @@ const BADVALS = [
 	[OpaDef.POSPOSBIGDEC, 1, 0],       // bigint length is 0
 	[OpaDef.POSPOSBIGDEC, 1, 2, 0, 1], // MSB is 0
 
+	// vardec with exponent that's too big (33 bits)
+	[OpaDef.POSPOSVARDEC, 0x80, 0x80, 0x80, 0x80, 0x10, 1],
+	[OpaDef.NEGPOSVARDEC, 0x80, 0x80, 0x80, 0x80, 0x10, 1],
+	// vardec with exponent that's too big (32 bits)
+	[OpaDef.POSPOSVARDEC, 0x80, 0x80, 0x80, 0x80, 0x08, 1],
+	[OpaDef.NEGPOSVARDEC, 0x80, 0x80, 0x80, 0x80, 0x08, 1],
+
 	// invalid utf8:
 	[OpaDef.STRLPVI, 1, 0xff],
 	[OpaDef.STRLPVI, 2, 0xc2, 0x41],
@@ -216,10 +223,6 @@ function testBigExp(v) {
 
 testBadValues();
 testGoodValues();
-testBigExp(new BigDec(new BigInteger("1"), -0x7FFFFFFF - 1));
-testBigExp(new BigDec(new BigInteger("1"), 0x7FFFFFFF + 1));
-testBigExp(new BigDec(new BigInteger("123456789012345678901234567890"), -0x7FFFFFFF - 1));
-testBigExp(new BigDec(new BigInteger("-123456789012345678901234567890"), 0x7FFFFFFF + 1));
 
 //var v = String.fromCharCode.apply(null, new Uint8Array(4));
 //console.log(new Buffer(v).toString("base64"));
